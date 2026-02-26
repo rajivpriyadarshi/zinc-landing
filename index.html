@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zinc — Financial Delegation Infrastructure for Autonomous Agents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #0D0D0D;
+            --bg-card: #111111;
+            --bg-code: #0D0D0D;
+            --border: #1A1A1A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --text-dark: #444444;
+            --accent: #00D084;
+            --accent-dark: #00AF6F;
+            --error: #FF5F56;
+            --warning: #FFBD2E;
+            --success: #27CA40;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes typewriter {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 80px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo-symbol {
+            color: var(--accent);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .header-ctas {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 180px 80px 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 48px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 6px 12px;
+            border: 1px solid var(--accent);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--accent);
+            animation: fadeInUp 0.6s ease 0.2s backwards;
+        }
+
+        .hero h1 {
+            font-size: 72px;
+            font-weight: 700;
+            letter-spacing: -2px;
+            animation: fadeInUp 0.6s ease 0.3s backwards;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            max-width: 700px;
+            animation: fadeInUp 0.6s ease 0.4s backwards;
+        }
+
+        .hero-divider {
+            width: 60px;
+            height: 1px;
+            background: var(--border-light);
+            animation: fadeIn 0.6s ease 0.5s backwards;
+        }
+
+        .capabilities {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            animation: fadeInUp 0.6s ease 0.6s backwards;
+        }
+
+        .cap-label {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .cap-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cap-item {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .cap-item span {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        .hero-ctas {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 0.6s ease 0.7s backwards;
+        }
+
+        .btn-terminal {
+            background: var(--accent);
+            color: #000;
+            padding: 14px 28px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .btn-terminal:hover {
+            background: var(--accent-dark);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            padding: 14px 28px;
+            font-size: 14px;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: var(--text-muted);
+        }
+
+        .btn-ghost.muted {
+            color: var(--text-muted);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 80px;
+        }
+
+        .section-alt {
+            background: var(--bg-secondary);
+        }
+
+        .section-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .section-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* Capability Matrix */
+        .capability-matrix {
+            padding: 80px;
+            background: var(--bg-secondary);
+        }
+
+        .matrix-header {
+            margin-bottom: 40px;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border: 1px solid var(--border);
+            border-collapse: collapse;
+        }
+
+        .matrix-table th,
+        .matrix-table td {
+            text-align: left;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .matrix-table th {
+            background: var(--bg-card);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .matrix-table td {
+            font-size: 13px;
+        }
+
+        .matrix-table td:first-child {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .matrix-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-yes {
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .rail {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .notes {
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        /* Two Column Layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .two-col.reverse {
+            grid-template-columns: 1fr 400px;
+        }
+
+        .two-col.reverse .col-content {
+            order: 2;
+        }
+
+        .two-col.reverse .col-code {
+            order: 1;
+        }
+
+        .col-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 20px;
+            background: var(--bg-code);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .code-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: var(--error); }
+        .code-dot.yellow { background: var(--warning); }
+        .code-dot.green { background: var(--success); }
+
+        .code-filename {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .code-content {
+            padding: 24px;
+        }
+
+        .code-line {
+            font-size: 12px;
+            line-height: 1.9;
+            color: var(--text-secondary);
+        }
+
+        .code-line.comment {
+            color: var(--text-dim);
+        }
+
+        .code-line.highlight {
+            color: var(--accent);
+        }
+
+        .code-line.indent {
+            padding-left: 24px;
+        }
+
+        /* Protocol Steps */
+        .protocol-steps {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 32px;
+        }
+
+        .protocol-step {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            line-height: 2.2;
+        }
+
+        .protocol-step.highlight {
+            color: var(--accent);
+        }
+
+        .protocol-indent {
+            padding-left: 24px;
+        }
+
+        .protocol-indent-item {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.8;
+        }
+
+        /* Parameters List */
+        .params-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 16px;
+        }
+
+        .param-item {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .param-item span {
+            color: var(--accent);
+            margin-right: 8px;
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .events-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .event-item.approved { color: var(--accent); }
+        .event-item.denied { color: var(--error); }
+        .event-item.warning { color: var(--warning); }
+
+        /* Integration Grid */
+        .integration-section {
+            text-align: center;
+        }
+
+        .integration-header {
+            margin-bottom: 48px;
+        }
+
+        .integration-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .integration-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 24px;
+            text-align: left;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .integration-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .integration-card h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .integration-card p {
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        /* Safety List */
+        .safety-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .safety-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .safety-badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .safety-text {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        /* Quickstart */
+        .quickstart-section {
+            text-align: center;
+            background: var(--bg-secondary);
+        }
+
+        .quickstart-header {
+            margin-bottom: 48px;
+        }
+
+        .quickstart-code {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        /* Use Cases */
+        .use-cases-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+        }
+
+        .use-case-col h4 {
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .use-case-col h4.supported { color: var(--accent); }
+        .use-case-col h4.unsupported { color: var(--error); }
+
+        .use-case-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .use-case-item {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .use-case-item.supported { color: var(--text-secondary); }
+        .use-case-item.unsupported { color: var(--text-dim); }
+
+        .use-case-item span {
+            margin-right: 8px;
+        }
+
+        /* Schema Section */
+        .schema-section {
+            text-align: center;
+            background: var(--bg-secondary);
+        }
+
+        .schema-header {
+            margin-bottom: 40px;
+        }
+
+        .schema-links {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .schema-link {
+            padding: 14px 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .schema-link:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .schema-link.muted {
+            color: var(--text-muted);
+        }
+
+        /* Conditions */
+        .conditions {
+            margin-top: 24px;
+        }
+
+        .conditions-label {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 12px;
+        }
+
+        .conditions-list {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .condition-tag {
+            padding: 6px 12px;
+            border: 1px solid var(--border-light);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* Footer */
+        footer {
+            background: #050505;
+            padding: 60px 80px;
+        }
+
+        .footer-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 32px;
+        }
+
+        .footer-nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--text-muted);
+        }
+
+        .footer-divider {
+            height: 1px;
+            background: var(--border);
+            margin-bottom: 40px;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            font-size: 11px;
+            color: var(--text-dark);
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 24px;
+        }
+
+        .footer-legal a {
+            font-size: 11px;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .footer-legal a:hover {
+            color: var(--text-dim);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .integration-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            header {
+                padding: 0 40px;
+            }
+
+            section {
+                padding: 60px 40px;
+            }
+
+            .hero {
+                padding: 160px 40px 80px;
+            }
+
+            .hero h1 {
+                font-size: 48px;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .two-col.reverse .col-content,
+            .two-col.reverse .col-code {
+                order: unset;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .integration-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .use-cases-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 0 20px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            section {
+                padding: 40px 20px;
+            }
+
+            .hero {
+                padding: 140px 20px 60px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+                letter-spacing: -1px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+            }
+
+            .hero-ctas {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .hero-ctas .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .matrix-table {
+                font-size: 11px;
+            }
+
+            .matrix-table th,
+            .matrix-table td {
+                padding: 12px;
+            }
+
+            .integration-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .schema-links {
+                flex-direction: column;
+            }
+
+            footer {
+                padding: 40px 20px;
+            }
+
+            .footer-top {
+                flex-direction: column;
+                gap: 24px;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+
+        /* Terminal cursor effect */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--accent);
+            margin-left: 4px;
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Glow effect on hover for CTAs */
+        .btn-terminal:hover {
+            box-shadow: 0 0 20px rgba(0, 208, 132, 0.3);
+        }
+
+        /* Subtle grid background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(0, 208, 132, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 208, 132, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .hero {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">
+            <span class="logo-symbol">></span>
+            <span class="logo-text">zinc</span>
+        </a>
+        <nav>
+            <a href="#capabilities">Docs</a>
+            <a href="#spend-protocol">API Spec</a>
+            <a href="#quickstart">SDK</a>
+            <a href="#schema">Pricing</a>
+        </nav>
+        <div class="header-ctas">
+            <a href="#schema" class="btn btn-outline">View Schema</a>
+            <a href="#" class="btn btn-primary">Get API Key</a>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <span class="badge">[FINANCIAL_INFRASTRUCTURE]</span>
+            <h1>Zinc</h1>
+            <p class="hero-subtitle">Financial Delegation Infrastructure for Autonomous Agents</p>
+            <div class="hero-divider"></div>
+        </div>
+
+        <div class="capabilities">
+            <p class="cap-label">// zinc enables AI agents to:</p>
+            <div class="cap-list">
+                <p class="cap-item"><span>→</span> Request scoped spending authority</p>
+                <p class="cap-item"><span>→</span> Execute merchant payments via virtual cards</p>
+                <p class="cap-item"><span>→</span> Create programmable escrow contracts</p>
+                <p class="cap-item"><span>→</span> Transfer stablecoin between verified agents</p>
+                <p class="cap-item"><span>→</span> Enforce deterministic financial policy constraints</p>
+                <p class="cap-item"><span>→</span> Generate verifiable audit trails</p>
+            </div>
+        </div>
+
+        <div class="hero-ctas">
+            <a href="#" class="btn btn-terminal">$ get_api_key</a>
+            <a href="#" class="btn btn-ghost">View API Spec</a>
+            <a href="#schema" class="btn btn-ghost muted">OpenAPI Schema</a>
+            <a href="#quickstart" class="btn btn-ghost muted">SDK Install</a>
+        </div>
+    </section>
+
+    <section class="capability-matrix" id="capabilities">
+        <div class="matrix-header animate-on-scroll">
+            <p class="section-label">// capability_declaration</p>
+            <h2 class="section-title">Core Capabilities</h2>
+            <p class="section-desc">Machine-readable capability matrix. Easy to scrape.</p>
+        </div>
+
+        <table class="matrix-table animate-on-scroll">
+            <thead>
+                <tr>
+                    <th style="width: 280px;">Capability</th>
+                    <th style="width: 100px;">Supported</th>
+                    <th style="width: 140px;">Rail</th>
+                    <th>Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Merchant Checkout</td>
+                    <td><span class="status-yes">[YES]</span></td>
+                    <td class="rail">Fiat + Cards</td>
+                    <td class="notes">Virtual merchant-locked cards</td>
+                </tr>
+                <tr>
+                    <td>Budget Enforcement</td>
+                    <td><span class="status-yes">[YES]</span></td>
+                    <td class="rail">All</td>
+                    <td class="notes">Deterministic policy engine</td>
+                </tr>
+                <tr>
+                    <td>Escrow Contracts</td>
+                    <td><span class="status-yes">[YES]</span></td>
+                    <td class="rail">Stablecoin</td>
+                    <td class="notes">Conditional release</td>
+                </tr>
+                <tr>
+                    <td>Agent Identity</td>
+                    <td><span class="status-yes">[YES]</span></td>
+                    <td class="rail">All</td>
+                    <td class="notes">Cryptographic identity</td>
+                </tr>
+                <tr>
+                    <td>Real-time Approval</td>
+                    <td><span class="status-yes">[YES]</span></td>
+                    <td class="rail">Fiat</td>
+                    <td class="notes">Configurable modes</td>
+                </tr>
+                <tr>
+                    <td>Cross-Agent Settlement</td>
+                    <td><span class="status-yes">[YES]</span></td>
+                    <td class="rail">Stablecoin</td>
+                    <td class="notes">Instant transfer</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="spend-protocol">
+        <div class="two-col">
+            <div class="col-content animate-on-scroll">
+                <p class="section-label">// spend_protocol</p>
+                <h2 class="section-title">Deterministic Spend Flow</h2>
+                <p class="section-desc">Agents need execution logic, not storytelling. Every transaction follows an explicit, verifiable protocol.</p>
+            </div>
+
+            <div class="code-block animate-on-scroll">
+                <div class="protocol-steps">
+                    <p class="protocol-step">1. request_spend(agent_id, amount, merchant)</p>
+                    <p class="protocol-step">2. Policy engine evaluates constraints</p>
+                    <p class="protocol-step highlight">3. Response: APPROVED | DENIED | REQUIRE_APPROVAL</p>
+                    <p class="protocol-step">4. If approved → issue_virtual_card()</p>
+                    <p class="protocol-step">5. Transaction logged with:</p>
+                    <div class="protocol-indent">
+                        <p class="protocol-indent-item">- policy_matched</p>
+                        <p class="protocol-indent-item">- decision_reason</p>
+                        <p class="protocol-indent-item">- risk_score</p>
+                        <p class="protocol-indent-item">- timestamp</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-alt">
+        <div class="two-col">
+            <div class="col-content animate-on-scroll">
+                <p class="section-label">// policy_model</p>
+                <h2 class="section-title">Policy Parameters</h2>
+                <p class="section-desc">Agents must understand boundaries. Explicit constraints schema.</p>
+                <div class="params-list">
+                    <p class="param-item"><span>→</span> spend_limit_per_transaction</p>
+                    <p class="param-item"><span>→</span> daily_budget_limit</p>
+                    <p class="param-item"><span>→</span> merchant_whitelist</p>
+                    <p class="param-item"><span>→</span> mcc_whitelist</p>
+                    <p class="param-item"><span>→</span> velocity_limit</p>
+                    <p class="param-item"><span>→</span> expiration_time</p>
+                    <p class="param-item"><span>→</span> approval_threshold</p>
+                </div>
+            </div>
+
+            <div class="code-block animate-on-scroll">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                    </div>
+                    <span class="code-filename">policy.json</span>
+                </div>
+                <div class="code-content">
+                    <p class="code-line comment">{</p>
+                    <p class="code-line">  "spend_limit_per_transaction": 1000,</p>
+                    <p class="code-line">  "daily_budget_limit": 5000,</p>
+                    <p class="code-line">  "merchant_whitelist": ["aws", "gcp"],</p>
+                    <p class="code-line">  "mcc_whitelist": [5734, 7372],</p>
+                    <p class="code-line">  "velocity_limit": 10,</p>
+                    <p class="code-line">  "expiration_time": "24h",</p>
+                    <p class="code-line">  "approval_threshold": 500</p>
+                    <p class="code-line comment">}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="two-col reverse">
+            <div class="col-code">
+                <div class="code-block animate-on-scroll">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-filename">agent.json</span>
+                    </div>
+                    <div class="code-content">
+                        <p class="code-line comment">{</p>
+                        <p class="code-line">  "agent_id": "string",</p>
+                        <p class="code-line">  "public_key": "string",</p>
+                        <p class="code-line">  "parent_org": "string",</p>
+                        <p class="code-line">  "risk_score": "float",</p>
+                        <p class="code-line highlight">  "status": "active | suspended"</p>
+                        <p class="code-line comment">}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-content animate-on-scroll">
+                <p class="section-label">// agent_identity</p>
+                <h2 class="section-title">Agent Identity Specification</h2>
+                <p class="section-desc">Each agent is defined with cryptographic identity. All transactions are signed and verifiable.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-alt">
+        <div class="two-col">
+            <div class="col-content animate-on-scroll">
+                <p class="section-label">// escrow_protocol</p>
+                <h2 class="section-title">Escrow Lifecycle</h2>
+                <p class="section-desc">Agent-to-agent programmable escrow with conditional release mechanisms.</p>
+            </div>
+
+            <div class="col-code animate-on-scroll">
+                <div class="protocol-steps" style="background: var(--bg-card); border: 1px solid var(--border); padding: 24px;">
+                    <p class="protocol-step">1. create_escrow(amount, counterparty_id, conditions)</p>
+                    <p class="protocol-step">2. Funds locked in smart contract</p>
+                    <p class="protocol-step">3. Condition verification</p>
+                    <p class="protocol-step highlight">4. release_escrow() || refund()</p>
+                </div>
+
+                <div class="conditions">
+                    <p class="conditions-label">// conditions may include:</p>
+                    <div class="conditions-list">
+                        <span class="condition-tag">hash_verification</span>
+                        <span class="condition-tag">sla_validation</span>
+                        <span class="condition-tag">oracle_confirmation</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="two-col">
+            <div class="col-content animate-on-scroll">
+                <p class="section-label">// event_architecture</p>
+                <h2 class="section-title">Event Architecture</h2>
+                <p class="section-desc">For monitoring agents. Subscribe to real-time event streams.</p>
+            </div>
+
+            <div class="events-grid animate-on-scroll">
+                <div class="events-col">
+                    <div class="event-item">agent.created</div>
+                    <div class="event-item">wallet.created</div>
+                    <div class="event-item">transaction.requested</div>
+                    <div class="event-item approved">transaction.approved</div>
+                </div>
+                <div class="events-col">
+                    <div class="event-item denied">transaction.denied</div>
+                    <div class="event-item">escrow.created</div>
+                    <div class="event-item">escrow.released</div>
+                    <div class="event-item warning">anomaly.detected</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-alt integration-section">
+        <div class="integration-header animate-on-scroll">
+            <p class="section-label">// integration_surfaces</p>
+            <h2 class="section-title">Integration Surfaces</h2>
+            <p class="section-desc" style="margin: 0 auto;">Explicit adapters for every major framework</p>
+        </div>
+
+        <div class="integration-grid animate-on-scroll">
+            <div class="integration-card">
+                <h4>OpenAI</h4>
+                <p>Tool call interface</p>
+            </div>
+            <div class="integration-card">
+                <h4>LangChain</h4>
+                <p>Tool definition</p>
+            </div>
+            <div class="integration-card">
+                <h4>MCP</h4>
+                <p>Server endpoint</p>
+            </div>
+            <div class="integration-card">
+                <h4>REST API</h4>
+                <p>Direct HTTP</p>
+            </div>
+            <div class="integration-card">
+                <h4>Webhooks</h4>
+                <p>Event subscriptions</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="two-col">
+            <div class="col-content animate-on-scroll">
+                <p class="section-label">// risk_safety</p>
+                <h2 class="section-title">Risk & Safety Guarantees</h2>
+                <p class="section-desc">Structured safety assurances. Clear, deterministic language.</p>
+            </div>
+
+            <div class="safety-list animate-on-scroll">
+                <div class="safety-item">
+                    <span class="safety-badge">[OK]</span>
+                    <span class="safety-text">No raw card exposure</span>
+                </div>
+                <div class="safety-item">
+                    <span class="safety-badge">[OK]</span>
+                    <span class="safety-text">Merchant-locked cards</span>
+                </div>
+                <div class="safety-item">
+                    <span class="safety-badge">[OK]</span>
+                    <span class="safety-text">Time-bound authorization</span>
+                </div>
+                <div class="safety-item">
+                    <span class="safety-badge">[OK]</span>
+                    <span class="safety-text">Revocable agent permissions</span>
+                </div>
+                <div class="safety-item">
+                    <span class="safety-badge">[OK]</span>
+                    <span class="safety-text">Full audit log export</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="quickstart-section" id="quickstart">
+        <div class="quickstart-header animate-on-scroll">
+            <p class="section-label">// quickstart</p>
+            <h2 class="section-title">10-Line Integration</h2>
+            <p class="section-desc" style="margin: 0 auto;">Runnable in minutes. Install SDK, create agent, execute spend.</p>
+        </div>
+
+        <div class="quickstart-code animate-on-scroll">
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <span class="code-dot red"></span>
+                        <span class="code-dot yellow"></span>
+                        <span class="code-dot green"></span>
+                    </div>
+                    <span class="code-filename">quickstart.py</span>
+                </div>
+                <div class="code-content">
+                    <p class="code-line comment"># pip install zinc-sdk</p>
+                    <p class="code-line">from zinc import Zinc, Policy</p>
+                    <p class="code-line">&nbsp;</p>
+                    <p class="code-line">zinc = Zinc(api_key="zk_...")</p>
+                    <p class="code-line">agent = zinc.create_agent(name="procurement-bot")</p>
+                    <p class="code-line">&nbsp;</p>
+                    <p class="code-line">policy = Policy(spend_limit=1000, merchant=["aws"])</p>
+                    <p class="code-line">result = agent.request_spend(amount=500, policy=policy)</p>
+                    <p class="code-line">&nbsp;</p>
+                    <p class="code-line highlight">zinc.on("transaction.approved", handler)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="two-col">
+            <div class="col-content animate-on-scroll">
+                <p class="section-label">// use_case_index</p>
+                <h2 class="section-title">Use Case Index</h2>
+                <p class="section-desc">For agent reasoning. Explicit task categories.</p>
+
+                <div style="margin-top: 24px;">
+                    <h4 class="use-case-col supported" style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 12px;">SUPPORTED:</h4>
+                    <div class="use-case-list">
+                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Travel booking</p>
+                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> SaaS subscription purchase</p>
+                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Vendor invoice settlement</p>
+                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> API procurement</p>
+                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Cross-agent service payment</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-code animate-on-scroll" style="padding-top: 60px;">
+                <h4 style="font-size: 11px; font-weight: 600; color: var(--error); margin-bottom: 12px;">UNSUPPORTED:</h4>
+                <div class="use-case-list">
+                    <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Consumer peer-to-peer</p>
+                    <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Anonymous transactions</p>
+                    <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Unrestricted financial delegation</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="schema-section" id="schema">
+        <div class="schema-header animate-on-scroll">
+            <p class="section-label">// openapi_schema</p>
+            <h2 class="section-title">OpenAPI + Schema Export</h2>
+        </div>
+
+        <div class="schema-links animate-on-scroll">
+            <a href="#" class="schema-link">openapi.yaml</a>
+            <a href="#" class="schema-link">schema.json</a>
+            <a href="#" class="schema-link muted">policy-dsl.md</a>
+            <a href="#" class="schema-link muted">github.com/zinc-sdk</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-top">
+            <a href="#" class="logo">
+                <span class="logo-symbol">></span>
+                <span class="logo-text">zinc</span>
+            </a>
+            <div class="footer-nav">
+                <a href="#">Docs</a>
+                <a href="#">API</a>
+                <a href="#">SDK</a>
+                <a href="#">Status</a>
+                <a href="#">GitHub</a>
+            </div>
+        </div>
+        <div class="footer-divider"></div>
+        <div class="footer-bottom">
+            <p class="footer-copyright">© 2026 Zinc Financial Infrastructure</p>
+            <div class="footer-legal">
+                <a href="#">Terms</a>
+                <a href="#">Privacy</a>
+                <a href="#">Security</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Scroll animation observer
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Header scroll effect
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                header.style.boxShadow = '0 1px 20px rgba(0, 0, 0, 0.5)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // Copy code functionality
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('click', function() {
+                const codeContent = this.querySelector('.code-content');
+                if (codeContent) {
+                    const text = codeContent.innerText;
+                    navigator.clipboard.writeText(text).then(() => {
+                        // Visual feedback
+                        const originalBorder = this.style.borderColor;
+                        this.style.borderColor = 'var(--accent)';
+                        setTimeout(() => {
+                            this.style.borderColor = originalBorder;
+                        }, 200);
+                    });
+                }
+            });
+            block.style.cursor = 'pointer';
+            block.title = 'Click to copy';
+        });
+
+        // Add typing effect to hero title
+        const heroTitle = document.querySelector('.hero h1');
+        if (heroTitle) {
+            heroTitle.innerHTML = heroTitle.textContent + '<span class="cursor"></span>';
+        }
+    </script>
+</body>
+</html>

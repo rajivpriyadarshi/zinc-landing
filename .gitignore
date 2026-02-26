@@ -1,0 +1,12 @@
+# Claude Code
+.claude/
+
+# Design files (optional - remove these lines if you want to include them)
+*.pen
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/

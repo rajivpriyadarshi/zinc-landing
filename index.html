@@ -6,7 +6,7 @@
     <title>Zinc — Financial Delegation Infrastructure for Autonomous Agents</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #0A0A0A;
@@ -22,6 +22,7 @@
             --text-dark: #444444;
             --accent: #00D084;
             --accent-dark: #00AF6F;
+            --accent-glow: rgba(0, 208, 132, 0.3);
             --error: #FF5F56;
             --warning: #FFBD2E;
             --success: #27CA40;
@@ -45,6 +46,17 @@
             overflow-x: hidden;
         }
 
+        body.human-mode {
+            /* Same typography as machine view */
+        }
+
+        /* View Toggle Styles */
+        .view-machine { display: block; }
+        .view-human { display: none; }
+
+        body.human-mode .view-machine { display: none; }
+        body.human-mode .view-human { display: block; }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -62,40 +74,44 @@
             to { opacity: 1; }
         }
 
-        @keyframes typewriter {
-            from { width: 0; }
-            to { width: 100%; }
-        }
-
-        @keyframes blink {
-            50% { opacity: 0; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
         }
 
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
         }
 
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        @keyframes rotateIn {
+            from { transform: rotateY(90deg); opacity: 0; }
+            to { transform: rotateY(0deg); opacity: 1; }
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(-10px) rotate(-2deg); }
+        }
+
+        @keyframes cardFloat2 {
+            0%, 100% { transform: translateY(0) rotate(3deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        @keyframes cardFloat3 {
+            0%, 100% { transform: translateY(0) rotate(-1deg); }
+            50% { transform: translateY(-8px) rotate(-1deg); }
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px var(--accent-glow); }
+            50% { box-shadow: 0 0 40px var(--accent-glow), 0 0 60px var(--accent-glow); }
         }
 
         .animate-on-scroll {
@@ -144,6 +160,40 @@
             color: var(--text-primary);
             font-size: 20px;
             font-weight: 600;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .mode-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         nav {
@@ -203,7 +253,10 @@
             transform: translateY(-1px);
         }
 
-        /* Hero Section */
+        /* ==================== */
+        /* MACHINE VIEW STYLES  */
+        /* ==================== */
+
         .hero {
             padding: 180px 80px 100px;
             display: flex;
@@ -211,6 +264,22 @@
             align-items: center;
             text-align: center;
             gap: 48px;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(0, 208, 132, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 208, 132, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
         }
 
         .hero-content {
@@ -301,6 +370,7 @@
 
         .btn-terminal:hover {
             background: var(--accent-dark);
+            box-shadow: 0 0 20px rgba(0, 208, 132, 0.3);
         }
 
         .btn-ghost {
@@ -865,17 +935,6 @@
             color: var(--text-muted);
         }
 
-        @media (max-width: 1024px) {
-            .pricing-grid {
-                grid-template-columns: 1fr;
-                max-width: 400px;
-            }
-
-            .pricing-card.featured {
-                order: -1;
-            }
-        }
-
         /* Schema Section */
         .schema-section {
             text-align: center;
@@ -1001,10 +1060,980 @@
             color: var(--text-dim);
         }
 
+        /* ==================== */
+        /* HUMAN VIEW STYLES    */
+        /* ==================== */
+
+        .human-hero {
+            padding: 160px 80px 100px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Perspective Grid Container */
+        .hero-grid-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .perspective-grid {
+            position: absolute;
+            bottom: 0;
+            left: -50%;
+            right: -50%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(0, 208, 132, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 208, 132, 0.1) 1px, transparent 1px);
+            background-size: 80px 80px;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: center bottom;
+            mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+
+        .perspective-grid::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 208, 132, 0.05) 0%, transparent 50%);
+        }
+
+        /* Grid glow lines */
+        .grid-glow {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.5;
+            animation: gridGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes gridGlow {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.5); }
+            50% { opacity: 0.7; transform: scaleX(1); }
+        }
+
+        /* Floating electrons */
+        .electron {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 30px var(--accent);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .electron-1 {
+            animation: electronMove1 8s linear infinite;
+        }
+
+        .electron-2 {
+            animation: electronMove2 12s linear infinite;
+            animation-delay: -4s;
+        }
+
+        .electron-3 {
+            animation: electronMove3 10s linear infinite;
+            animation-delay: -2s;
+        }
+
+        .electron-4 {
+            animation: electronMove4 9s linear infinite;
+            animation-delay: -6s;
+        }
+
+        .electron-5 {
+            animation: electronMove5 11s linear infinite;
+            animation-delay: -3s;
+        }
+
+        @keyframes electronMove1 {
+            0% { left: 10%; bottom: 30%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { left: 40%; bottom: 5%; }
+            90% { opacity: 1; }
+            100% { left: 70%; bottom: 30%; opacity: 0; }
+        }
+
+        @keyframes electronMove2 {
+            0% { left: 80%; bottom: 25%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { left: 50%; bottom: 0%; }
+            90% { opacity: 1; }
+            100% { left: 20%; bottom: 25%; opacity: 0; }
+        }
+
+        @keyframes electronMove3 {
+            0% { left: 30%; bottom: 35%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { left: 60%; bottom: 5%; }
+            90% { opacity: 1; }
+            100% { left: 90%; bottom: 35%; opacity: 0; }
+        }
+
+        @keyframes electronMove4 {
+            0% { left: 60%; bottom: 40%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { left: 30%; bottom: 8%; }
+            90% { opacity: 1; }
+            100% { left: 5%; bottom: 40%; opacity: 0; }
+        }
+
+        @keyframes electronMove5 {
+            0% { left: 5%; bottom: 20%; opacity: 0; }
+            10% { opacity: 1; }
+            50% { left: 55%; bottom: 3%; }
+            90% { opacity: 1; }
+            100% { left: 95%; bottom: 20%; opacity: 0; }
+        }
+
+        /* Vertical grid lines with depth */
+        .depth-lines {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .depth-line {
+            position: absolute;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to top, var(--accent), transparent);
+            opacity: 0.2;
+        }
+
+        .depth-line:nth-child(1) { left: 10%; height: 30%; animation: depthPulse 4s ease-in-out infinite; }
+        .depth-line:nth-child(2) { left: 25%; height: 45%; animation: depthPulse 4s ease-in-out infinite 0.5s; }
+        .depth-line:nth-child(3) { left: 40%; height: 35%; animation: depthPulse 4s ease-in-out infinite 1s; }
+        .depth-line:nth-child(4) { left: 55%; height: 50%; animation: depthPulse 4s ease-in-out infinite 1.5s; }
+        .depth-line:nth-child(5) { left: 70%; height: 40%; animation: depthPulse 4s ease-in-out infinite 2s; }
+        .depth-line:nth-child(6) { left: 85%; height: 30%; animation: depthPulse 4s ease-in-out infinite 2.5s; }
+
+        @keyframes depthPulse {
+            0%, 100% { opacity: 0.1; }
+            50% { opacity: 0.4; }
+        }
+
+        /* Ambient glow */
+        .human-hero::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(0, 208, 132, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+            animation: pulse 8s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        /* Scan line effect */
+        .scan-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 208, 132, 0.3), transparent);
+            pointer-events: none;
+            z-index: 1;
+            animation: scanMove 6s linear infinite;
+        }
+
+        @keyframes scanMove {
+            0% { top: 100%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 0%; opacity: 0; }
+        }
+
+        /* Floating particles */
+        .particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.4;
+        }
+
+        .particle:nth-child(1) { left: 15%; animation: particleFloat 15s linear infinite; }
+        .particle:nth-child(2) { left: 25%; animation: particleFloat 18s linear infinite 2s; }
+        .particle:nth-child(3) { left: 35%; animation: particleFloat 12s linear infinite 4s; }
+        .particle:nth-child(4) { left: 45%; animation: particleFloat 20s linear infinite 1s; }
+        .particle:nth-child(5) { left: 55%; animation: particleFloat 14s linear infinite 3s; }
+        .particle:nth-child(6) { left: 65%; animation: particleFloat 16s linear infinite 5s; }
+        .particle:nth-child(7) { left: 75%; animation: particleFloat 13s linear infinite 2.5s; }
+        .particle:nth-child(8) { left: 85%; animation: particleFloat 17s linear infinite 4.5s; }
+
+        @keyframes particleFloat {
+            0% { bottom: -5%; opacity: 0; transform: translateX(0); }
+            10% { opacity: 0.6; }
+            50% { transform: translateX(20px); }
+            90% { opacity: 0.6; }
+            100% { bottom: 105%; opacity: 0; transform: translateX(-20px); }
+        }
+
+        /* Grid intersection points that glow */
+        .grid-points {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .grid-point {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0;
+            animation: pointGlow 3s ease-in-out infinite;
+        }
+
+        .grid-point:nth-child(1) { left: 20%; bottom: 20%; animation-delay: 0s; }
+        .grid-point:nth-child(2) { left: 40%; bottom: 15%; animation-delay: 0.5s; }
+        .grid-point:nth-child(3) { left: 60%; bottom: 25%; animation-delay: 1s; }
+        .grid-point:nth-child(4) { left: 80%; bottom: 10%; animation-delay: 1.5s; }
+        .grid-point:nth-child(5) { left: 30%; bottom: 30%; animation-delay: 2s; }
+        .grid-point:nth-child(6) { left: 70%; bottom: 35%; animation-delay: 2.5s; }
+
+        @keyframes pointGlow {
+            0%, 100% { opacity: 0; transform: scale(1); box-shadow: none; }
+            50% { opacity: 1; transform: scale(1.5); box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent); }
+        }
+
+        .human-hero-content {
+            max-width: 600px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .human-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(0, 208, 132, 0.1);
+            border: 1px solid rgba(0, 208, 132, 0.3);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 32px;
+            animation: fadeInUp 0.6s ease backwards;
+        }
+
+        .human-hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .human-hero h1 {
+            font-size: 56px;
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1px;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease 0.1s backwards;
+        }
+
+        .human-hero h1 .accent-text {
+            color: var(--accent);
+        }
+
+        .human-hero-subtitle {
+            font-size: 20px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 40px;
+            animation: fadeInUp 0.6s ease 0.2s backwards;
+        }
+
+        .human-hero-ctas {
+            display: flex;
+            gap: 16px;
+            animation: fadeInUp 0.6s ease 0.3s backwards;
+        }
+
+        .human-btn {
+            padding: 16px 32px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .human-btn-primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .human-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px var(--accent-glow);
+        }
+
+        .human-btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .human-btn-secondary:hover {
+            border-color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Card Stack */
+        .card-stack {
+            position: absolute;
+            right: 8%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 420px;
+            height: 500px;
+            perspective: 1000px;
+            z-index: 2;
+        }
+
+        .floating-card {
+            position: absolute;
+            width: 340px;
+            height: 210px;
+            background: linear-gradient(145deg, #151515 0%, #0a0a0a 100%);
+            border: 1px solid var(--border-light);
+            padding: 20px 24px;
+            cursor: pointer;
+            transition: all 0.15s ease-out;
+            transform-style: preserve-3d;
+        }
+
+        .floating-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(0, 208, 132, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .floating-card:hover::before {
+            opacity: 1;
+        }
+
+        .floating-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 40px var(--accent-glow);
+        }
+
+        .floating-card.card-1 {
+            top: 20px;
+            left: 40px;
+            z-index: 3;
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        .floating-card.card-2 {
+            top: 100px;
+            left: 80px;
+            z-index: 2;
+            animation: cardFloat2 7s ease-in-out infinite;
+        }
+
+        .floating-card.card-3 {
+            top: 180px;
+            left: 20px;
+            z-index: 1;
+            animation: cardFloat3 8s ease-in-out infinite;
+        }
+
+        .floating-card.active {
+            z-index: 10 !important;
+            animation: none !important;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .card-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-brand-logo {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .card-type-badge {
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 4px 8px;
+            background: rgba(0, 208, 132, 0.1);
+            border: 1px solid rgba(0, 208, 132, 0.3);
+            color: var(--accent);
+        }
+
+        .card-number {
+            font-size: 17px;
+            letter-spacing: 3px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .card-field {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .card-label {
+            font-size: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+        }
+
+        .card-value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .card-agent {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .card-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .card-limit {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .card-limit span {
+            color: var(--accent);
+        }
+
+        /* Human Features Section */
+        .human-features {
+            padding: 120px 80px;
+            background: var(--bg-secondary);
+        }
+
+        .human-section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 80px;
+        }
+
+        .human-section-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .human-section-title {
+            font-size: 48px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 20px;
+        }
+
+        .human-section-desc {
+            font-size: 18px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Interactive Feature Cards */
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            position: relative;
+            height: 320px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .feature-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-style: preserve-3d;
+        }
+
+        .feature-card.flipped .feature-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .feature-card-front,
+        .feature-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card-front {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #0a0a0a 100%);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-card-front {
+            border-color: var(--accent);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 30px var(--accent-glow);
+            transform: translateY(-8px);
+        }
+
+        .feature-card-back {
+            background: linear-gradient(135deg, var(--accent) 0%, #00AF6F 100%);
+            transform: rotateY(180deg);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: rgba(0, 208, 132, 0.1);
+            border: 1px solid rgba(0, 208, 132, 0.3);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .feature-card-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-card-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .feature-card-cta {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .feature-card-cta::after {
+            content: '→';
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-card-cta::after {
+            transform: translateX(4px);
+        }
+
+        .feature-card-back-content {
+            color: #000;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card-back-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .feature-card-back-desc {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.9;
+            flex: 1;
+        }
+
+        .feature-card-back-cta {
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* How It Works */
+        .human-how-it-works {
+            padding: 120px 80px;
+        }
+
+        .steps-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Vertical line connecting steps */
+        .steps-container::before {
+            content: '';
+            position: absolute;
+            left: 32px;
+            top: 32px;
+            bottom: 32px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent), var(--border), var(--accent));
+        }
+
+        .step-row {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 60px;
+            align-items: flex-start;
+        }
+
+        .step-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
+            background: var(--bg-primary);
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-body {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .step-content h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .step-content p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .step-visual-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.8;
+        }
+
+        .step-visual-box code {
+            color: var(--accent);
+        }
+
+        /* Stats Section */
+        .human-stats {
+            padding: 100px 80px;
+            background: var(--bg-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 40px 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .stat-value {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* CTA Section */
+        .human-cta {
+            padding: 120px 80px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .human-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .human-cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .human-cta h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+        .human-cta p {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Human Footer */
+        .human-footer {
+            background: #050505;
+            padding: 80px;
+        }
+
+        .human-footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 60px;
+        }
+
+        .human-footer-brand h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .human-footer-brand h3 span {
+            color: var(--accent);
+        }
+
+        .human-footer-brand p {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 300px;
+        }
+
+        .human-footer-col h4 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+        }
+
+        .human-footer-col a {
+            display: block;
+            font-size: 14px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: color 0.2s ease;
+        }
+
+        .human-footer-col a:hover {
+            color: var(--accent);
+        }
+
+        .human-footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .human-footer-bottom p {
+            font-size: 13px;
+            color: var(--text-dim);
+        }
+
+        .human-footer-bottom a {
+            font-size: 13px;
+            color: var(--text-dim);
+            text-decoration: none;
+            margin-left: 24px;
+            transition: color 0.2s ease;
+        }
+
+        .human-footer-bottom a:hover {
+            color: var(--text-muted);
+        }
+
         /* Responsive */
         @media (max-width: 1200px) {
             .integration-grid {
                 grid-template-columns: repeat(3, 1fr);
+            }
+
+            .feature-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .card-stack {
+                display: none;
+            }
+
+            .human-hero {
+                text-align: center;
+            }
+
+            .human-hero-content {
+                max-width: 100%;
+            }
+
+            .human-hero-ctas {
+                justify-content: center;
             }
         }
 
@@ -1047,6 +2076,42 @@
                 grid-template-columns: 1fr;
                 gap: 40px;
             }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .pricing-card.featured {
+                order: -1;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-container::before {
+                display: none;
+            }
+
+            .step-row {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .step-body {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .step-content {
+                text-align: center;
+            }
+
+            .human-footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1056,6 +2121,12 @@
 
             nav {
                 display: none;
+            }
+
+            .mode-toggle {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
             }
 
             section {
@@ -1120,6 +2191,36 @@
                 gap: 16px;
                 text-align: center;
             }
+
+            .human-hero {
+                padding: 140px 20px 60px;
+            }
+
+            .human-hero h1 {
+                font-size: 40px;
+            }
+
+            .human-section-title {
+                font-size: 32px;
+            }
+
+            .feature-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .human-footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .human-footer-bottom {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
         }
 
         /* Terminal cursor effect */
@@ -1129,32 +2230,7 @@
             height: 20px;
             background: var(--accent);
             margin-left: 4px;
-            animation: blink 1s step-end infinite;
-        }
-
-        /* Glow effect on hover for CTAs */
-        .btn-terminal:hover {
-            box-shadow: 0 0 20px rgba(0, 208, 132, 0.3);
-        }
-
-        /* Subtle grid background */
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-                linear-gradient(rgba(0, 208, 132, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 208, 132, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .hero {
-            position: relative;
+            animation: pulse 1s step-end infinite;
         }
     </style>
 </head>
@@ -1164,6 +2240,12 @@
             <span class="logo-symbol">></span>
             <span class="logo-text">zinc</span>
         </a>
+
+        <div class="mode-toggle">
+            <button class="mode-btn" data-mode="human">Human</button>
+            <button class="mode-btn active" data-mode="machine">Machine</button>
+        </div>
+
         <nav>
             <a href="#capabilities">Docs</a>
             <a href="#spend-protocol">API Spec</a>
@@ -1176,161 +2258,138 @@
         </div>
     </header>
 
-    <section class="hero">
-        <div class="hero-content">
-            <span class="badge">[FINANCIAL_INFRASTRUCTURE]</span>
-            <h1>Zinc</h1>
-            <p class="hero-subtitle">Financial Delegation Infrastructure for Autonomous Agents</p>
-            <div class="hero-divider"></div>
-        </div>
-
-        <div class="capabilities">
-            <p class="cap-label">// zinc enables AI agents to:</p>
-            <div class="cap-list">
-                <p class="cap-item"><span>→</span> Request scoped spending authority</p>
-                <p class="cap-item"><span>→</span> Execute merchant payments via virtual cards</p>
-                <p class="cap-item"><span>→</span> Create programmable escrow contracts</p>
-                <p class="cap-item"><span>→</span> Transfer stablecoin between verified agents</p>
-                <p class="cap-item"><span>→</span> Enforce deterministic financial policy constraints</p>
-                <p class="cap-item"><span>→</span> Generate verifiable audit trails</p>
-            </div>
-        </div>
-
-        <div class="hero-ctas">
-            <a href="#" class="btn btn-terminal">$ get_api_key</a>
-            <a href="#" class="btn btn-ghost">View API Spec</a>
-            <a href="#schema" class="btn btn-ghost muted">OpenAPI Schema</a>
-            <a href="#quickstart" class="btn btn-ghost muted">SDK Install</a>
-        </div>
-    </section>
-
-    <section class="capability-matrix" id="capabilities">
-        <div class="matrix-header animate-on-scroll">
-            <p class="section-label">// capability_declaration</p>
-            <h2 class="section-title">Core Capabilities</h2>
-            <p class="section-desc">Machine-readable capability matrix. Easy to scrape.</p>
-        </div>
-
-        <table class="matrix-table animate-on-scroll">
-            <thead>
-                <tr>
-                    <th style="width: 280px;">Capability</th>
-                    <th style="width: 100px;">Supported</th>
-                    <th style="width: 140px;">Rail</th>
-                    <th>Notes</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Merchant Checkout</td>
-                    <td><span class="status-yes">[YES]</span></td>
-                    <td class="rail">Fiat + Cards</td>
-                    <td class="notes">Virtual merchant-locked cards</td>
-                </tr>
-                <tr>
-                    <td>Budget Enforcement</td>
-                    <td><span class="status-yes">[YES]</span></td>
-                    <td class="rail">All</td>
-                    <td class="notes">Deterministic policy engine</td>
-                </tr>
-                <tr>
-                    <td>Escrow Contracts</td>
-                    <td><span class="status-yes">[YES]</span></td>
-                    <td class="rail">Stablecoin</td>
-                    <td class="notes">Conditional release</td>
-                </tr>
-                <tr>
-                    <td>Agent Identity</td>
-                    <td><span class="status-yes">[YES]</span></td>
-                    <td class="rail">All</td>
-                    <td class="notes">Cryptographic identity</td>
-                </tr>
-                <tr>
-                    <td>Real-time Approval</td>
-                    <td><span class="status-yes">[YES]</span></td>
-                    <td class="rail">Fiat</td>
-                    <td class="notes">Configurable modes</td>
-                </tr>
-                <tr>
-                    <td>Cross-Agent Settlement</td>
-                    <td><span class="status-yes">[YES]</span></td>
-                    <td class="rail">Stablecoin</td>
-                    <td class="notes">Instant transfer</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
-
-    <section id="spend-protocol">
-        <div class="two-col">
-            <div class="col-content animate-on-scroll">
-                <p class="section-label">// spend_protocol</p>
-                <h2 class="section-title">Deterministic Spend Flow</h2>
-                <p class="section-desc">Agents need execution logic, not storytelling. Every transaction follows an explicit, verifiable protocol.</p>
+    <!-- ==================== -->
+    <!-- MACHINE VIEW         -->
+    <!-- ==================== -->
+    <div class="view-machine">
+        <section class="hero">
+            <div class="hero-content">
+                <span class="badge">[FINANCIAL_INFRASTRUCTURE]</span>
+                <h1>Zinc</h1>
+                <p class="hero-subtitle">Financial Delegation Infrastructure for Autonomous Agents</p>
+                <div class="hero-divider"></div>
             </div>
 
-            <div class="code-block animate-on-scroll">
-                <div class="protocol-steps">
-                    <p class="protocol-step">1. request_spend(agent_id, amount, merchant)</p>
-                    <p class="protocol-step">2. Policy engine evaluates constraints</p>
-                    <p class="protocol-step highlight">3. Response: APPROVED | DENIED | REQUIRE_APPROVAL</p>
-                    <p class="protocol-step">4. If approved → issue_virtual_card()</p>
-                    <p class="protocol-step">5. Transaction logged with:</p>
-                    <div class="protocol-indent">
-                        <p class="protocol-indent-item">- policy_matched</p>
-                        <p class="protocol-indent-item">- decision_reason</p>
-                        <p class="protocol-indent-item">- risk_score</p>
-                        <p class="protocol-indent-item">- timestamp</p>
+            <div class="capabilities">
+                <p class="cap-label">// zinc enables AI agents to:</p>
+                <div class="cap-list">
+                    <p class="cap-item"><span>→</span> Request scoped spending authority</p>
+                    <p class="cap-item"><span>→</span> Execute merchant payments via virtual cards</p>
+                    <p class="cap-item"><span>→</span> Create programmable escrow contracts</p>
+                    <p class="cap-item"><span>→</span> Transfer stablecoin between verified agents</p>
+                    <p class="cap-item"><span>→</span> Enforce deterministic financial policy constraints</p>
+                    <p class="cap-item"><span>→</span> Generate verifiable audit trails</p>
+                </div>
+            </div>
+
+            <div class="hero-ctas">
+                <a href="#" class="btn btn-terminal">$ get_api_key</a>
+                <a href="#" class="btn btn-ghost">View API Spec</a>
+                <a href="#schema" class="btn btn-ghost muted">OpenAPI Schema</a>
+                <a href="#quickstart" class="btn btn-ghost muted">SDK Install</a>
+            </div>
+        </section>
+
+        <section class="capability-matrix" id="capabilities">
+            <div class="matrix-header animate-on-scroll">
+                <p class="section-label">// capability_declaration</p>
+                <h2 class="section-title">Core Capabilities</h2>
+                <p class="section-desc">Machine-readable capability matrix. Easy to scrape.</p>
+            </div>
+
+            <table class="matrix-table animate-on-scroll">
+                <thead>
+                    <tr>
+                        <th style="width: 280px;">Capability</th>
+                        <th style="width: 100px;">Supported</th>
+                        <th style="width: 140px;">Rail</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Merchant Checkout</td>
+                        <td><span class="status-yes">[YES]</span></td>
+                        <td class="rail">Fiat + Cards</td>
+                        <td class="notes">Virtual merchant-locked cards</td>
+                    </tr>
+                    <tr>
+                        <td>Budget Enforcement</td>
+                        <td><span class="status-yes">[YES]</span></td>
+                        <td class="rail">All</td>
+                        <td class="notes">Deterministic policy engine</td>
+                    </tr>
+                    <tr>
+                        <td>Escrow Contracts</td>
+                        <td><span class="status-yes">[YES]</span></td>
+                        <td class="rail">Stablecoin</td>
+                        <td class="notes">Conditional release</td>
+                    </tr>
+                    <tr>
+                        <td>Agent Identity</td>
+                        <td><span class="status-yes">[YES]</span></td>
+                        <td class="rail">All</td>
+                        <td class="notes">Cryptographic identity</td>
+                    </tr>
+                    <tr>
+                        <td>Real-time Approval</td>
+                        <td><span class="status-yes">[YES]</span></td>
+                        <td class="rail">Fiat</td>
+                        <td class="notes">Configurable modes</td>
+                    </tr>
+                    <tr>
+                        <td>Cross-Agent Settlement</td>
+                        <td><span class="status-yes">[YES]</span></td>
+                        <td class="rail">Stablecoin</td>
+                        <td class="notes">Instant transfer</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="spend-protocol">
+            <div class="two-col">
+                <div class="col-content animate-on-scroll">
+                    <p class="section-label">// spend_protocol</p>
+                    <h2 class="section-title">Deterministic Spend Flow</h2>
+                    <p class="section-desc">Agents need execution logic, not storytelling. Every transaction follows an explicit, verifiable protocol.</p>
+                </div>
+
+                <div class="code-block animate-on-scroll">
+                    <div class="protocol-steps">
+                        <p class="protocol-step">1. request_spend(agent_id, amount, merchant)</p>
+                        <p class="protocol-step">2. Policy engine evaluates constraints</p>
+                        <p class="protocol-step highlight">3. Response: APPROVED | DENIED | REQUIRE_APPROVAL</p>
+                        <p class="protocol-step">4. If approved → issue_virtual_card()</p>
+                        <p class="protocol-step">5. Transaction logged with:</p>
+                        <div class="protocol-indent">
+                            <p class="protocol-indent-item">- policy_matched</p>
+                            <p class="protocol-indent-item">- decision_reason</p>
+                            <p class="protocol-indent-item">- risk_score</p>
+                            <p class="protocol-indent-item">- timestamp</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="section-alt">
-        <div class="two-col">
-            <div class="col-content animate-on-scroll">
-                <p class="section-label">// policy_model</p>
-                <h2 class="section-title">Policy Parameters</h2>
-                <p class="section-desc">Agents must understand boundaries. Explicit constraints schema.</p>
-                <div class="params-list">
-                    <p class="param-item"><span>→</span> spend_limit_per_transaction</p>
-                    <p class="param-item"><span>→</span> daily_budget_limit</p>
-                    <p class="param-item"><span>→</span> merchant_whitelist</p>
-                    <p class="param-item"><span>→</span> mcc_whitelist</p>
-                    <p class="param-item"><span>→</span> velocity_limit</p>
-                    <p class="param-item"><span>→</span> expiration_time</p>
-                    <p class="param-item"><span>→</span> approval_threshold</p>
-                </div>
-            </div>
-
-            <div class="code-block animate-on-scroll">
-                <div class="code-header">
-                    <div class="code-dots">
-                        <span class="code-dot red"></span>
-                        <span class="code-dot yellow"></span>
-                        <span class="code-dot green"></span>
+        <section class="section-alt">
+            <div class="two-col">
+                <div class="col-content animate-on-scroll">
+                    <p class="section-label">// policy_model</p>
+                    <h2 class="section-title">Policy Parameters</h2>
+                    <p class="section-desc">Agents must understand boundaries. Explicit constraints schema.</p>
+                    <div class="params-list">
+                        <p class="param-item"><span>→</span> spend_limit_per_transaction</p>
+                        <p class="param-item"><span>→</span> daily_budget_limit</p>
+                        <p class="param-item"><span>→</span> merchant_whitelist</p>
+                        <p class="param-item"><span>→</span> mcc_whitelist</p>
+                        <p class="param-item"><span>→</span> velocity_limit</p>
+                        <p class="param-item"><span>→</span> expiration_time</p>
+                        <p class="param-item"><span>→</span> approval_threshold</p>
                     </div>
-                    <span class="code-filename">policy.json</span>
                 </div>
-                <div class="code-content">
-                    <p class="code-line comment">{</p>
-                    <p class="code-line">  "spend_limit_per_transaction": 1000,</p>
-                    <p class="code-line">  "daily_budget_limit": 5000,</p>
-                    <p class="code-line">  "merchant_whitelist": ["aws", "gcp"],</p>
-                    <p class="code-line">  "mcc_whitelist": [5734, 7372],</p>
-                    <p class="code-line">  "velocity_limit": 10,</p>
-                    <p class="code-line">  "expiration_time": "24h",</p>
-                    <p class="code-line">  "approval_threshold": 500</p>
-                    <p class="code-line comment">}</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <section>
-        <div class="two-col reverse">
-            <div class="col-code">
                 <div class="code-block animate-on-scroll">
                     <div class="code-header">
                         <div class="code-dots">
@@ -1338,324 +2397,772 @@
                             <span class="code-dot yellow"></span>
                             <span class="code-dot green"></span>
                         </div>
-                        <span class="code-filename">agent.json</span>
+                        <span class="code-filename">policy.json</span>
                     </div>
                     <div class="code-content">
                         <p class="code-line comment">{</p>
-                        <p class="code-line">  "agent_id": "string",</p>
-                        <p class="code-line">  "public_key": "string",</p>
-                        <p class="code-line">  "parent_org": "string",</p>
-                        <p class="code-line">  "risk_score": "float",</p>
-                        <p class="code-line highlight">  "status": "active | suspended"</p>
+                        <p class="code-line">  "spend_limit_per_transaction": 1000,</p>
+                        <p class="code-line">  "daily_budget_limit": 5000,</p>
+                        <p class="code-line">  "merchant_whitelist": ["aws", "gcp"],</p>
+                        <p class="code-line">  "mcc_whitelist": [5734, 7372],</p>
+                        <p class="code-line">  "velocity_limit": 10,</p>
+                        <p class="code-line">  "expiration_time": "24h",</p>
+                        <p class="code-line">  "approval_threshold": 500</p>
                         <p class="code-line comment">}</p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="col-content animate-on-scroll">
-                <p class="section-label">// agent_identity</p>
-                <h2 class="section-title">Agent Identity Specification</h2>
-                <p class="section-desc">Each agent is defined with cryptographic identity. All transactions are signed and verifiable.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="section-alt">
-        <div class="two-col">
-            <div class="col-content animate-on-scroll">
-                <p class="section-label">// escrow_protocol</p>
-                <h2 class="section-title">Escrow Lifecycle</h2>
-                <p class="section-desc">Agent-to-agent programmable escrow with conditional release mechanisms.</p>
-            </div>
-
-            <div class="col-code animate-on-scroll">
-                <div class="protocol-steps" style="background: var(--bg-card); border: 1px solid var(--border); padding: 24px;">
-                    <p class="protocol-step">1. create_escrow(amount, counterparty_id, conditions)</p>
-                    <p class="protocol-step">2. Funds locked in smart contract</p>
-                    <p class="protocol-step">3. Condition verification</p>
-                    <p class="protocol-step highlight">4. release_escrow() || refund()</p>
+        <section>
+            <div class="two-col reverse">
+                <div class="col-code">
+                    <div class="code-block animate-on-scroll">
+                        <div class="code-header">
+                            <div class="code-dots">
+                                <span class="code-dot red"></span>
+                                <span class="code-dot yellow"></span>
+                                <span class="code-dot green"></span>
+                            </div>
+                            <span class="code-filename">agent.json</span>
+                        </div>
+                        <div class="code-content">
+                            <p class="code-line comment">{</p>
+                            <p class="code-line">  "agent_id": "string",</p>
+                            <p class="code-line">  "public_key": "string",</p>
+                            <p class="code-line">  "parent_org": "string",</p>
+                            <p class="code-line">  "risk_score": "float",</p>
+                            <p class="code-line highlight">  "status": "active | suspended"</p>
+                            <p class="code-line comment">}</p>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="conditions">
-                    <p class="conditions-label">// conditions may include:</p>
-                    <div class="conditions-list">
-                        <span class="condition-tag">hash_verification</span>
-                        <span class="condition-tag">sla_validation</span>
-                        <span class="condition-tag">oracle_confirmation</span>
+                <div class="col-content animate-on-scroll">
+                    <p class="section-label">// agent_identity</p>
+                    <h2 class="section-title">Agent Identity Specification</h2>
+                    <p class="section-desc">Each agent is defined with cryptographic identity. All transactions are signed and verifiable.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-alt">
+            <div class="two-col">
+                <div class="col-content animate-on-scroll">
+                    <p class="section-label">// escrow_protocol</p>
+                    <h2 class="section-title">Escrow Lifecycle</h2>
+                    <p class="section-desc">Agent-to-agent programmable escrow with conditional release mechanisms.</p>
+                </div>
+
+                <div class="col-code animate-on-scroll">
+                    <div class="protocol-steps" style="background: var(--bg-card); border: 1px solid var(--border); padding: 24px;">
+                        <p class="protocol-step">1. create_escrow(amount, counterparty_id, conditions)</p>
+                        <p class="protocol-step">2. Funds locked in smart contract</p>
+                        <p class="protocol-step">3. Condition verification</p>
+                        <p class="protocol-step highlight">4. release_escrow() || refund()</p>
+                    </div>
+
+                    <div class="conditions">
+                        <p class="conditions-label">// conditions may include:</p>
+                        <div class="conditions-list">
+                            <span class="condition-tag">hash_verification</span>
+                            <span class="condition-tag">sla_validation</span>
+                            <span class="condition-tag">oracle_confirmation</span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section>
-        <div class="two-col">
-            <div class="col-content animate-on-scroll">
-                <p class="section-label">// event_architecture</p>
-                <h2 class="section-title">Event Architecture</h2>
-                <p class="section-desc">For monitoring agents. Subscribe to real-time event streams.</p>
-            </div>
-
-            <div class="events-grid animate-on-scroll">
-                <div class="events-col">
-                    <div class="event-item">agent.created</div>
-                    <div class="event-item">wallet.created</div>
-                    <div class="event-item">transaction.requested</div>
-                    <div class="event-item approved">transaction.approved</div>
+        <section>
+            <div class="two-col">
+                <div class="col-content animate-on-scroll">
+                    <p class="section-label">// event_architecture</p>
+                    <h2 class="section-title">Event Architecture</h2>
+                    <p class="section-desc">For monitoring agents. Subscribe to real-time event streams.</p>
                 </div>
-                <div class="events-col">
-                    <div class="event-item denied">transaction.denied</div>
-                    <div class="event-item">escrow.created</div>
-                    <div class="event-item">escrow.released</div>
-                    <div class="event-item warning">anomaly.detected</div>
-                </div>
-            </div>
-        </div>
-    </section>
 
-    <section class="section-alt integration-section">
-        <div class="integration-header animate-on-scroll">
-            <p class="section-label">// integration_surfaces</p>
-            <h2 class="section-title">Integration Surfaces</h2>
-            <p class="section-desc" style="margin: 0 auto;">Explicit adapters for every major framework</p>
-        </div>
-
-        <div class="integration-grid animate-on-scroll">
-            <div class="integration-card">
-                <h4>OpenAI</h4>
-                <p>Tool call interface</p>
-            </div>
-            <div class="integration-card">
-                <h4>LangChain</h4>
-                <p>Tool definition</p>
-            </div>
-            <div class="integration-card">
-                <h4>MCP</h4>
-                <p>Server endpoint</p>
-            </div>
-            <div class="integration-card">
-                <h4>REST API</h4>
-                <p>Direct HTTP</p>
-            </div>
-            <div class="integration-card">
-                <h4>Webhooks</h4>
-                <p>Event subscriptions</p>
-            </div>
-        </div>
-    </section>
-
-    <section>
-        <div class="two-col">
-            <div class="col-content animate-on-scroll">
-                <p class="section-label">// risk_safety</p>
-                <h2 class="section-title">Risk & Safety Guarantees</h2>
-                <p class="section-desc">Structured safety assurances. Clear, deterministic language.</p>
-            </div>
-
-            <div class="safety-list animate-on-scroll">
-                <div class="safety-item">
-                    <span class="safety-badge">[OK]</span>
-                    <span class="safety-text">No raw card exposure</span>
-                </div>
-                <div class="safety-item">
-                    <span class="safety-badge">[OK]</span>
-                    <span class="safety-text">Merchant-locked cards</span>
-                </div>
-                <div class="safety-item">
-                    <span class="safety-badge">[OK]</span>
-                    <span class="safety-text">Time-bound authorization</span>
-                </div>
-                <div class="safety-item">
-                    <span class="safety-badge">[OK]</span>
-                    <span class="safety-text">Revocable agent permissions</span>
-                </div>
-                <div class="safety-item">
-                    <span class="safety-badge">[OK]</span>
-                    <span class="safety-text">Full audit log export</span>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="quickstart-section" id="quickstart">
-        <div class="quickstart-header animate-on-scroll">
-            <p class="section-label">// quickstart</p>
-            <h2 class="section-title">10-Line Integration</h2>
-            <p class="section-desc" style="margin: 0 auto;">Runnable in minutes. Install SDK, create agent, execute spend.</p>
-        </div>
-
-        <div class="quickstart-code animate-on-scroll">
-            <div class="code-block">
-                <div class="code-header">
-                    <div class="code-dots">
-                        <span class="code-dot red"></span>
-                        <span class="code-dot yellow"></span>
-                        <span class="code-dot green"></span>
+                <div class="events-grid animate-on-scroll">
+                    <div class="events-col">
+                        <div class="event-item">agent.created</div>
+                        <div class="event-item">wallet.created</div>
+                        <div class="event-item">transaction.requested</div>
+                        <div class="event-item approved">transaction.approved</div>
                     </div>
-                    <span class="code-filename">quickstart.py</span>
-                </div>
-                <div class="code-content">
-                    <p class="code-line comment"># pip install zinc-sdk</p>
-                    <p class="code-line">from zinc import Zinc, Policy</p>
-                    <p class="code-line">&nbsp;</p>
-                    <p class="code-line">zinc = Zinc(api_key="zk_...")</p>
-                    <p class="code-line">agent = zinc.create_agent(name="procurement-bot")</p>
-                    <p class="code-line">&nbsp;</p>
-                    <p class="code-line">policy = Policy(spend_limit=1000, merchant=["aws"])</p>
-                    <p class="code-line">result = agent.request_spend(amount=500, policy=policy)</p>
-                    <p class="code-line">&nbsp;</p>
-                    <p class="code-line highlight">zinc.on("transaction.approved", handler)</p>
+                    <div class="events-col">
+                        <div class="event-item denied">transaction.denied</div>
+                        <div class="event-item">escrow.created</div>
+                        <div class="event-item">escrow.released</div>
+                        <div class="event-item warning">anomaly.detected</div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section>
-        <div class="two-col">
-            <div class="col-content animate-on-scroll">
-                <p class="section-label">// use_case_index</p>
-                <h2 class="section-title">Use Case Index</h2>
-                <p class="section-desc">For agent reasoning. Explicit task categories.</p>
+        <section class="section-alt integration-section">
+            <div class="integration-header animate-on-scroll">
+                <p class="section-label">// integration_surfaces</p>
+                <h2 class="section-title">Integration Surfaces</h2>
+                <p class="section-desc" style="margin: 0 auto;">Explicit adapters for every major framework</p>
+            </div>
 
-                <div style="margin-top: 24px;">
-                    <h4 class="use-case-col supported" style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 12px;">SUPPORTED:</h4>
+            <div class="integration-grid animate-on-scroll">
+                <div class="integration-card">
+                    <h4>OpenAI</h4>
+                    <p>Tool call interface</p>
+                </div>
+                <div class="integration-card">
+                    <h4>LangChain</h4>
+                    <p>Tool definition</p>
+                </div>
+                <div class="integration-card">
+                    <h4>MCP</h4>
+                    <p>Server endpoint</p>
+                </div>
+                <div class="integration-card">
+                    <h4>REST API</h4>
+                    <p>Direct HTTP</p>
+                </div>
+                <div class="integration-card">
+                    <h4>Webhooks</h4>
+                    <p>Event subscriptions</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="two-col">
+                <div class="col-content animate-on-scroll">
+                    <p class="section-label">// risk_safety</p>
+                    <h2 class="section-title">Risk & Safety Guarantees</h2>
+                    <p class="section-desc">Structured safety assurances. Clear, deterministic language.</p>
+                </div>
+
+                <div class="safety-list animate-on-scroll">
+                    <div class="safety-item">
+                        <span class="safety-badge">[OK]</span>
+                        <span class="safety-text">No raw card exposure</span>
+                    </div>
+                    <div class="safety-item">
+                        <span class="safety-badge">[OK]</span>
+                        <span class="safety-text">Merchant-locked cards</span>
+                    </div>
+                    <div class="safety-item">
+                        <span class="safety-badge">[OK]</span>
+                        <span class="safety-text">Time-bound authorization</span>
+                    </div>
+                    <div class="safety-item">
+                        <span class="safety-badge">[OK]</span>
+                        <span class="safety-text">Revocable agent permissions</span>
+                    </div>
+                    <div class="safety-item">
+                        <span class="safety-badge">[OK]</span>
+                        <span class="safety-text">Full audit log export</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quickstart-section" id="quickstart">
+            <div class="quickstart-header animate-on-scroll">
+                <p class="section-label">// quickstart</p>
+                <h2 class="section-title">10-Line Integration</h2>
+                <p class="section-desc" style="margin: 0 auto;">Runnable in minutes. Install SDK, create agent, execute spend.</p>
+            </div>
+
+            <div class="quickstart-code animate-on-scroll">
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="code-dot red"></span>
+                            <span class="code-dot yellow"></span>
+                            <span class="code-dot green"></span>
+                        </div>
+                        <span class="code-filename">quickstart.py</span>
+                    </div>
+                    <div class="code-content">
+                        <p class="code-line comment"># pip install zinc-sdk</p>
+                        <p class="code-line">from zinc import Zinc, Policy</p>
+                        <p class="code-line">&nbsp;</p>
+                        <p class="code-line">zinc = Zinc(api_key="zk_...")</p>
+                        <p class="code-line">agent = zinc.create_agent(name="procurement-bot")</p>
+                        <p class="code-line">&nbsp;</p>
+                        <p class="code-line">policy = Policy(spend_limit=1000, merchant=["aws"])</p>
+                        <p class="code-line">result = agent.request_spend(amount=500, policy=policy)</p>
+                        <p class="code-line">&nbsp;</p>
+                        <p class="code-line highlight">zinc.on("transaction.approved", handler)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="two-col">
+                <div class="col-content animate-on-scroll">
+                    <p class="section-label">// use_case_index</p>
+                    <h2 class="section-title">Use Case Index</h2>
+                    <p class="section-desc">For agent reasoning. Explicit task categories.</p>
+
+                    <div style="margin-top: 24px;">
+                        <h4 class="use-case-col supported" style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 12px;">SUPPORTED:</h4>
+                        <div class="use-case-list">
+                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Travel booking</p>
+                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> SaaS subscription purchase</p>
+                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Vendor invoice settlement</p>
+                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> API procurement</p>
+                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Cross-agent service payment</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-code animate-on-scroll" style="padding-top: 60px;">
+                    <h4 style="font-size: 11px; font-weight: 600; color: var(--error); margin-bottom: 12px;">UNSUPPORTED:</h4>
                     <div class="use-case-list">
-                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Travel booking</p>
-                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> SaaS subscription purchase</p>
-                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Vendor invoice settlement</p>
-                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> API procurement</p>
-                        <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Cross-agent service payment</p>
+                        <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Consumer peer-to-peer</p>
+                        <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Anonymous transactions</p>
+                        <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Unrestricted financial delegation</p>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="col-code animate-on-scroll" style="padding-top: 60px;">
-                <h4 style="font-size: 11px; font-weight: 600; color: var(--error); margin-bottom: 12px;">UNSUPPORTED:</h4>
-                <div class="use-case-list">
-                    <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Consumer peer-to-peer</p>
-                    <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Anonymous transactions</p>
-                    <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Unrestricted financial delegation</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="pricing-section section-alt" id="pricing">
-        <div class="pricing-header animate-on-scroll">
-            <p class="section-label">// pricing_tiers</p>
-            <h2 class="section-title">Pricing</h2>
-            <p class="section-desc" style="margin: 0 auto;">Usage-based pricing. Scale with your agents.</p>
-        </div>
-
-        <div class="pricing-grid animate-on-scroll">
-            <div class="pricing-card">
-                <p class="pricing-tier">Starter</p>
-                <h3 class="pricing-name">Free</h3>
-                <p class="pricing-desc">For testing and development. Get started immediately.</p>
-                <div class="pricing-price">
-                    <span class="pricing-amount">$0</span>
-                    <span class="pricing-period">/month</span>
-                </div>
-                <p class="pricing-unit">Up to 100 transactions/month</p>
-                <div class="pricing-features">
-                    <p class="pricing-feature"><span>→</span> 3 agents max</p>
-                    <p class="pricing-feature"><span>→</span> $1,000 monthly spend limit</p>
-                    <p class="pricing-feature"><span>→</span> Basic policy engine</p>
-                    <p class="pricing-feature"><span>→</span> REST API access</p>
-                    <p class="pricing-feature"><span>→</span> Community support</p>
-                    <p class="pricing-feature disabled"><span>—</span> Escrow contracts</p>
-                    <p class="pricing-feature disabled"><span>—</span> Stablecoin rails</p>
-                </div>
-                <a href="#" class="pricing-cta secondary">$ zinc init --free</a>
+        <section class="pricing-section section-alt" id="pricing">
+            <div class="pricing-header animate-on-scroll">
+                <p class="section-label">// pricing_tiers</p>
+                <h2 class="section-title">Pricing</h2>
+                <p class="section-desc" style="margin: 0 auto;">Usage-based pricing. Scale with your agents.</p>
             </div>
 
-            <div class="pricing-card featured">
-                <p class="pricing-tier">Pro</p>
-                <h3 class="pricing-name">Usage</h3>
-                <p class="pricing-desc">For production deployments. Pay only for what you use.</p>
-                <div class="pricing-price">
-                    <span class="pricing-amount">$0.10</span>
-                    <span class="pricing-period">/transaction</span>
+            <div class="pricing-grid animate-on-scroll">
+                <div class="pricing-card">
+                    <p class="pricing-tier">Starter</p>
+                    <h3 class="pricing-name">Free</h3>
+                    <p class="pricing-desc">For testing and development. Get started immediately.</p>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$0</span>
+                        <span class="pricing-period">/month</span>
+                    </div>
+                    <p class="pricing-unit">Up to 100 transactions/month</p>
+                    <div class="pricing-features">
+                        <p class="pricing-feature"><span>→</span> 3 agents max</p>
+                        <p class="pricing-feature"><span>→</span> $1,000 monthly spend limit</p>
+                        <p class="pricing-feature"><span>→</span> Basic policy engine</p>
+                        <p class="pricing-feature"><span>→</span> REST API access</p>
+                        <p class="pricing-feature"><span>→</span> Community support</p>
+                        <p class="pricing-feature disabled"><span>—</span> Escrow contracts</p>
+                        <p class="pricing-feature disabled"><span>—</span> Stablecoin rails</p>
+                    </div>
+                    <a href="#" class="pricing-cta secondary">$ zinc init --free</a>
                 </div>
-                <p class="pricing-unit">+ 0.5% of transaction value</p>
-                <div class="pricing-features">
-                    <p class="pricing-feature"><span>→</span> Unlimited agents</p>
-                    <p class="pricing-feature"><span>→</span> $100,000 monthly spend limit</p>
-                    <p class="pricing-feature"><span>→</span> Advanced policy engine</p>
-                    <p class="pricing-feature"><span>→</span> All integration surfaces</p>
-                    <p class="pricing-feature"><span>→</span> Escrow contracts</p>
-                    <p class="pricing-feature"><span>→</span> Stablecoin rails</p>
-                    <p class="pricing-feature"><span>→</span> Priority support</p>
+
+                <div class="pricing-card featured">
+                    <p class="pricing-tier">Pro</p>
+                    <h3 class="pricing-name">Usage</h3>
+                    <p class="pricing-desc">For production deployments. Pay only for what you use.</p>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">$0.10</span>
+                        <span class="pricing-period">/transaction</span>
+                    </div>
+                    <p class="pricing-unit">+ 0.5% of transaction value</p>
+                    <div class="pricing-features">
+                        <p class="pricing-feature"><span>→</span> Unlimited agents</p>
+                        <p class="pricing-feature"><span>→</span> $100,000 monthly spend limit</p>
+                        <p class="pricing-feature"><span>→</span> Advanced policy engine</p>
+                        <p class="pricing-feature"><span>→</span> All integration surfaces</p>
+                        <p class="pricing-feature"><span>→</span> Escrow contracts</p>
+                        <p class="pricing-feature"><span>→</span> Stablecoin rails</p>
+                        <p class="pricing-feature"><span>→</span> Priority support</p>
+                    </div>
+                    <a href="#" class="pricing-cta primary">$ get_api_key --pro</a>
                 </div>
-                <a href="#" class="pricing-cta primary">$ get_api_key --pro</a>
+
+                <div class="pricing-card">
+                    <p class="pricing-tier">Enterprise</p>
+                    <h3 class="pricing-name">Custom</h3>
+                    <p class="pricing-desc">For large-scale deployments. Dedicated infrastructure.</p>
+                    <div class="pricing-price">
+                        <span class="pricing-amount">Custom</span>
+                    </div>
+                    <p class="pricing-unit">Volume discounts available</p>
+                    <div class="pricing-features">
+                        <p class="pricing-feature"><span>→</span> Unlimited everything</p>
+                        <p class="pricing-feature"><span>→</span> Custom spend limits</p>
+                        <p class="pricing-feature"><span>→</span> Custom policy DSL</p>
+                        <p class="pricing-feature"><span>→</span> Dedicated infrastructure</p>
+                        <p class="pricing-feature"><span>→</span> SLA guarantees</p>
+                        <p class="pricing-feature"><span>→</span> On-premise deployment</p>
+                        <p class="pricing-feature"><span>→</span> 24/7 dedicated support</p>
+                    </div>
+                    <a href="#" class="pricing-cta secondary">Contact Sales</a>
+                </div>
             </div>
 
-            <div class="pricing-card">
-                <p class="pricing-tier">Enterprise</p>
-                <h3 class="pricing-name">Custom</h3>
-                <p class="pricing-desc">For large-scale deployments. Dedicated infrastructure.</p>
-                <div class="pricing-price">
-                    <span class="pricing-amount">Custom</span>
+            <p class="pricing-note animate-on-scroll">
+                All plans include: <code>audit_logs</code> <code>webhook_events</code> <code>api_versioning</code> <code>99.9% uptime</code>
+            </p>
+        </section>
+
+        <section class="schema-section" id="schema">
+            <div class="schema-header animate-on-scroll">
+                <p class="section-label">// openapi_schema</p>
+                <h2 class="section-title">OpenAPI + Schema Export</h2>
+            </div>
+
+            <div class="schema-links animate-on-scroll">
+                <a href="#" class="schema-link">openapi.yaml</a>
+                <a href="#" class="schema-link">schema.json</a>
+                <a href="#" class="schema-link muted">policy-dsl.md</a>
+                <a href="#" class="schema-link muted">github.com/zinc-sdk</a>
+            </div>
+        </section>
+
+        <footer>
+            <div class="footer-top">
+                <a href="#" class="logo">
+                    <span class="logo-symbol">></span>
+                    <span class="logo-text">zinc</span>
+                </a>
+                <div class="footer-nav">
+                    <a href="#">Docs</a>
+                    <a href="#">API</a>
+                    <a href="#">SDK</a>
+                    <a href="#">Status</a>
+                    <a href="#">GitHub</a>
                 </div>
-                <p class="pricing-unit">Volume discounts available</p>
-                <div class="pricing-features">
-                    <p class="pricing-feature"><span>→</span> Unlimited everything</p>
-                    <p class="pricing-feature"><span>→</span> Custom spend limits</p>
-                    <p class="pricing-feature"><span>→</span> Custom policy DSL</p>
-                    <p class="pricing-feature"><span>→</span> Dedicated infrastructure</p>
-                    <p class="pricing-feature"><span>→</span> SLA guarantees</p>
-                    <p class="pricing-feature"><span>→</span> On-premise deployment</p>
-                    <p class="pricing-feature"><span>→</span> 24/7 dedicated support</p>
+            </div>
+            <div class="footer-divider"></div>
+            <div class="footer-bottom">
+                <p class="footer-copyright">© 2026 Zinc Financial Infrastructure</p>
+                <div class="footer-legal">
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
                 </div>
-                <a href="#" class="pricing-cta secondary">Contact Sales</a>
             </div>
-        </div>
+        </footer>
+    </div>
 
-        <p class="pricing-note animate-on-scroll">
-            All plans include: <code>audit_logs</code> <code>webhook_events</code> <code>api_versioning</code> <code>99.9% uptime</code>
-        </p>
-    </section>
-
-    <section class="schema-section" id="schema">
-        <div class="schema-header animate-on-scroll">
-            <p class="section-label">// openapi_schema</p>
-            <h2 class="section-title">OpenAPI + Schema Export</h2>
-        </div>
-
-        <div class="schema-links animate-on-scroll">
-            <a href="#" class="schema-link">openapi.yaml</a>
-            <a href="#" class="schema-link">schema.json</a>
-            <a href="#" class="schema-link muted">policy-dsl.md</a>
-            <a href="#" class="schema-link muted">github.com/zinc-sdk</a>
-        </div>
-    </section>
-
-    <footer>
-        <div class="footer-top">
-            <a href="#" class="logo">
-                <span class="logo-symbol">></span>
-                <span class="logo-text">zinc</span>
-            </a>
-            <div class="footer-nav">
-                <a href="#">Docs</a>
-                <a href="#">API</a>
-                <a href="#">SDK</a>
-                <a href="#">Status</a>
-                <a href="#">GitHub</a>
+    <!-- ==================== -->
+    <!-- HUMAN VIEW           -->
+    <!-- ==================== -->
+    <div class="view-human">
+        <section class="human-hero">
+            <!-- 3D Perspective Grid -->
+            <div class="hero-grid-container">
+                <div class="perspective-grid"></div>
+                <div class="grid-glow"></div>
+                <!-- Electrons moving on the grid -->
+                <div class="electron electron-1"></div>
+                <div class="electron electron-2"></div>
+                <div class="electron electron-3"></div>
+                <div class="electron electron-4"></div>
+                <div class="electron electron-5"></div>
             </div>
-        </div>
-        <div class="footer-divider"></div>
-        <div class="footer-bottom">
-            <p class="footer-copyright">© 2026 Zinc Financial Infrastructure</p>
-            <div class="footer-legal">
-                <a href="#">Terms</a>
-                <a href="#">Privacy</a>
-                <a href="#">Security</a>
+            <!-- Vertical depth lines -->
+            <div class="depth-lines">
+                <div class="depth-line"></div>
+                <div class="depth-line"></div>
+                <div class="depth-line"></div>
+                <div class="depth-line"></div>
+                <div class="depth-line"></div>
+                <div class="depth-line"></div>
             </div>
-        </div>
-    </footer>
+            <!-- Scan line -->
+            <div class="scan-line"></div>
+            <!-- Floating particles -->
+            <div class="particles">
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+                <div class="particle"></div>
+            </div>
+            <!-- Grid intersection glow points -->
+            <div class="grid-points">
+                <div class="grid-point"></div>
+                <div class="grid-point"></div>
+                <div class="grid-point"></div>
+                <div class="grid-point"></div>
+                <div class="grid-point"></div>
+                <div class="grid-point"></div>
+            </div>
+
+            <div class="human-hero-content">
+                <div class="human-hero-badge">Now in Public Beta</div>
+                <h1>Give your AI agents <span class="accent-text">financial superpowers</span></h1>
+                <p class="human-hero-subtitle">Zinc is the secure infrastructure layer that lets autonomous agents handle payments, manage budgets, and transact with the real world—all with enterprise-grade controls.</p>
+                <div class="human-hero-ctas">
+                    <a href="#" class="human-btn human-btn-primary">Start Building Free</a>
+                    <a href="#" class="human-btn human-btn-secondary">Watch Demo</a>
+                </div>
+            </div>
+
+            <div class="card-stack">
+                <div class="floating-card card-1" data-card="1">
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <span class="card-brand-logo">ZINC</span>
+                            <span style="color: var(--text-dim); font-size: 10px;">×</span>
+                            <span style="color: var(--text-muted); font-size: 10px; font-weight: 600;">VISA</span>
+                        </div>
+                        <div class="card-type-badge">merchant_locked</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 0639</div>
+                    <div class="card-row">
+                        <div class="card-field">
+                            <span class="card-label">Expires</span>
+                            <span class="card-value">10/25</span>
+                        </div>
+                        <div class="card-field">
+                            <span class="card-label">CVV</span>
+                            <span class="card-value">•••</span>
+                        </div>
+                        <div class="card-field" style="text-align: right;">
+                            <span class="card-label">Limit</span>
+                            <span class="card-limit"><span>$</span>500.00</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-agent">ChatGPT Agent</span>
+                        <span class="card-status">ACTIVE</span>
+                    </div>
+                </div>
+                <div class="floating-card card-2" data-card="2">
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <span class="card-brand-logo">ZINC</span>
+                            <span style="color: var(--text-dim); font-size: 10px;">×</span>
+                            <span style="color: var(--text-muted); font-size: 10px; font-weight: 600;">VISA</span>
+                        </div>
+                        <div class="card-type-badge">single_use</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 4156</div>
+                    <div class="card-row">
+                        <div class="card-field">
+                            <span class="card-label">Expires</span>
+                            <span class="card-value">08/25</span>
+                        </div>
+                        <div class="card-field">
+                            <span class="card-label">CVV</span>
+                            <span class="card-value">•••</span>
+                        </div>
+                        <div class="card-field" style="text-align: right;">
+                            <span class="card-label">Limit</span>
+                            <span class="card-limit"><span>$</span>150.00</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-agent">Claude Agent</span>
+                        <span class="card-status">ACTIVE</span>
+                    </div>
+                </div>
+                <div class="floating-card card-3" data-card="3">
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <span class="card-brand-logo">ZINC</span>
+                            <span style="color: var(--text-dim); font-size: 10px;">×</span>
+                            <span style="color: var(--text-muted); font-size: 10px; font-weight: 600;">VISA</span>
+                        </div>
+                        <div class="card-type-badge">multi_use</div>
+                    </div>
+                    <div class="card-number">•••• •••• •••• 7842</div>
+                    <div class="card-row">
+                        <div class="card-field">
+                            <span class="card-label">Expires</span>
+                            <span class="card-value">12/25</span>
+                        </div>
+                        <div class="card-field">
+                            <span class="card-label">CVV</span>
+                            <span class="card-value">•••</span>
+                        </div>
+                        <div class="card-field" style="text-align: right;">
+                            <span class="card-label">Limit</span>
+                            <span class="card-limit"><span>$</span>2,500.00</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="card-agent">Procurement Bot</span>
+                        <span class="card-status">ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="human-stats">
+            <div class="stats-grid">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-value">$2.5M+</div>
+                    <div class="stat-label">Processed Monthly</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-value">150+</div>
+                    <div class="stat-label">Active Agents</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-value">99.9%</div>
+                    <div class="stat-label">Uptime SLA</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-value">&lt;50ms</div>
+                    <div class="stat-label">Avg Response</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="human-features">
+            <div class="human-section-header animate-on-scroll">
+                <div class="human-section-label">Capabilities</div>
+                <h2 class="human-section-title">Everything agents need to transact</h2>
+                <p class="human-section-desc">From virtual cards to programmable escrow, Zinc provides the complete financial toolkit for autonomous systems.</p>
+            </div>
+
+            <div class="feature-cards">
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-card-inner">
+                        <div class="feature-card-front">
+                            <div class="feature-icon">💳</div>
+                            <h3 class="feature-card-title">Virtual Cards</h3>
+                            <p class="feature-card-desc">Issue merchant-locked virtual cards instantly. Each card is scoped to specific vendors with automatic spend limits.</p>
+                            <div class="feature-card-cta">Learn more</div>
+                        </div>
+                        <div class="feature-card-back">
+                            <div class="feature-card-back-content">
+                                <h3 class="feature-card-back-title">How it works</h3>
+                                <p class="feature-card-back-desc">Cards are generated on-demand, locked to specific merchant categories, and automatically expire after use. Perfect for one-time purchases or recurring subscriptions.</p>
+                                <div class="feature-card-back-cta">Click to flip back</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-card-inner">
+                        <div class="feature-card-front">
+                            <div class="feature-icon">🔒</div>
+                            <h3 class="feature-card-title">Policy Engine</h3>
+                            <p class="feature-card-desc">Define granular spending rules with our deterministic policy engine. Set limits, whitelist merchants, control velocity.</p>
+                            <div class="feature-card-cta">Learn more</div>
+                        </div>
+                        <div class="feature-card-back">
+                            <div class="feature-card-back-content">
+                                <h3 class="feature-card-back-title">Complete control</h3>
+                                <p class="feature-card-back-desc">Every transaction is evaluated against your policy rules before approval. Define per-transaction limits, daily caps, merchant whitelists, and custom approval workflows.</p>
+                                <div class="feature-card-back-cta">Click to flip back</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-card-inner">
+                        <div class="feature-card-front">
+                            <div class="feature-icon">🤝</div>
+                            <h3 class="feature-card-title">Escrow Contracts</h3>
+                            <p class="feature-card-desc">Enable agent-to-agent transactions with programmable escrow. Funds release automatically when conditions are met.</p>
+                            <div class="feature-card-cta">Learn more</div>
+                        </div>
+                        <div class="feature-card-back">
+                            <div class="feature-card-back-content">
+                                <h3 class="feature-card-back-title">Trustless transactions</h3>
+                                <p class="feature-card-back-desc">Set up conditional releases based on hash verification, SLA completion, or oracle confirmations. Perfect for agent marketplaces and service exchanges.</p>
+                                <div class="feature-card-back-cta">Click to flip back</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-card-inner">
+                        <div class="feature-card-front">
+                            <div class="feature-icon">⚡</div>
+                            <h3 class="feature-card-title">Real-time Events</h3>
+                            <p class="feature-card-desc">Subscribe to transaction events via webhooks. Get instant notifications for approvals, denials, and anomalies.</p>
+                            <div class="feature-card-cta">Learn more</div>
+                        </div>
+                        <div class="feature-card-back">
+                            <div class="feature-card-back-content">
+                                <h3 class="feature-card-back-title">Stay informed</h3>
+                                <p class="feature-card-back-desc">Receive real-time webhooks for every transaction event. Build monitoring dashboards, trigger alerts, or chain automated responses to financial events.</p>
+                                <div class="feature-card-back-cta">Click to flip back</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-card-inner">
+                        <div class="feature-card-front">
+                            <div class="feature-icon">🪪</div>
+                            <h3 class="feature-card-title">Agent Identity</h3>
+                            <p class="feature-card-desc">Cryptographic identity for every agent. All transactions are signed, verified, and fully auditable.</p>
+                            <div class="feature-card-cta">Learn more</div>
+                        </div>
+                        <div class="feature-card-back">
+                            <div class="feature-card-back-content">
+                                <h3 class="feature-card-back-title">Verifiable agents</h3>
+                                <p class="feature-card-back-desc">Each agent gets a unique cryptographic identity tied to their parent organization. Every action is signed and logged for complete audit trails.</p>
+                                <div class="feature-card-back-cta">Click to flip back</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card animate-on-scroll">
+                    <div class="feature-card-inner">
+                        <div class="feature-card-front">
+                            <div class="feature-icon">🔌</div>
+                            <h3 class="feature-card-title">Universal Integration</h3>
+                            <p class="feature-card-desc">Native adapters for OpenAI, LangChain, MCP, and REST. Drop into any agent framework in minutes.</p>
+                            <div class="feature-card-cta">Learn more</div>
+                        </div>
+                        <div class="feature-card-back">
+                            <div class="feature-card-back-content">
+                                <h3 class="feature-card-back-title">Works everywhere</h3>
+                                <p class="feature-card-back-desc">Pre-built integrations for every major agent framework. OpenAI tool calls, LangChain tools, MCP servers, or direct REST—choose what works for you.</p>
+                                <div class="feature-card-back-cta">Click to flip back</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="human-how-it-works">
+            <div class="human-section-header animate-on-scroll">
+                <div class="human-section-label">How It Works</div>
+                <h2 class="human-section-title">Three steps to financial autonomy</h2>
+                <p class="human-section-desc">Get your agents transacting in minutes, not months.</p>
+            </div>
+
+            <div class="steps-container">
+                <div class="step-row animate-on-scroll">
+                    <div class="step-number">1</div>
+                    <div class="step-body">
+                        <div class="step-content">
+                            <h3>Create an Agent</h3>
+                            <p>Register your AI agent with Zinc and receive cryptographic credentials. Each agent gets a unique identity tied to your organization.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="step-visual-box">
+                                <code>zinc.create_agent(</code><br>
+                                &nbsp;&nbsp;name=<code>"procurement-bot"</code><br>
+                                <code>)</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-row animate-on-scroll">
+                    <div class="step-number">2</div>
+                    <div class="step-body">
+                        <div class="step-content">
+                            <h3>Define Policies</h3>
+                            <p>Set spending limits, whitelist merchants, and configure approval workflows. Your rules, enforced automatically on every transaction.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="step-visual-box">
+                                <code>Policy(</code><br>
+                                &nbsp;&nbsp;spend_limit=<code>1000</code>,<br>
+                                &nbsp;&nbsp;merchants=[<code>"aws"</code>, <code>"gcp"</code>]<br>
+                                <code>)</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-row animate-on-scroll">
+                    <div class="step-number">3</div>
+                    <div class="step-body">
+                        <div class="step-content">
+                            <h3>Start Transacting</h3>
+                            <p>Your agent can now request spend, receive virtual cards, and execute payments—all within the guardrails you've defined.</p>
+                        </div>
+                        <div class="step-visual">
+                            <div class="step-visual-box">
+                                <code>agent.request_spend(</code><br>
+                                &nbsp;&nbsp;amount=<code>500</code>,<br>
+                                &nbsp;&nbsp;merchant=<code>"aws"</code><br>
+                                <code>) → APPROVED</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="human-cta">
+            <div class="human-cta-content animate-on-scroll">
+                <h2>Ready to empower your agents?</h2>
+                <p>Join the companies building the next generation of autonomous systems with Zinc.</p>
+                <div class="human-hero-ctas" style="justify-content: center;">
+                    <a href="#" class="human-btn human-btn-primary">Get Started Free</a>
+                    <a href="#" class="human-btn human-btn-secondary">Talk to Sales</a>
+                </div>
+            </div>
+        </section>
+
+        <footer class="human-footer">
+            <div class="human-footer-grid">
+                <div class="human-footer-brand">
+                    <h3><span>></span> zinc</h3>
+                    <p>Financial infrastructure for the autonomous agent economy. Secure, programmable, enterprise-ready.</p>
+                </div>
+                <div class="human-footer-col">
+                    <h4>Product</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">Security</a>
+                    <a href="#">Enterprise</a>
+                </div>
+                <div class="human-footer-col">
+                    <h4>Developers</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="#">SDKs</a>
+                    <a href="#">Status</a>
+                </div>
+                <div class="human-footer-col">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="human-footer-bottom">
+                <p>© 2026 Zinc Financial Infrastructure. All rights reserved.</p>
+                <div>
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Security</a>
+                </div>
+            </div>
+        </footer>
+    </div>
 
     <script>
+        // Mode Toggle
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        const body = document.body;
+
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+
+                modeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                if (mode === 'human') {
+                    body.classList.add('human-mode');
+                } else {
+                    body.classList.remove('human-mode');
+                }
+            });
+        });
+
         // Scroll animation observer
         const observerOptions = {
             root: null,
@@ -1673,6 +3180,45 @@
 
         document.querySelectorAll('.animate-on-scroll').forEach(el => {
             observer.observe(el);
+        });
+
+        // Feature Card Flip
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+            });
+        });
+
+        // Floating Cards Interaction with 3D Tilt Effect
+        const floatingCards = document.querySelectorAll('.floating-card');
+
+        floatingCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // Stop animation and bring card to front
+                card.style.animation = 'none';
+                card.style.zIndex = '10';
+            });
+
+            // 3D Tilt effect on mouse move
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Reset transform and restore animation
+                card.style.transform = '';
+                card.style.animation = '';
+                card.style.zIndex = '';
+            });
         });
 
         // Smooth scroll for anchor links
@@ -1705,14 +3251,13 @@
             lastScroll = currentScroll;
         });
 
-        // Copy code functionality
+        // Copy code functionality (Machine view)
         document.querySelectorAll('.code-block').forEach(block => {
             block.addEventListener('click', function() {
                 const codeContent = this.querySelector('.code-content');
                 if (codeContent) {
                     const text = codeContent.innerText;
                     navigator.clipboard.writeText(text).then(() => {
-                        // Visual feedback
                         const originalBorder = this.style.borderColor;
                         this.style.borderColor = 'var(--accent)';
                         setTimeout(() => {
@@ -1725,11 +3270,60 @@
             block.title = 'Click to copy';
         });
 
-        // Add typing effect to hero title
-        const heroTitle = document.querySelector('.hero h1');
+        // Add typing effect to hero title (Machine view)
+        const heroTitle = document.querySelector('.view-machine .hero h1');
         if (heroTitle) {
             heroTitle.innerHTML = heroTitle.textContent + '<span class="cursor"></span>';
         }
+
+        // Counter animation for stats
+        const animateCounter = (el, target) => {
+            let current = 0;
+            const increment = target / 50;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    clearInterval(timer);
+                    current = target;
+                }
+
+                if (target >= 1000000) {
+                    el.textContent = '$' + (current / 1000000).toFixed(1) + 'M+';
+                } else if (target >= 100) {
+                    el.textContent = Math.floor(current) + '+';
+                } else if (target < 1) {
+                    el.textContent = '<' + Math.floor(current * 1000) + 'ms';
+                } else {
+                    el.textContent = current.toFixed(1) + '%';
+                }
+            }, 30);
+        };
+
+        // Trigger counter animation when stats become visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statValue = entry.target.querySelector('.stat-value');
+                    if (statValue && !statValue.dataset.animated) {
+                        statValue.dataset.animated = 'true';
+                        const text = statValue.textContent;
+                        if (text.includes('$2.5M')) {
+                            animateCounter(statValue, 2500000);
+                        } else if (text.includes('150')) {
+                            animateCounter(statValue, 150);
+                        } else if (text.includes('99.9')) {
+                            animateCounter(statValue, 99.9);
+                        } else if (text.includes('50ms')) {
+                            animateCounter(statValue, 0.05);
+                        }
+                    }
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('.stat-item').forEach(item => {
+            statsObserver.observe(item);
+        });
     </script>
 </body>
 </html>

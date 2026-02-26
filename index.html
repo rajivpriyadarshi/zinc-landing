@@ -50,12 +50,39 @@
             /* Same typography as machine view */
         }
 
-        /* View Toggle Styles */
-        .view-machine { display: block; }
-        .view-human { display: none; }
+        /* View Toggle Styles - Human mode is default */
+        .view-machine { display: none; }
+        .view-human { display: block; }
 
-        body.human-mode .view-machine { display: none; }
-        body.human-mode .view-human { display: block; }
+        body.machine-mode .view-machine { display: block; }
+        body.machine-mode .view-human { display: none; }
+
+        /* Typing effect */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blinkCursor {
+            0%, 100% { border-color: var(--accent); }
+            50% { border-color: transparent; }
+        }
+
+        .typewriter {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid var(--accent);
+            animation: typing 2s steps(40, end) forwards, blinkCursor 0.75s step-end infinite;
+        }
+
+        .typewriter-line {
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        .typewriter-line:nth-child(1) { animation-delay: 0.5s; }
+        .typewriter-line:nth-child(2) { animation-delay: 1.5s; }
+        .typewriter-line:nth-child(3) { animation-delay: 2.5s; }
 
         /* Animations */
         @keyframes fadeInUp {
@@ -1079,7 +1106,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 60%;
+            height: 75%;
             overflow: hidden;
             pointer-events: none;
             z-index: 0;
@@ -1087,25 +1114,25 @@
 
         .perspective-grid {
             position: absolute;
-            bottom: 0;
-            left: -50%;
-            right: -50%;
-            height: 100%;
+            bottom: -20%;
+            left: -100%;
+            right: -100%;
+            height: 150%;
             background-image:
-                linear-gradient(rgba(0, 208, 132, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 208, 132, 0.1) 1px, transparent 1px);
-            background-size: 80px 80px;
-            transform: perspective(500px) rotateX(60deg);
+                linear-gradient(rgba(0, 208, 132, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 208, 132, 0.08) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: perspective(400px) rotateX(65deg);
             transform-origin: center bottom;
-            mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 40%, transparent 80%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 40%, transparent 80%);
         }
 
         .perspective-grid::before {
             content: '';
             position: absolute;
             inset: 0;
-            background: linear-gradient(to top, rgba(0, 208, 132, 0.05) 0%, transparent 50%);
+            background: linear-gradient(to top, rgba(0, 208, 132, 0.08) 0%, transparent 60%);
         }
 
         /* Grid glow lines */
@@ -1127,14 +1154,19 @@
 
         /* Floating electrons */
         .electron {
-            position: absolute;
-            width: 4px;
-            height: 4px;
+            position: fixed;
+            width: 6px;
+            height: 6px;
             background: var(--accent);
             border-radius: 50%;
             box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 30px var(--accent);
             pointer-events: none;
-            z-index: 1;
+            z-index: 100;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .electron.orbiting {
+            transition: none;
         }
 
         .electron-1 {
@@ -1161,44 +1193,49 @@
             animation-delay: -3s;
         }
 
+        .electron.attracted {
+            animation: none !important;
+            box-shadow: 0 0 15px var(--accent), 0 0 30px var(--accent), 0 0 45px var(--accent);
+        }
+
         @keyframes electronMove1 {
-            0% { left: 10%; bottom: 30%; opacity: 0; }
+            0% { left: 10%; top: 40%; opacity: 0; }
             10% { opacity: 1; }
-            50% { left: 40%; bottom: 5%; }
+            50% { left: 40%; top: 70%; }
             90% { opacity: 1; }
-            100% { left: 70%; bottom: 30%; opacity: 0; }
+            100% { left: 70%; top: 40%; opacity: 0; }
         }
 
         @keyframes electronMove2 {
-            0% { left: 80%; bottom: 25%; opacity: 0; }
+            0% { left: 80%; top: 35%; opacity: 0; }
             10% { opacity: 1; }
-            50% { left: 50%; bottom: 0%; }
+            50% { left: 50%; top: 65%; }
             90% { opacity: 1; }
-            100% { left: 20%; bottom: 25%; opacity: 0; }
+            100% { left: 20%; top: 35%; opacity: 0; }
         }
 
         @keyframes electronMove3 {
-            0% { left: 30%; bottom: 35%; opacity: 0; }
+            0% { left: 30%; top: 30%; opacity: 0; }
             10% { opacity: 1; }
-            50% { left: 60%; bottom: 5%; }
+            50% { left: 60%; top: 60%; }
             90% { opacity: 1; }
-            100% { left: 90%; bottom: 35%; opacity: 0; }
+            100% { left: 90%; top: 30%; opacity: 0; }
         }
 
         @keyframes electronMove4 {
-            0% { left: 60%; bottom: 40%; opacity: 0; }
+            0% { left: 60%; top: 25%; opacity: 0; }
             10% { opacity: 1; }
-            50% { left: 30%; bottom: 8%; }
+            50% { left: 30%; top: 55%; }
             90% { opacity: 1; }
-            100% { left: 5%; bottom: 40%; opacity: 0; }
+            100% { left: 5%; top: 25%; opacity: 0; }
         }
 
         @keyframes electronMove5 {
-            0% { left: 5%; bottom: 20%; opacity: 0; }
+            0% { left: 5%; top: 45%; opacity: 0; }
             10% { opacity: 1; }
-            50% { left: 55%; bottom: 3%; }
+            50% { left: 55%; top: 75%; }
             90% { opacity: 1; }
-            100% { left: 95%; bottom: 20%; opacity: 0; }
+            100% { left: 95%; top: 45%; opacity: 0; }
         }
 
         /* Vertical grid lines with depth */
@@ -2242,8 +2279,8 @@
         </a>
 
         <div class="mode-toggle">
-            <button class="mode-btn" data-mode="human">Human</button>
-            <button class="mode-btn active" data-mode="machine">Machine</button>
+            <button class="mode-btn active" data-mode="human">Human</button>
+            <button class="mode-btn" data-mode="machine">Machine</button>
         </div>
 
         <nav>
@@ -3144,7 +3181,7 @@
     </div>
 
     <script>
-        // Mode Toggle
+        // Mode Toggle - Human is default
         const modeButtons = document.querySelectorAll('.mode-btn');
         const body = document.body;
 
@@ -3155,13 +3192,70 @@
                 modeButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
 
-                if (mode === 'human') {
-                    body.classList.add('human-mode');
+                if (mode === 'machine') {
+                    body.classList.add('machine-mode');
                 } else {
-                    body.classList.remove('human-mode');
+                    body.classList.remove('machine-mode');
                 }
             });
         });
+
+        // Typing effect for hero text
+        const heroTitle = document.querySelector('.human-hero h1');
+        const heroSubtitle = document.querySelector('.human-hero-subtitle');
+
+        if (heroTitle) {
+            heroTitle.style.opacity = '0';
+            heroTitle.style.animation = 'fadeInUp 0.8s ease forwards';
+        }
+        if (heroSubtitle) {
+            heroSubtitle.style.opacity = '0';
+            heroSubtitle.style.animation = 'fadeInUp 0.8s ease 0.3s forwards';
+        }
+
+        // Typewriter effect for hero
+        function typeWriter(element, text, speed = 50) {
+            element.textContent = '';
+            element.style.opacity = '1';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        // Initialize typing on page load for human view
+        setTimeout(() => {
+            const humanTitle = document.querySelector('.human-hero h1');
+            if (humanTitle && !body.classList.contains('machine-mode')) {
+                const originalHTML = humanTitle.innerHTML;
+                humanTitle.innerHTML = '';
+                humanTitle.style.opacity = '1';
+
+                let i = 0;
+                const plainText = 'Give your AI agents financial superpowers';
+                function typeTitle() {
+                    if (i < plainText.length) {
+                        const currentText = plainText.substring(0, i + 1);
+                        // Add accent class to "financial superpowers"
+                        const accentStart = plainText.indexOf('financial superpowers');
+                        if (i >= accentStart) {
+                            humanTitle.innerHTML = currentText.substring(0, accentStart) +
+                                '<span class="accent-text">' + currentText.substring(accentStart) + '</span>';
+                        } else {
+                            humanTitle.textContent = currentText;
+                        }
+                        i++;
+                        setTimeout(typeTitle, 40);
+                    }
+                }
+                typeTitle();
+            }
+        }, 500);
 
         // Scroll animation observer
         const observerOptions = {
@@ -3189,14 +3283,89 @@
             });
         });
 
-        // Floating Cards Interaction with 3D Tilt Effect
+        // Floating Cards Interaction with 3D Tilt Effect and Electron Attraction
         const floatingCards = document.querySelectorAll('.floating-card');
+        const electrons = document.querySelectorAll('.electron');
+        let orbitAnimationFrame;
+        let isCardHovered = false;
+
+        // Store original electron positions
+        const electronOriginalPositions = [];
+        electrons.forEach((electron, index) => {
+            electronOriginalPositions[index] = {
+                animation: window.getComputedStyle(electron).animation
+            };
+        });
+
+        // Orbit electrons around card
+        function orbitElectronsAroundCard(card) {
+            const rect = card.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const orbitWidth = rect.width / 2 + 30;
+            const orbitHeight = rect.height / 2 + 30;
+
+            let angles = [];
+            electrons.forEach((electron, index) => {
+                angles[index] = (index * (360 / electrons.length)) * (Math.PI / 180);
+            });
+
+            function animate() {
+                if (!isCardHovered) return;
+
+                electrons.forEach((electron, index) => {
+                    angles[index] += 0.02; // Speed of orbit
+                    const x = centerX + Math.cos(angles[index]) * orbitWidth;
+                    const y = centerY + Math.sin(angles[index]) * orbitHeight;
+
+                    electron.style.left = x + 'px';
+                    electron.style.top = y + 'px';
+                });
+
+                orbitAnimationFrame = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        // Release electrons back to original animation
+        function releaseElectrons() {
+            cancelAnimationFrame(orbitAnimationFrame);
+            electrons.forEach((electron, index) => {
+                electron.classList.remove('attracted', 'orbiting');
+                electron.style.left = '';
+                electron.style.top = '';
+                electron.style.animation = '';
+            });
+        }
 
         floatingCards.forEach(card => {
             card.addEventListener('mouseenter', () => {
-                // Stop animation and bring card to front
+                // Stop card animation and bring to front
                 card.style.animation = 'none';
                 card.style.zIndex = '10';
+
+                // Attract electrons
+                isCardHovered = true;
+                const rect = card.getBoundingClientRect();
+
+                electrons.forEach((electron, index) => {
+                    electron.classList.add('attracted');
+                    // First move electrons towards the card
+                    const angle = (index * (360 / electrons.length)) * (Math.PI / 180);
+                    const x = rect.left + rect.width / 2 + Math.cos(angle) * (rect.width / 2 + 30);
+                    const y = rect.top + rect.height / 2 + Math.sin(angle) * (rect.height / 2 + 30);
+
+                    electron.style.left = x + 'px';
+                    electron.style.top = y + 'px';
+                });
+
+                // Start orbiting after electrons arrive
+                setTimeout(() => {
+                    if (isCardHovered) {
+                        electrons.forEach(electron => electron.classList.add('orbiting'));
+                        orbitElectronsAroundCard(card);
+                    }
+                }, 800);
             });
 
             // 3D Tilt effect on mouse move
@@ -3218,6 +3387,10 @@
                 card.style.transform = '';
                 card.style.animation = '';
                 card.style.zIndex = '';
+
+                // Release electrons
+                isCardHovered = false;
+                releaseElectrons();
             });
         });
 

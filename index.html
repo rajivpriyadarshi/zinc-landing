@@ -2073,6 +2073,55 @@
             color: var(--accent);
         }
 
+        .step-visual-box .code-comment {
+            color: var(--text-dim);
+        }
+
+        .step-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .step-status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .step-status-indicator.warning {
+            background: var(--warning);
+        }
+
+        .step-status-text {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+        }
+
+        .step-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .step-tag {
+            font-size: 10px;
+            padding: 4px 8px;
+            background: rgba(0, 208, 132, 0.1);
+            border: 1px solid rgba(0, 208, 132, 0.3);
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* Stats Section */
         .human-stats {
             padding: 100px 80px;
@@ -2330,6 +2379,10 @@
 
             .step-content {
                 text-align: center;
+            }
+
+            .step-tags {
+                justify-content: center;
             }
 
             .human-footer-grid {
@@ -3389,59 +3442,155 @@
         <section class="human-how-it-works">
             <div class="human-section-header animate-on-scroll">
                 <div class="human-section-label">How It Works</div>
-                <h2 class="human-section-title">Three steps to financial autonomy</h2>
-                <p class="human-section-desc">Get your agents transacting in minutes, not months.</p>
+                <h2 class="human-section-title">Five steps to autonomous transactions</h2>
+                <p class="human-section-desc">From policy definition to automatic verification—complete financial autonomy for your agents.</p>
             </div>
 
             <div class="steps-container">
                 <div class="step-row animate-on-scroll">
-                    <div class="step-number">1</div>
+                    <div class="step-number">01</div>
                     <div class="step-body">
                         <div class="step-content">
-                            <h3>Create an Agent</h3>
-                            <p>Register your AI agent with Zinc and receive cryptographic credentials. Each agent gets a unique identity tied to your organization.</p>
+                            <h3>Register Agent & Set Policies</h3>
+                            <p>Register your AI agent and define comprehensive spend controls—limits per transaction, daily caps, allowed merchants, blocked categories, and velocity controls. Your policies become the guardrails for every future transaction.</p>
+                            <div class="step-tags">
+                                <span class="step-tag">Spend Limits</span>
+                                <span class="step-tag">Merchant Locks</span>
+                                <span class="step-tag">Velocity Controls</span>
+                            </div>
                         </div>
                         <div class="step-visual">
                             <div class="step-visual-box">
-                                <code>zinc.create_agent(</code><br>
-                                &nbsp;&nbsp;name=<code>"procurement-bot"</code><br>
-                                <code>)</code>
+                                <span class="code-comment">// Register agent with policies</span><br>
+                                <code>await zinc.agents.create</code>({<br>
+                                &nbsp;&nbsp;name: <code>"procurement-bot"</code>,<br>
+                                &nbsp;&nbsp;policies: {<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;perTransaction: <code>5000</code>,<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;perDay: <code>20000</code>,<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;merchants: [<code>"aws"</code>, <code>"gcp"</code>]<br>
+                                &nbsp;&nbsp;}<br>
+                                });
+                                <div class="step-status">
+                                    <div class="step-status-indicator"></div>
+                                    <span class="step-status-text">Agent Registered</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="step-row animate-on-scroll">
-                    <div class="step-number">2</div>
+                    <div class="step-number">02</div>
                     <div class="step-body">
                         <div class="step-content">
-                            <h3>Define Policies</h3>
-                            <p>Set spending limits, whitelist merchants, and configure approval workflows. Your rules, enforced automatically on every transaction.</p>
+                            <h3>Declare Intent</h3>
+                            <p>Before any purchase, your agent declares exactly what it wants to buy, from which merchant, and for how much. This intent becomes the contract that all subsequent actions are verified against.</p>
+                            <div class="step-tags">
+                                <span class="step-tag">Pre-authorization</span>
+                                <span class="step-tag">Intent Logging</span>
+                            </div>
                         </div>
                         <div class="step-visual">
                             <div class="step-visual-box">
-                                <code>Policy(</code><br>
-                                &nbsp;&nbsp;spend_limit=<code>1000</code>,<br>
-                                &nbsp;&nbsp;merchants=[<code>"aws"</code>, <code>"gcp"</code>]<br>
-                                <code>)</code>
+                                <span class="code-comment">// Declare purchase intent</span><br>
+                                <code>const intent = await zinc.intents.create</code>({<br>
+                                &nbsp;&nbsp;agentId: <code>"procurement-bot"</code>,<br>
+                                &nbsp;&nbsp;merchant: <code>"aws.amazon.com"</code>,<br>
+                                &nbsp;&nbsp;amount: <code>2500</code>,<br>
+                                &nbsp;&nbsp;purpose: <code>"EC2 instances"</code><br>
+                                });
+                                <div class="step-status">
+                                    <div class="step-status-indicator warning"></div>
+                                    <span class="step-status-text">Awaiting Policy Check</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="step-row animate-on-scroll">
-                    <div class="step-number">3</div>
+                    <div class="step-number">03</div>
                     <div class="step-body">
                         <div class="step-content">
-                            <h3>Start Transacting</h3>
-                            <p>Your agent can now request spend, receive virtual cards, and execute payments—all within the guardrails you've defined.</p>
+                            <h3>Card Issuance</h3>
+                            <p>If the intent passes your policies, a virtual card is automatically created and locked to the declared intent. The card can only be used at the specified merchant for the approved amount.</p>
+                            <div class="step-tags">
+                                <span class="step-tag">Virtual Cards</span>
+                                <span class="step-tag">Intent-Locked</span>
+                            </div>
                         </div>
                         <div class="step-visual">
                             <div class="step-visual-box">
-                                <code>agent.request_spend(</code><br>
-                                &nbsp;&nbsp;amount=<code>500</code>,<br>
-                                &nbsp;&nbsp;merchant=<code>"aws"</code><br>
-                                <code>) → APPROVED</code>
+                                <span class="code-comment">// Card auto-generated on approval</span><br>
+                                <code>const card = await zinc.cards.issue</code>({<br>
+                                &nbsp;&nbsp;intentId: intent.id,<br>
+                                &nbsp;&nbsp;type: <code>"single_use"</code><br>
+                                });<br><br>
+                                <span class="code-comment">// Returns: PAN, CVV, expiry</span>
+                                <div class="step-status">
+                                    <div class="step-status-indicator"></div>
+                                    <span class="step-status-text">Card Ready</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-row animate-on-scroll">
+                    <div class="step-number">04</div>
+                    <div class="step-body">
+                        <div class="step-content">
+                            <h3>Execute Checkout</h3>
+                            <p>Your agent retrieves the card credentials and completes the purchase at the merchant. The transaction is constrained to the pre-approved parameters—any deviation is automatically blocked.</p>
+                            <div class="step-tags">
+                                <span class="step-tag">Secure Checkout</span>
+                                <span class="step-tag">Auto-Block</span>
+                            </div>
+                        </div>
+                        <div class="step-visual">
+                            <div class="step-visual-box">
+                                <span class="code-comment">// Agent completes purchase</span><br>
+                                <code>const txn = await agent.checkout</code>({<br>
+                                &nbsp;&nbsp;card: card.credentials,<br>
+                                &nbsp;&nbsp;merchant: <code>"aws.amazon.com"</code>,<br>
+                                &nbsp;&nbsp;amount: <code>2500</code><br>
+                                });<br><br>
+                                <span class="code-comment">// status: "completed"</span>
+                                <div class="step-status">
+                                    <div class="step-status-indicator"></div>
+                                    <span class="step-status-text">Purchase Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-row animate-on-scroll">
+                    <div class="step-number">05</div>
+                    <div class="step-body">
+                        <div class="step-content">
+                            <h3>Auto Verification</h3>
+                            <p>Every transaction is automatically verified against the declared intent. Mismatches are flagged, receipts are captured, and a complete audit trail is generated for compliance and reconciliation.</p>
+                            <div class="step-tags">
+                                <span class="step-tag">Intent Matching</span>
+                                <span class="step-tag">Audit Trail</span>
+                                <span class="step-tag">Receipts</span>
+                            </div>
+                        </div>
+                        <div class="step-visual">
+                            <div class="step-visual-box">
+                                <span class="code-comment">// Automatic verification</span><br>
+                                <code>zinc.verify</code>(txn.id);<br><br>
+                                {<br>
+                                &nbsp;&nbsp;intentMatch: <code>true</code>,<br>
+                                &nbsp;&nbsp;policyCompliant: <code>true</code>,<br>
+                                &nbsp;&nbsp;receipt: <code>"captured"</code>,<br>
+                                &nbsp;&nbsp;auditLog: <code>"complete"</code><br>
+                                }
+                                <div class="step-status">
+                                    <div class="step-status-indicator"></div>
+                                    <span class="step-status-text">Verified • 99.8% Match Rate</span>
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -2207,7 +2207,7 @@
             transform: translate(-50%, -50%);
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 39%);
             pointer-events: none;
             z-index: 1;
         }
@@ -3747,6 +3747,30 @@
             });
         });
 
+        // Animate cards on page load (starts immediately)
+        (function initCardAnimation() {
+            const cards = document.querySelectorAll('.floating-card');
+            const heroSection = document.querySelector('.human-hero');
+
+            if (!heroSection || body.classList.contains('machine-mode')) return;
+
+            // Start animating cards after a brief delay
+            setTimeout(() => {
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('visible');
+
+                        // Show glow after last card appears
+                        if (index === cards.length - 1) {
+                            setTimeout(() => {
+                                heroSection.classList.add('glow-visible');
+                            }, 400);
+                        }
+                    }, index * 200); // 200ms delay between each card
+                });
+            }, 300);
+        })();
+
         // Typing animation for hero text
         (function initTypingAnimation() {
             const heroTitle = document.querySelector('.human-hero h1');
@@ -3809,26 +3833,10 @@
                                             setTimeout(() => {
                                                 heroBadge.style.transition = 'opacity 0.6s ease';
                                                 heroBadge.style.opacity = '1';
-
-                                                // Step 4: Animate cards one by one
-                                                const cards = document.querySelectorAll('.floating-card');
-                                                const heroSection = document.querySelector('.human-hero');
-                                                cards.forEach((card, index) => {
-                                                    setTimeout(() => {
-                                                        card.classList.add('visible');
-
-                                                        // Show glow after last card appears
-                                                        if (index === cards.length - 1) {
-                                                            setTimeout(() => {
-                                                                heroSection.classList.add('glow-visible');
-                                                            }, 400);
-                                                        }
-                                                    }, index * 200); // 200ms delay between each card
-                                                });
                                             }, 400);
                                         }, 300);
-                                    }, 200);
-                                }, 400);
+                                    }, 50);
+                                }, 100);
                             }
                         }
                         typeAccent();

@@ -687,6 +687,195 @@
             margin-right: 8px;
         }
 
+        /* Pricing Section */
+        .pricing-section {
+            text-align: center;
+        }
+
+        .pricing-header {
+            margin-bottom: 48px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 32px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-4px);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--accent);
+            position: relative;
+        }
+
+        .pricing-card.featured::before {
+            content: '[RECOMMENDED]';
+            position: absolute;
+            top: -12px;
+            left: 24px;
+            background: var(--accent);
+            color: #000;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+        }
+
+        .pricing-tier {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pricing-card.featured .pricing-tier {
+            color: var(--accent);
+        }
+
+        .pricing-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .pricing-desc {
+            font-size: 12px;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .pricing-price {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .pricing-amount {
+            font-size: 36px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .pricing-period {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .pricing-unit {
+            font-size: 11px;
+            color: var(--text-dim);
+            margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .pricing-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .pricing-feature span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .pricing-feature.disabled {
+            color: var(--text-dark);
+        }
+
+        .pricing-feature.disabled span {
+            color: var(--text-dark);
+        }
+
+        .pricing-cta {
+            width: 100%;
+            padding: 14px 24px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .pricing-cta.primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .pricing-cta.primary:hover {
+            background: var(--accent-dark);
+            box-shadow: 0 0 20px rgba(0, 208, 132, 0.3);
+        }
+
+        .pricing-cta.secondary {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .pricing-cta.secondary:hover {
+            border-color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .pricing-note {
+            margin-top: 48px;
+            font-size: 12px;
+            color: var(--text-dim);
+        }
+
+        .pricing-note code {
+            background: var(--bg-card);
+            padding: 2px 6px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 1024px) {
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .pricing-card.featured {
+                order: -1;
+            }
+        }
+
         /* Schema Section */
         .schema-section {
             text-align: center;
@@ -979,7 +1168,7 @@
             <a href="#capabilities">Docs</a>
             <a href="#spend-protocol">API Spec</a>
             <a href="#quickstart">SDK</a>
-            <a href="#schema">Pricing</a>
+            <a href="#pricing">Pricing</a>
         </nav>
         <div class="header-ctas">
             <a href="#schema" class="btn btn-outline">View Schema</a>
@@ -1349,6 +1538,82 @@
                 </div>
             </div>
         </div>
+    </section>
+
+    <section class="pricing-section section-alt" id="pricing">
+        <div class="pricing-header animate-on-scroll">
+            <p class="section-label">// pricing_tiers</p>
+            <h2 class="section-title">Pricing</h2>
+            <p class="section-desc" style="margin: 0 auto;">Usage-based pricing. Scale with your agents.</p>
+        </div>
+
+        <div class="pricing-grid animate-on-scroll">
+            <div class="pricing-card">
+                <p class="pricing-tier">Starter</p>
+                <h3 class="pricing-name">Free</h3>
+                <p class="pricing-desc">For testing and development. Get started immediately.</p>
+                <div class="pricing-price">
+                    <span class="pricing-amount">$0</span>
+                    <span class="pricing-period">/month</span>
+                </div>
+                <p class="pricing-unit">Up to 100 transactions/month</p>
+                <div class="pricing-features">
+                    <p class="pricing-feature"><span>→</span> 3 agents max</p>
+                    <p class="pricing-feature"><span>→</span> $1,000 monthly spend limit</p>
+                    <p class="pricing-feature"><span>→</span> Basic policy engine</p>
+                    <p class="pricing-feature"><span>→</span> REST API access</p>
+                    <p class="pricing-feature"><span>→</span> Community support</p>
+                    <p class="pricing-feature disabled"><span>—</span> Escrow contracts</p>
+                    <p class="pricing-feature disabled"><span>—</span> Stablecoin rails</p>
+                </div>
+                <a href="#" class="pricing-cta secondary">$ zinc init --free</a>
+            </div>
+
+            <div class="pricing-card featured">
+                <p class="pricing-tier">Pro</p>
+                <h3 class="pricing-name">Usage</h3>
+                <p class="pricing-desc">For production deployments. Pay only for what you use.</p>
+                <div class="pricing-price">
+                    <span class="pricing-amount">$0.10</span>
+                    <span class="pricing-period">/transaction</span>
+                </div>
+                <p class="pricing-unit">+ 0.5% of transaction value</p>
+                <div class="pricing-features">
+                    <p class="pricing-feature"><span>→</span> Unlimited agents</p>
+                    <p class="pricing-feature"><span>→</span> $100,000 monthly spend limit</p>
+                    <p class="pricing-feature"><span>→</span> Advanced policy engine</p>
+                    <p class="pricing-feature"><span>→</span> All integration surfaces</p>
+                    <p class="pricing-feature"><span>→</span> Escrow contracts</p>
+                    <p class="pricing-feature"><span>→</span> Stablecoin rails</p>
+                    <p class="pricing-feature"><span>→</span> Priority support</p>
+                </div>
+                <a href="#" class="pricing-cta primary">$ get_api_key --pro</a>
+            </div>
+
+            <div class="pricing-card">
+                <p class="pricing-tier">Enterprise</p>
+                <h3 class="pricing-name">Custom</h3>
+                <p class="pricing-desc">For large-scale deployments. Dedicated infrastructure.</p>
+                <div class="pricing-price">
+                    <span class="pricing-amount">Custom</span>
+                </div>
+                <p class="pricing-unit">Volume discounts available</p>
+                <div class="pricing-features">
+                    <p class="pricing-feature"><span>→</span> Unlimited everything</p>
+                    <p class="pricing-feature"><span>→</span> Custom spend limits</p>
+                    <p class="pricing-feature"><span>→</span> Custom policy DSL</p>
+                    <p class="pricing-feature"><span>→</span> Dedicated infrastructure</p>
+                    <p class="pricing-feature"><span>→</span> SLA guarantees</p>
+                    <p class="pricing-feature"><span>→</span> On-premise deployment</p>
+                    <p class="pricing-feature"><span>→</span> 24/7 dedicated support</p>
+                </div>
+                <a href="#" class="pricing-cta secondary">Contact Sales</a>
+            </div>
+        </div>
+
+        <p class="pricing-note animate-on-scroll">
+            All plans include: <code>audit_logs</code> <code>webhook_events</code> <code>api_versioning</code> <code>99.9% uptime</code>
+        </p>
     </section>
 
     <section class="schema-section" id="schema">

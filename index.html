@@ -1830,6 +1830,167 @@
         }
 
         /* How It Works */
+        /* Use Cases Section */
+        .human-use-cases {
+            padding: 120px 80px;
+            background: var(--bg-primary);
+        }
+
+        .use-cases-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .use-case-card {
+            display: flex;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .use-case-card:hover {
+            border-color: var(--accent);
+        }
+
+        .use-case-number {
+            width: 60px;
+            min-width: 60px;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dim);
+            border-right: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover .use-case-number {
+            color: var(--accent);
+        }
+
+        .use-case-content {
+            flex: 1;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .use-case-category {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+        }
+
+        .use-case-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .use-case-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .use-case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .use-case-tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover .use-case-tag {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .use-case-arrow {
+            width: 50px;
+            min-width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            transition: all 0.3s ease;
+        }
+
+        .use-case-card:hover .use-case-arrow {
+            color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .use-cases-cta {
+            max-width: 1200px;
+            margin: 60px auto 0;
+            padding: 40px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .use-cases-cta-text h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .use-cases-cta-text p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .use-cases-cta-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .use-cases-cta-links a {
+            font-size: 14px;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.3s ease;
+        }
+
+        .use-cases-cta-links a:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 900px) {
+            .use-cases-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .use-cases-cta {
+                flex-direction: column;
+                text-align: center;
+                gap: 24px;
+            }
+        }
+
         .human-how-it-works {
             padding: 120px 80px;
         }
@@ -3088,6 +3249,139 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="human-use-cases">
+            <div class="human-section-header animate-on-scroll">
+                <div class="human-section-label">Use Cases</div>
+                <h2 class="human-section-title">Built for true autonomous checkout</h2>
+                <p class="human-section-desc">Give your AI agents secure, controlled spending power across any transaction type.</p>
+            </div>
+
+            <div class="use-cases-grid">
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">01</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">E-commerce</div>
+                        <h3 class="use-case-title">Autonomous Purchasing</h3>
+                        <p class="use-case-desc">Let agents browse, compare, and purchase products autonomously with merchant-locked cards and spend limits.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Merchant locks</span>
+                            <span class="use-case-tag">Per-txn limits</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">02</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">Infrastructure</div>
+                        <h3 class="use-case-title">SaaS & API Credits</h3>
+                        <p class="use-case-desc">Automate software subscriptions, API credits, and cloud infrastructure billing with recurring spend controls.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Recurring limits</span>
+                            <span class="use-case-tag">Auto-approval</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">03</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">Travel</div>
+                        <h3 class="use-case-title">Booking & Reservations</h3>
+                        <p class="use-case-desc">Enable agents to book flights, hotels, and car rentals with category-specific budgets and approval workflows.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Category controls</span>
+                            <span class="use-case-tag">Receipt capture</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">04</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">Marketing</div>
+                        <h3 class="use-case-title">Ad Spend & Growth Ops</h3>
+                        <p class="use-case-desc">Let growth agents run experiments across ad platforms with strict daily budgets and performance-based limits.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Daily caps</span>
+                            <span class="use-case-tag">Platform locks</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">05</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">Operations</div>
+                        <h3 class="use-case-title">Vendor Onboarding</h3>
+                        <p class="use-case-desc">Agents can trial new vendors, provision tools, and manage supplier relationships with controlled spending.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Trial limits</span>
+                            <span class="use-case-tag">Vendor scoring</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">06</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">Security</div>
+                        <h3 class="use-case-title">Incident Response</h3>
+                        <p class="use-case-desc">Security agents can rapidly procure tooling and infrastructure during incidents without waiting for approvals.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Emergency access</span>
+                            <span class="use-case-tag">Audit logs</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">07</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">Data</div>
+                        <h3 class="use-case-title">Data Procurement</h3>
+                        <p class="use-case-desc">Enable agents to purchase datasets, API access, and research materials with usage-based controls.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Usage tracking</span>
+                            <span class="use-case-tag">Cost allocation</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+
+                <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-number">08</div>
+                    <div class="use-case-content">
+                        <div class="use-case-category">Supply Chain</div>
+                        <h3 class="use-case-title">Marketplace Sourcing</h3>
+                        <p class="use-case-desc">Procurement agents source parts and supplies across multiple marketplaces with comparative spend analysis.</p>
+                        <div class="use-case-tags">
+                            <span class="use-case-tag">Multi-vendor</span>
+                            <span class="use-case-tag">Price matching</span>
+                        </div>
+                    </div>
+                    <div class="use-case-arrow">→</div>
+                </div>
+            </div>
+
+            <div class="use-cases-cta animate-on-scroll">
+                <div class="use-cases-cta-text">
+                    <h3>Don't see your use case?</h3>
+                    <p>We're building for the autonomous future. Let's talk about your specific needs.</p>
+                </div>
+                <div class="use-cases-cta-links">
+                    <a href="mailto:hello@zinc.dev">Contact Us →</a>
+                    <a href="#schema">View Docs →</a>
                 </div>
             </div>
         </section>

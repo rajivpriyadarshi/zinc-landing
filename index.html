@@ -1114,18 +1114,18 @@
 
         .perspective-grid {
             position: absolute;
-            bottom: -20%;
-            left: -100%;
-            right: -100%;
-            height: 150%;
+            bottom: 0;
+            left: -50%;
+            right: -50%;
+            height: 100%;
             background-image:
-                linear-gradient(rgba(0, 208, 132, 0.12) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 208, 132, 0.08) 1px, transparent 1px);
-            background-size: 60px 60px;
-            transform: perspective(400px) rotateX(65deg);
+                linear-gradient(rgba(0, 208, 132, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 208, 132, 0.15) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
             transform-origin: center bottom;
-            mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 40%, transparent 80%);
-            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.5) 40%, transparent 80%);
+            mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, transparent 90%);
+            -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.7) 50%, transparent 90%);
         }
 
         .perspective-grid::before {
@@ -1154,14 +1154,14 @@
 
         /* Floating electrons */
         .electron {
-            position: fixed;
+            position: absolute;
             width: 6px;
             height: 6px;
             background: var(--accent);
             border-radius: 50%;
             box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 30px var(--accent);
             pointer-events: none;
-            z-index: 100;
+            z-index: 5;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -2788,13 +2788,13 @@
             <div class="hero-grid-container">
                 <div class="perspective-grid"></div>
                 <div class="grid-glow"></div>
-                <!-- Electrons moving on the grid -->
-                <div class="electron electron-1"></div>
-                <div class="electron electron-2"></div>
-                <div class="electron electron-3"></div>
-                <div class="electron electron-4"></div>
-                <div class="electron electron-5"></div>
             </div>
+            <!-- Electrons moving in hero section -->
+            <div class="electron electron-1"></div>
+            <div class="electron electron-2"></div>
+            <div class="electron electron-3"></div>
+            <div class="electron electron-4"></div>
+            <div class="electron electron-5"></div>
             <!-- Vertical depth lines -->
             <div class="depth-lines">
                 <div class="depth-line"></div>
@@ -3299,11 +3299,15 @@
 
         // Orbit electrons around card
         function orbitElectronsAroundCard(card) {
-            const rect = card.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            const orbitWidth = rect.width / 2 + 30;
-            const orbitHeight = rect.height / 2 + 30;
+            const heroSection = document.querySelector('.human-hero');
+            const heroRect = heroSection.getBoundingClientRect();
+            const cardRect = card.getBoundingClientRect();
+
+            // Calculate card center relative to hero section
+            const centerX = cardRect.left - heroRect.left + cardRect.width / 2;
+            const centerY = cardRect.top - heroRect.top + cardRect.height / 2;
+            const orbitWidth = cardRect.width / 2 + 30;
+            const orbitHeight = cardRect.height / 2 + 30;
 
             let angles = [];
             electrons.forEach((electron, index) => {
@@ -3346,14 +3350,20 @@
 
                 // Attract electrons
                 isCardHovered = true;
-                const rect = card.getBoundingClientRect();
+                const heroSection = document.querySelector('.human-hero');
+                const heroRect = heroSection.getBoundingClientRect();
+                const cardRect = card.getBoundingClientRect();
+
+                // Calculate card center relative to hero section
+                const centerX = cardRect.left - heroRect.left + cardRect.width / 2;
+                const centerY = cardRect.top - heroRect.top + cardRect.height / 2;
 
                 electrons.forEach((electron, index) => {
                     electron.classList.add('attracted');
                     // First move electrons towards the card
                     const angle = (index * (360 / electrons.length)) * (Math.PI / 180);
-                    const x = rect.left + rect.width / 2 + Math.cos(angle) * (rect.width / 2 + 30);
-                    const y = rect.top + rect.height / 2 + Math.sin(angle) * (rect.height / 2 + 30);
+                    const x = centerX + Math.cos(angle) * (cardRect.width / 2 + 30);
+                    const y = centerY + Math.sin(angle) * (cardRect.height / 2 + 30);
 
                     electron.style.left = x + 'px';
                     electron.style.top = y + 'px';

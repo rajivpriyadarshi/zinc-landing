@@ -1991,6 +1991,180 @@
             }
         }
 
+        /* Human Pricing Section */
+        .human-pricing {
+            padding: 120px 80px;
+            background: var(--bg-secondary);
+        }
+
+        .human-pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .human-pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 40px 32px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .human-pricing-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .human-pricing-card.featured {
+            border-color: var(--accent);
+        }
+
+        .human-pricing-card.featured::before {
+            content: 'RECOMMENDED';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #000;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            letter-spacing: 1px;
+        }
+
+        .human-pricing-tier {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        .human-pricing-name {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .human-pricing-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+
+        .human-pricing-price {
+            margin-bottom: 8px;
+        }
+
+        .human-pricing-amount {
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .human-pricing-period {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .human-pricing-unit {
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-bottom: 32px;
+        }
+
+        .human-pricing-features {
+            margin-bottom: 32px;
+        }
+
+        .human-pricing-feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .human-pricing-feature span {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .human-pricing-feature.disabled {
+            color: var(--text-dim);
+        }
+
+        .human-pricing-feature.disabled span {
+            color: var(--text-dim);
+        }
+
+        .human-pricing-cta {
+            display: block;
+            width: 100%;
+            padding: 14px 24px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .human-pricing-cta.primary {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .human-pricing-cta.primary:hover {
+            opacity: 0.9;
+        }
+
+        .human-pricing-cta.secondary {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .human-pricing-cta.secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .human-pricing-note {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-dim);
+            margin-top: 48px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .human-pricing-note code {
+            background: var(--bg-card);
+            padding: 4px 8px;
+            margin: 0 4px;
+            border: 1px solid var(--border);
+            font-size: 11px;
+        }
+
+        @media (max-width: 900px) {
+            .human-pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+
+            .human-pricing-card.featured {
+                order: -1;
+            }
+        }
+
         .human-how-it-works {
             padding: 120px 80px;
         }
@@ -2001,7 +2175,7 @@
             position: relative;
         }
 
-        /* Vertical line connecting steps */
+        /* Vertical line connecting steps - background (grey) */
         .steps-container::before {
             content: '';
             position: absolute;
@@ -2009,7 +2183,20 @@
             top: 32px;
             bottom: 32px;
             width: 2px;
-            background: linear-gradient(to bottom, var(--accent), var(--border), var(--accent));
+            background: var(--border);
+            z-index: 0;
+        }
+
+        /* Progress line (green) - fills as you scroll */
+        .steps-progress-line {
+            position: absolute;
+            left: 32px;
+            top: 32px;
+            width: 2px;
+            height: 0;
+            background: var(--accent);
+            z-index: 0;
+            transition: height 0.5s ease;
         }
 
         .step-row {
@@ -2023,20 +2210,41 @@
             margin-bottom: 0;
         }
 
+        /* Inactive step (default) */
         .step-number {
             flex-shrink: 0;
             width: 64px;
             height: 64px;
             background: var(--bg-primary);
-            border: 2px solid var(--accent);
+            border: 2px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
             font-weight: 700;
-            color: var(--accent);
+            color: var(--text-dim);
             position: relative;
             z-index: 1;
+            transition: all 0.5s ease;
+        }
+
+        /* Active step (green) */
+        .step-row.step-active .step-number {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Inactive step content */
+        .step-row .step-content h3,
+        .step-row .step-body {
+            opacity: 0.4;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Active step content */
+        .step-row.step-active .step-content h3,
+        .step-row.step-active .step-body {
+            opacity: 1;
         }
 
         .step-body {
@@ -2972,82 +3180,6 @@
             </div>
         </section>
 
-        <section class="pricing-section section-alt" id="pricing">
-            <div class="pricing-header animate-on-scroll">
-                <p class="section-label">// pricing_tiers</p>
-                <h2 class="section-title">Pricing</h2>
-                <p class="section-desc" style="margin: 0 auto;">Usage-based pricing. Scale with your agents.</p>
-            </div>
-
-            <div class="pricing-grid animate-on-scroll">
-                <div class="pricing-card">
-                    <p class="pricing-tier">Starter</p>
-                    <h3 class="pricing-name">Free</h3>
-                    <p class="pricing-desc">For testing and development. Get started immediately.</p>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">$0</span>
-                        <span class="pricing-period">/month</span>
-                    </div>
-                    <p class="pricing-unit">Up to 100 transactions/month</p>
-                    <div class="pricing-features">
-                        <p class="pricing-feature"><span>→</span> 3 agents max</p>
-                        <p class="pricing-feature"><span>→</span> $1,000 monthly spend limit</p>
-                        <p class="pricing-feature"><span>→</span> Basic policy engine</p>
-                        <p class="pricing-feature"><span>→</span> REST API access</p>
-                        <p class="pricing-feature"><span>→</span> Community support</p>
-                        <p class="pricing-feature disabled"><span>—</span> Escrow contracts</p>
-                        <p class="pricing-feature disabled"><span>—</span> Stablecoin rails</p>
-                    </div>
-                    <a href="#" class="pricing-cta secondary">$ zinc init --free</a>
-                </div>
-
-                <div class="pricing-card featured">
-                    <p class="pricing-tier">Pro</p>
-                    <h3 class="pricing-name">Usage</h3>
-                    <p class="pricing-desc">For production deployments. Pay only for what you use.</p>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">$0.10</span>
-                        <span class="pricing-period">/transaction</span>
-                    </div>
-                    <p class="pricing-unit">+ 0.5% of transaction value</p>
-                    <div class="pricing-features">
-                        <p class="pricing-feature"><span>→</span> Unlimited agents</p>
-                        <p class="pricing-feature"><span>→</span> $100,000 monthly spend limit</p>
-                        <p class="pricing-feature"><span>→</span> Advanced policy engine</p>
-                        <p class="pricing-feature"><span>→</span> All integration surfaces</p>
-                        <p class="pricing-feature"><span>→</span> Escrow contracts</p>
-                        <p class="pricing-feature"><span>→</span> Stablecoin rails</p>
-                        <p class="pricing-feature"><span>→</span> Priority support</p>
-                    </div>
-                    <a href="#" class="pricing-cta primary">$ get_api_key --pro</a>
-                </div>
-
-                <div class="pricing-card">
-                    <p class="pricing-tier">Enterprise</p>
-                    <h3 class="pricing-name">Custom</h3>
-                    <p class="pricing-desc">For large-scale deployments. Dedicated infrastructure.</p>
-                    <div class="pricing-price">
-                        <span class="pricing-amount">Custom</span>
-                    </div>
-                    <p class="pricing-unit">Volume discounts available</p>
-                    <div class="pricing-features">
-                        <p class="pricing-feature"><span>→</span> Unlimited everything</p>
-                        <p class="pricing-feature"><span>→</span> Custom spend limits</p>
-                        <p class="pricing-feature"><span>→</span> Custom policy DSL</p>
-                        <p class="pricing-feature"><span>→</span> Dedicated infrastructure</p>
-                        <p class="pricing-feature"><span>→</span> SLA guarantees</p>
-                        <p class="pricing-feature"><span>→</span> On-premise deployment</p>
-                        <p class="pricing-feature"><span>→</span> 24/7 dedicated support</p>
-                    </div>
-                    <a href="#" class="pricing-cta secondary">Contact Sales</a>
-                </div>
-            </div>
-
-            <p class="pricing-note animate-on-scroll">
-                All plans include: <code>audit_logs</code> <code>webhook_events</code> <code>api_versioning</code> <code>99.9% uptime</code>
-            </p>
-        </section>
-
         <section class="schema-section" id="schema">
             <div class="schema-header animate-on-scroll">
                 <p class="section-label">// openapi_schema</p>
@@ -3517,7 +3649,8 @@
             </div>
 
             <div class="steps-container">
-                <div class="step-row animate-on-scroll">
+                <div class="steps-progress-line"></div>
+                <div class="step-row step-active animate-on-scroll">
                     <div class="step-number">01</div>
                     <div class="step-body">
                         <div class="step-content">
@@ -3666,6 +3799,82 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section class="human-pricing" id="pricing">
+            <div class="human-section-header animate-on-scroll">
+                <div class="human-section-label">Pricing</div>
+                <h2 class="human-section-title">Usage-based pricing that scales</h2>
+                <p class="human-section-desc">Start free, pay only for what you use. No hidden fees.</p>
+            </div>
+
+            <div class="human-pricing-grid">
+                <div class="human-pricing-card animate-on-scroll">
+                    <p class="human-pricing-tier">Starter</p>
+                    <h3 class="human-pricing-name">Free</h3>
+                    <p class="human-pricing-desc">For testing and development. Get started immediately.</p>
+                    <div class="human-pricing-price">
+                        <span class="human-pricing-amount">$0</span>
+                        <span class="human-pricing-period">/month</span>
+                    </div>
+                    <p class="human-pricing-unit">Up to 100 transactions/month</p>
+                    <div class="human-pricing-features">
+                        <p class="human-pricing-feature"><span>✓</span> 3 agents max</p>
+                        <p class="human-pricing-feature"><span>✓</span> $1,000 monthly spend limit</p>
+                        <p class="human-pricing-feature"><span>✓</span> Basic policy engine</p>
+                        <p class="human-pricing-feature"><span>✓</span> REST API access</p>
+                        <p class="human-pricing-feature"><span>✓</span> Community support</p>
+                        <p class="human-pricing-feature disabled"><span>—</span> Escrow contracts</p>
+                        <p class="human-pricing-feature disabled"><span>—</span> Stablecoin rails</p>
+                    </div>
+                    <a href="#" class="human-pricing-cta secondary">Get Started Free</a>
+                </div>
+
+                <div class="human-pricing-card featured animate-on-scroll">
+                    <p class="human-pricing-tier">Pro</p>
+                    <h3 class="human-pricing-name">Usage</h3>
+                    <p class="human-pricing-desc">For production deployments. Pay only for what you use.</p>
+                    <div class="human-pricing-price">
+                        <span class="human-pricing-amount">$0.10</span>
+                        <span class="human-pricing-period">/transaction</span>
+                    </div>
+                    <p class="human-pricing-unit">+ 0.5% of transaction value</p>
+                    <div class="human-pricing-features">
+                        <p class="human-pricing-feature"><span>✓</span> Unlimited agents</p>
+                        <p class="human-pricing-feature"><span>✓</span> $100,000 monthly spend limit</p>
+                        <p class="human-pricing-feature"><span>✓</span> Advanced policy engine</p>
+                        <p class="human-pricing-feature"><span>✓</span> All integration surfaces</p>
+                        <p class="human-pricing-feature"><span>✓</span> Escrow contracts</p>
+                        <p class="human-pricing-feature"><span>✓</span> Stablecoin rails</p>
+                        <p class="human-pricing-feature"><span>✓</span> Priority support</p>
+                    </div>
+                    <a href="#" class="human-pricing-cta primary">Get API Key</a>
+                </div>
+
+                <div class="human-pricing-card animate-on-scroll">
+                    <p class="human-pricing-tier">Enterprise</p>
+                    <h3 class="human-pricing-name">Custom</h3>
+                    <p class="human-pricing-desc">For large-scale deployments. Dedicated infrastructure.</p>
+                    <div class="human-pricing-price">
+                        <span class="human-pricing-amount">Custom</span>
+                    </div>
+                    <p class="human-pricing-unit">Volume discounts available</p>
+                    <div class="human-pricing-features">
+                        <p class="human-pricing-feature"><span>✓</span> Unlimited everything</p>
+                        <p class="human-pricing-feature"><span>✓</span> Custom spend limits</p>
+                        <p class="human-pricing-feature"><span>✓</span> Custom policy DSL</p>
+                        <p class="human-pricing-feature"><span>✓</span> Dedicated infrastructure</p>
+                        <p class="human-pricing-feature"><span>✓</span> SLA guarantees</p>
+                        <p class="human-pricing-feature"><span>✓</span> On-premise deployment</p>
+                        <p class="human-pricing-feature"><span>✓</span> 24/7 dedicated support</p>
+                    </div>
+                    <a href="#" class="human-pricing-cta secondary">Contact Sales</a>
+                </div>
+            </div>
+
+            <p class="human-pricing-note animate-on-scroll">
+                All plans include: <code>audit_logs</code> <code>webhook_events</code> <code>api_versioning</code> <code>99.9% uptime</code>
+            </p>
         </section>
 
         <section class="human-cta">
@@ -3913,6 +4122,74 @@
                 requestAnimationFrame(animate);
             }
             animate();
+        })();
+
+        // Scroll-based step activation for How It Works section
+        (function initStepScrollAnimation() {
+            const stepsContainer = document.querySelector('.steps-container');
+            const stepRows = document.querySelectorAll('.step-row');
+            const progressLine = document.querySelector('.steps-progress-line');
+
+            if (!stepsContainer || stepRows.length === 0 || !progressLine) return;
+
+            // Calculate positions for progress line
+            function updateProgressLine() {
+                const containerRect = stepsContainer.getBoundingClientRect();
+                const activeSteps = document.querySelectorAll('.step-row.step-active');
+
+                if (activeSteps.length === 0) {
+                    progressLine.style.height = '0px';
+                    return;
+                }
+
+                // Get the last active step
+                const lastActiveStep = activeSteps[activeSteps.length - 1];
+                const stepNumber = lastActiveStep.querySelector('.step-number');
+
+                if (stepNumber) {
+                    const stepRect = stepNumber.getBoundingClientRect();
+                    // Calculate height from top of container to center of last active step number
+                    const height = (stepRect.top - containerRect.top) + (stepRect.height / 2) - 32;
+                    progressLine.style.height = Math.max(0, height) + 'px';
+                }
+            }
+
+            // Create observer for steps
+            const stepObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Activate this step and all previous steps
+                        const currentStep = entry.target;
+                        let foundCurrent = false;
+
+                        stepRows.forEach(step => {
+                            if (step === currentStep) {
+                                foundCurrent = true;
+                            }
+                            if (!foundCurrent || step === currentStep) {
+                                step.classList.add('step-active');
+                            }
+                        });
+
+                        // Update progress line
+                        updateProgressLine();
+                    }
+                });
+            }, {
+                root: null,
+                rootMargin: '-20% 0px -20% 0px',
+                threshold: 0.3
+            });
+
+            // Observe all steps except the first (which is already active)
+            stepRows.forEach((step, index) => {
+                if (index > 0) {
+                    stepObserver.observe(step);
+                }
+            });
+
+            // Initial progress line for first step
+            updateProgressLine();
         })();
 
         // Scroll animation observer

@@ -57,6 +57,30 @@
         body.machine-mode .view-machine { display: block; }
         body.machine-mode .view-human { display: none; }
 
+        /* Typing animation */
+        .typing-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: var(--accent);
+            margin-left: 4px;
+            animation: blink 0.7s step-end infinite;
+            vertical-align: text-bottom;
+        }
+
+        .typing-cursor.hidden {
+            display: none;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .hero-text-typing {
+            min-height: 1.2em;
+        }
+
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -1134,7 +1158,12 @@
             border-radius: 50%;
             box-shadow: 0 0 10px var(--accent), 0 0 20px var(--accent), 0 0 30px var(--accent);
             pointer-events: none;
-            z-index: 1;
+            z-index: 10;
+        }
+
+        .electron.following {
+            animation: none !important;
+            opacity: 1 !important;
         }
 
         .electron-1 {
@@ -1242,8 +1271,19 @@
             height: 500px;
             background: radial-gradient(circle, rgba(0, 208, 132, 0.15) 0%, transparent 70%);
             pointer-events: none;
-            animation: pulse 8s ease-in-out infinite;
             z-index: 0;
+            opacity: 0;
+        }
+
+        @keyframes glowFadeInPulse {
+            0% { opacity: 0; transform: scale(1); }
+            10% { opacity: 1; transform: scale(1); }
+            55% { opacity: 0.8; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .human-hero.glow-visible::after {
+            animation: glowFadeInPulse 8s ease-in-out infinite;
         }
 
         /* Scan line effect */
@@ -1351,7 +1391,7 @@
             font-weight: 600;
             color: var(--accent);
             margin-bottom: 32px;
-            animation: fadeInUp 0.6s ease backwards;
+            opacity: 0;
         }
 
         .human-hero-badge::before {
@@ -1369,7 +1409,6 @@
             line-height: 1.15;
             letter-spacing: -1px;
             margin-bottom: 24px;
-            animation: fadeInUp 0.6s ease 0.1s backwards;
         }
 
         .human-hero h1 .accent-text {
@@ -1381,13 +1420,15 @@
             color: var(--text-muted);
             line-height: 1.6;
             margin-bottom: 40px;
-            animation: fadeInUp 0.6s ease 0.2s backwards;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         .human-hero-ctas {
             display: flex;
             gap: 16px;
-            animation: fadeInUp 0.6s ease 0.3s backwards;
+            opacity: 0;
+            transform: translateY(20px);
         }
 
         .human-btn {
@@ -1440,7 +1481,7 @@
             border: 1px solid var(--border-light);
             padding: 20px 24px;
             cursor: pointer;
-            transition: all 0.15s ease-out;
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out, border-color 0.15s ease, box-shadow 0.15s ease;
             transform-style: preserve-3d;
         }
 
@@ -1467,6 +1508,13 @@
             top: 20px;
             left: 40px;
             z-index: 3;
+            opacity: 0;
+            transform: translateX(100px) rotate(-2deg);
+        }
+
+        .floating-card.card-1.visible {
+            opacity: 1;
+            transform: translateX(0) rotate(-2deg);
             animation: cardFloat 6s ease-in-out infinite;
         }
 
@@ -1474,6 +1522,13 @@
             top: 100px;
             left: 80px;
             z-index: 2;
+            opacity: 0;
+            transform: translateX(120px) rotate(3deg);
+        }
+
+        .floating-card.card-2.visible {
+            opacity: 1;
+            transform: translateX(0) rotate(3deg);
             animation: cardFloat2 7s ease-in-out infinite;
         }
 
@@ -1481,6 +1536,13 @@
             top: 180px;
             left: 20px;
             z-index: 1;
+            opacity: 0;
+            transform: translateX(140px) rotate(-1deg);
+        }
+
+        .floating-card.card-3.visible {
+            opacity: 1;
+            transform: translateX(0) rotate(-1deg);
             animation: cardFloat3 8s ease-in-out infinite;
         }
 
@@ -2751,13 +2813,13 @@
             <div class="hero-grid-container">
                 <div class="perspective-grid"></div>
                 <div class="grid-glow"></div>
-                <!-- Electrons moving on the grid -->
-                <div class="electron electron-1"></div>
-                <div class="electron electron-2"></div>
-                <div class="electron electron-3"></div>
-                <div class="electron electron-4"></div>
-                <div class="electron electron-5"></div>
             </div>
+            <!-- Electrons (magic wand trail) -->
+            <div class="electron electron-1"></div>
+            <div class="electron electron-2"></div>
+            <div class="electron electron-3"></div>
+            <div class="electron electron-4"></div>
+            <div class="electron electron-5"></div>
             <!-- Vertical depth lines -->
             <div class="depth-lines">
                 <div class="depth-line"></div>
@@ -3162,6 +3224,166 @@
                 }
             });
         });
+
+        // Typing animation for hero text
+        (function initTypingAnimation() {
+            const heroTitle = document.querySelector('.human-hero h1');
+            const heroSubtitle = document.querySelector('.human-hero-subtitle');
+            const heroBadge = document.querySelector('.human-hero-badge');
+            const heroCTAs = document.querySelector('.human-hero-ctas');
+
+            if (!heroTitle || body.classList.contains('machine-mode')) return;
+
+            // Text content
+            const titleText = 'Give your AI agents ';
+            const accentText = 'financial superpowers';
+
+            // Hide badge initially (will fade in at the end)
+            heroBadge.style.opacity = '0';
+
+            // Clear title and show cursor
+            heroTitle.innerHTML = '<span class="typing-cursor"></span>';
+
+            // Typing speed
+            const typingSpeed = 30;
+
+            // Start typing after a short delay
+            setTimeout(() => {
+                let i = 0;
+
+                function typeTitle() {
+                    if (i < titleText.length) {
+                        heroTitle.innerHTML = titleText.substring(0, i + 1) + '<span class="typing-cursor"></span>';
+                        i++;
+                        setTimeout(typeTitle, typingSpeed);
+                    } else {
+                        // Now type the accent text
+                        let j = 0;
+                        function typeAccent() {
+                            if (j < accentText.length) {
+                                heroTitle.innerHTML = titleText + '<span class="accent-text">' + accentText.substring(0, j + 1) + '</span><span class="typing-cursor"></span>';
+                                j++;
+                                setTimeout(typeAccent, typingSpeed);
+                            } else {
+                                // Typing complete - start the reveal sequence
+                                setTimeout(() => {
+                                    // Hide cursor
+                                    const finalCursor = heroTitle.querySelector('.typing-cursor');
+                                    if (finalCursor) finalCursor.classList.add('hidden');
+
+                                    // Step 1: Slide up subtitle into view
+                                    setTimeout(() => {
+                                        heroSubtitle.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                                        heroSubtitle.style.opacity = '1';
+                                        heroSubtitle.style.transform = 'translateY(0)';
+
+                                        // Step 2: Slide up CTAs
+                                        setTimeout(() => {
+                                            heroCTAs.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                                            heroCTAs.style.opacity = '1';
+                                            heroCTAs.style.transform = 'translateY(0)';
+
+                                            // Step 3: Fade in badge at the end
+                                            setTimeout(() => {
+                                                heroBadge.style.transition = 'opacity 0.6s ease';
+                                                heroBadge.style.opacity = '1';
+
+                                                // Step 4: Animate cards one by one
+                                                const cards = document.querySelectorAll('.floating-card');
+                                                const heroSection = document.querySelector('.human-hero');
+                                                cards.forEach((card, index) => {
+                                                    setTimeout(() => {
+                                                        card.classList.add('visible');
+
+                                                        // Show glow after last card appears
+                                                        if (index === cards.length - 1) {
+                                                            setTimeout(() => {
+                                                                heroSection.classList.add('glow-visible');
+                                                            }, 400);
+                                                        }
+                                                    }, index * 200); // 200ms delay between each card
+                                                });
+                                            }, 400);
+                                        }, 300);
+                                    }, 200);
+                                }, 400);
+                            }
+                        }
+                        typeAccent();
+                    }
+                }
+                typeTitle();
+            }, 500);
+        })();
+
+        // Electron mouse-following behavior (magic wand trail effect)
+        (function initElectronMouseFollow() {
+            const heroSection = document.querySelector('.human-hero');
+            const electrons = Array.from(document.querySelectorAll('.electron'));
+            if (!heroSection || electrons.length === 0) return;
+
+            let mouseX = 0;
+            let mouseY = 0;
+            let isMouseInHero = false;
+
+            // Each electron has its own position that lerps towards target
+            const electronStates = electrons.map((el, i) => ({
+                element: el,
+                x: 0,
+                y: 0,
+                // Different follow speeds create the trail effect
+                speed: 0.04 + (i * 0.025)
+            }));
+
+            heroSection.addEventListener('mouseenter', (e) => {
+                isMouseInHero = true;
+                const rect = heroSection.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+
+                // Initialize all electrons to current mouse position
+                electronStates.forEach(state => {
+                    state.x = mouseX;
+                    state.y = mouseY;
+                });
+
+                electrons.forEach(el => el.classList.add('following'));
+            });
+
+            heroSection.addEventListener('mouseleave', () => {
+                isMouseInHero = false;
+                electrons.forEach(electron => {
+                    electron.classList.remove('following');
+                    electron.style.left = '';
+                    electron.style.top = '';
+                    electron.style.bottom = '';
+                });
+            });
+
+            heroSection.addEventListener('mousemove', (e) => {
+                const rect = heroSection.getBoundingClientRect();
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
+            });
+
+            // Animation loop for smooth trailing
+            function animate() {
+                if (isMouseInHero) {
+                    electronStates.forEach((state) => {
+                        // Lerp towards mouse position (slower = more trail)
+                        state.x += (mouseX - state.x) * state.speed;
+                        state.y += (mouseY - state.y) * state.speed;
+
+                        // Use pixel positioning for precision
+                        state.element.style.left = state.x + 'px';
+                        state.element.style.top = state.y + 'px';
+                        state.element.style.bottom = 'auto';
+                    });
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        })();
 
         // Scroll animation observer
         const observerOptions = {

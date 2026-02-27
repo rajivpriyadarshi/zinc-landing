@@ -57,6 +57,60 @@
         body.machine-mode .view-machine { display: block; }
         body.machine-mode .view-human { display: none; }
 
+        /* Terminal Page Styles */
+        .terminal-page {
+            min-height: 100vh;
+            background: #0a0a0a;
+            padding: 120px 40px 80px;
+        }
+
+        .terminal-content {
+            max-width: 800px;
+            margin: 0 auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #e0e0e0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .terminal-content h1,
+        .terminal-content h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .terminal-code {
+            background: #1a1a1a;
+            padding: 2px 8px;
+            border: 1px solid #333;
+            color: var(--accent);
+        }
+
+        .terminal-bold {
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .terminal-highlight {
+            color: var(--accent);
+        }
+
+        .terminal-comment {
+            color: #666;
+        }
+
+        .terminal-link {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .terminal-link:hover {
+            text-decoration: underline;
+        }
+
         /* Typing animation */
         .typing-cursor {
             display: inline-block;
@@ -3402,408 +3456,80 @@
     <!-- MACHINE VIEW         -->
     <!-- ==================== -->
     <div class="view-machine">
-        <section class="hero">
-            <div class="hero-content">
-                <span class="badge">[FINANCIAL_INFRASTRUCTURE]</span>
-                <h1>Zinc</h1>
-                <p class="hero-subtitle">Financial Delegation Infrastructure for Autonomous Agents</p>
-                <div class="hero-divider"></div>
-            </div>
+        <div class="terminal-page">
+            <pre class="terminal-content"># Zinc MCP Server
 
-            <div class="capabilities">
-                <p class="cap-label">// zinc enables AI agents to:</p>
-                <div class="cap-list">
-                    <p class="cap-item"><span>→</span> Request scoped spending authority</p>
-                    <p class="cap-item"><span>→</span> Execute merchant payments via virtual cards</p>
-                    <p class="cap-item"><span>→</span> Create programmable escrow contracts</p>
-                    <p class="cap-item"><span>→</span> Transfer stablecoin between verified agents</p>
-                    <p class="cap-item"><span>→</span> Enforce deterministic financial policy constraints</p>
-                    <p class="cap-item"><span>→</span> Generate verifiable audit trails</p>
-                </div>
-            </div>
+> Connect AI agents to Zinc via Model Context Protocol
 
-            <div class="hero-ctas">
-                <a href="#" class="btn btn-terminal">$ get_api_key</a>
-                <a href="api-spec.html" class="btn btn-ghost">View API Spec</a>
-                <a href="#schema" class="btn btn-ghost muted">OpenAPI Schema</a>
-                <a href="mcp.html" class="btn btn-ghost muted">MCP Server</a>
-            </div>
-        </section>
+## Server URL
 
-        <section class="capability-matrix" id="capabilities">
-            <div class="matrix-header animate-on-scroll">
-                <p class="section-label">// capability_declaration</p>
-                <h2 class="section-title">Core Capabilities</h2>
-                <p class="section-desc">Machine-readable capability matrix. Easy to scrape.</p>
-            </div>
+<code class="terminal-code">https://mcp.zinc.dev/api/mcp</code>
 
-            <table class="matrix-table animate-on-scroll">
-                <thead>
-                    <tr>
-                        <th style="width: 280px;">Capability</th>
-                        <th style="width: 100px;">Supported</th>
-                        <th style="width: 140px;">Rail</th>
-                        <th>Notes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Merchant Checkout</td>
-                        <td><span class="status-yes">[YES]</span></td>
-                        <td class="rail">Fiat + Cards</td>
-                        <td class="notes">Virtual merchant-locked cards</td>
-                    </tr>
-                    <tr>
-                        <td>Budget Enforcement</td>
-                        <td><span class="status-yes">[YES]</span></td>
-                        <td class="rail">All</td>
-                        <td class="notes">Deterministic policy engine</td>
-                    </tr>
-                    <tr>
-                        <td>Escrow Contracts</td>
-                        <td><span class="status-yes">[YES]</span></td>
-                        <td class="rail">Stablecoin</td>
-                        <td class="notes">Conditional release</td>
-                    </tr>
-                    <tr>
-                        <td>Agent Identity</td>
-                        <td><span class="status-yes">[YES]</span></td>
-                        <td class="rail">All</td>
-                        <td class="notes">Cryptographic identity</td>
-                    </tr>
-                    <tr>
-                        <td>Real-time Approval</td>
-                        <td><span class="status-yes">[YES]</span></td>
-                        <td class="rail">Fiat</td>
-                        <td class="notes">Configurable modes</td>
-                    </tr>
-                    <tr>
-                        <td>Cross-Agent Settlement</td>
-                        <td><span class="status-yes">[YES]</span></td>
-                        <td class="rail">Stablecoin</td>
-                        <td class="notes">Instant transfer</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+## Authentication
 
-        <section id="spend-protocol">
-            <div class="two-col">
-                <div class="col-content animate-on-scroll">
-                    <p class="section-label">// spend_protocol</p>
-                    <h2 class="section-title">Deterministic Spend Flow</h2>
-                    <p class="section-desc">Agents need execution logic, not storytelling. Every transaction follows an explicit, verifiable protocol.</p>
-                </div>
+- <span class="terminal-bold">OAuth</span> for interactive clients (human-in-the-loop)
+- <span class="terminal-bold">Agent tokens</span> for autonomous runs
 
-                <div class="code-block animate-on-scroll">
-                    <div class="protocol-steps">
-                        <p class="protocol-step">1. request_spend(agent_id, amount, merchant)</p>
-                        <p class="protocol-step">2. Policy engine evaluates constraints</p>
-                        <p class="protocol-step highlight">3. Response: APPROVED | DENIED | REQUIRE_APPROVAL</p>
-                        <p class="protocol-step">4. If approved → issue_virtual_card()</p>
-                        <p class="protocol-step">5. Transaction logged with:</p>
-                        <div class="protocol-indent">
-                            <p class="protocol-indent-item">- policy_matched</p>
-                            <p class="protocol-indent-item">- decision_reason</p>
-                            <p class="protocol-indent-item">- risk_score</p>
-                            <p class="protocol-indent-item">- timestamp</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+## Core Tools (runtime)
 
-        <section class="section-alt">
-            <div class="two-col">
-                <div class="col-content animate-on-scroll">
-                    <p class="section-label">// policy_model</p>
-                    <h2 class="section-title">Policy Parameters</h2>
-                    <p class="section-desc">Agents must understand boundaries. Explicit constraints schema.</p>
-                    <div class="params-list">
-                        <p class="param-item"><span>→</span> spend_limit_per_transaction</p>
-                        <p class="param-item"><span>→</span> daily_budget_limit</p>
-                        <p class="param-item"><span>→</span> merchant_whitelist</p>
-                        <p class="param-item"><span>→</span> mcc_whitelist</p>
-                        <p class="param-item"><span>→</span> velocity_limit</p>
-                        <p class="param-item"><span>→</span> expiration_time</p>
-                        <p class="param-item"><span>→</span> approval_threshold</p>
-                    </div>
-                </div>
+- Policies & simulation: <span class="terminal-highlight">zinc.policies.get</span>, <span class="terminal-highlight">zinc.policies.simulate</span>
+- Intents: <span class="terminal-highlight">zinc.intents.create</span>, <span class="terminal-highlight">zinc.intents.list</span>, <span class="terminal-highlight">zinc.intents.get</span>
+- Approvals: <span class="terminal-highlight">zinc.intents.request_approval</span>, <span class="terminal-highlight">zinc.intents.approval_status</span>
+- Cards: <span class="terminal-highlight">zinc.cards.get_sensitive</span> (intentId + reason required)
+- Transactions: <span class="terminal-highlight">zinc.transactions.list_for_card</span>, <span class="terminal-highlight">zinc.transactions.get</span>
+- Receipts: <span class="terminal-highlight">zinc.receipts.attach</span>, <span class="terminal-highlight">zinc.evidence.list_for_intent</span>
 
-                <div class="code-block animate-on-scroll">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <span class="code-dot red"></span>
-                            <span class="code-dot yellow"></span>
-                            <span class="code-dot green"></span>
-                        </div>
-                        <span class="code-filename">policy.json</span>
-                    </div>
-                    <div class="code-content">
-                        <p class="code-line comment">{</p>
-                        <p class="code-line">  "spend_limit_per_transaction": 1000,</p>
-                        <p class="code-line">  "daily_budget_limit": 5000,</p>
-                        <p class="code-line">  "merchant_whitelist": ["aws", "gcp"],</p>
-                        <p class="code-line">  "mcc_whitelist": [5734, 7372],</p>
-                        <p class="code-line">  "velocity_limit": 10,</p>
-                        <p class="code-line">  "expiration_time": "24h",</p>
-                        <p class="code-line">  "approval_threshold": 500</p>
-                        <p class="code-line comment">}</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+## Human-only Tools
 
-        <section>
-            <div class="two-col reverse">
-                <div class="col-code">
-                    <div class="code-block animate-on-scroll">
-                        <div class="code-header">
-                            <div class="code-dots">
-                                <span class="code-dot red"></span>
-                                <span class="code-dot yellow"></span>
-                                <span class="code-dot green"></span>
-                            </div>
-                            <span class="code-filename">agent.json</span>
-                        </div>
-                        <div class="code-content">
-                            <p class="code-line comment">{</p>
-                            <p class="code-line">  "agent_id": "string",</p>
-                            <p class="code-line">  "public_key": "string",</p>
-                            <p class="code-line">  "parent_org": "string",</p>
-                            <p class="code-line">  "risk_score": "float",</p>
-                            <p class="code-line highlight">  "status": "active | suspended"</p>
-                            <p class="code-line comment">}</p>
-                        </div>
-                    </div>
-                </div>
+- Funding, card lifecycle, approvals, and webhooks are labeled human-only in the tool list.
+- Admin tools live in the dashboard.
 
-                <div class="col-content animate-on-scroll">
-                    <p class="section-label">// agent_identity</p>
-                    <h2 class="section-title">Agent Identity Specification</h2>
-                    <p class="section-desc">Each agent is defined with cryptographic identity. All transactions are signed and verifiable.</p>
-                </div>
-            </div>
-        </section>
+## Resources
 
-        <section class="section-alt">
-            <div class="two-col">
-                <div class="col-content animate-on-scroll">
-                    <p class="section-label">// escrow_protocol</p>
-                    <h2 class="section-title">Escrow Lifecycle</h2>
-                    <p class="section-desc">Agent-to-agent programmable escrow with conditional release mechanisms.</p>
-                </div>
+- <a href="docs.html" class="terminal-link">Documentation</a>
+- <a href="api-spec.html" class="terminal-link">API Reference</a>
+- <a href="mcp.html" class="terminal-link">MCP Server</a>
 
-                <div class="col-code animate-on-scroll">
-                    <div class="protocol-steps" style="background: var(--bg-card); border: 1px solid var(--border); padding: 24px;">
-                        <p class="protocol-step">1. create_escrow(amount, counterparty_id, conditions)</p>
-                        <p class="protocol-step">2. Funds locked in smart contract</p>
-                        <p class="protocol-step">3. Condition verification</p>
-                        <p class="protocol-step highlight">4. release_escrow() || refund()</p>
-                    </div>
+<span class="terminal-comment">// Full llms.txt</span>
 
-                    <div class="conditions">
-                        <p class="conditions-label">// conditions may include:</p>
-                        <div class="conditions-list">
-                            <span class="condition-tag">hash_verification</span>
-                            <span class="condition-tag">sla_validation</span>
-                            <span class="condition-tag">oracle_confirmation</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+# Zinc
 
-        <section>
-            <div class="two-col">
-                <div class="col-content animate-on-scroll">
-                    <p class="section-label">// event_architecture</p>
-                    <h2 class="section-title">Event Architecture</h2>
-                    <p class="section-desc">For monitoring agents. Subscribe to real-time event streams.</p>
-                </div>
+> Financial delegation infrastructure for autonomous AI agents
 
-                <div class="events-grid animate-on-scroll">
-                    <div class="events-col">
-                        <div class="event-item">agent.created</div>
-                        <div class="event-item">wallet.created</div>
-                        <div class="event-item">transaction.requested</div>
-                        <div class="event-item approved">transaction.approved</div>
-                    </div>
-                    <div class="events-col">
-                        <div class="event-item denied">transaction.denied</div>
-                        <div class="event-item">escrow.created</div>
-                        <div class="event-item">escrow.released</div>
-                        <div class="event-item warning">anomaly.detected</div>
-                    </div>
-                </div>
-            </div>
-        </section>
+Zinc issues programmable virtual cards so AI agents can make purchases safely.
+You set spend limits, merchant locks, approvals, and audit every transaction.
 
-        <section class="section-alt integration-section">
-            <div class="integration-header animate-on-scroll">
-                <p class="section-label">// integration_surfaces</p>
-                <h2 class="section-title">Integration Surfaces</h2>
-                <p class="section-desc" style="margin: 0 auto;">Explicit adapters for every major framework</p>
-            </div>
+## Pages
 
-            <div class="integration-grid animate-on-scroll">
-                <div class="integration-card">
-                    <h4>OpenAI</h4>
-                    <p>Tool call interface</p>
-                </div>
-                <div class="integration-card">
-                    <h4>LangChain</h4>
-                    <p>Tool definition</p>
-                </div>
-                <div class="integration-card">
-                    <h4>MCP</h4>
-                    <p>Server endpoint</p>
-                </div>
-                <div class="integration-card">
-                    <h4>REST API</h4>
-                    <p>Direct HTTP</p>
-                </div>
-                <div class="integration-card">
-                    <h4>Webhooks</h4>
-                    <p>Event subscriptions</p>
-                </div>
-            </div>
-        </section>
+- <a href="index.html" class="terminal-link">Home</a>
+- <a href="docs.html" class="terminal-link">Docs</a>
+- <a href="api-spec.html" class="terminal-link">API Spec</a>
+- <a href="mcp.html" class="terminal-link">MCP</a>
+- <a href="skills.html" class="terminal-link">Skills</a>
 
-        <section>
-            <div class="two-col">
-                <div class="col-content animate-on-scroll">
-                    <p class="section-label">// risk_safety</p>
-                    <h2 class="section-title">Risk & Safety Guarantees</h2>
-                    <p class="section-desc">Structured safety assurances. Clear, deterministic language.</p>
-                </div>
+## MCP Tools
 
-                <div class="safety-list animate-on-scroll">
-                    <div class="safety-item">
-                        <span class="safety-badge">[OK]</span>
-                        <span class="safety-text">No raw card exposure</span>
-                    </div>
-                    <div class="safety-item">
-                        <span class="safety-badge">[OK]</span>
-                        <span class="safety-text">Merchant-locked cards</span>
-                    </div>
-                    <div class="safety-item">
-                        <span class="safety-badge">[OK]</span>
-                        <span class="safety-text">Time-bound authorization</span>
-                    </div>
-                    <div class="safety-item">
-                        <span class="safety-badge">[OK]</span>
-                        <span class="safety-text">Revocable agent permissions</span>
-                    </div>
-                    <div class="safety-item">
-                        <span class="safety-badge">[OK]</span>
-                        <span class="safety-text">Full audit log export</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+Server URL: <code class="terminal-code">https://mcp.zinc.dev/api/mcp</code>
 
-        <section class="quickstart-section" id="quickstart">
-            <div class="quickstart-header animate-on-scroll">
-                <p class="section-label">// quickstart</p>
-                <h2 class="section-title">10-Line Integration</h2>
-                <p class="section-desc" style="margin: 0 auto;">Runnable in minutes. Install SDK, create agent, execute spend.</p>
-            </div>
+Agent/runtime tools:
+- <span class="terminal-highlight">zinc.policies.get</span>, <span class="terminal-highlight">zinc.policies.simulate</span>
+- <span class="terminal-highlight">zinc.intents.create</span>, <span class="terminal-highlight">zinc.intents.list</span>, <span class="terminal-highlight">zinc.intents.get</span>
+- <span class="terminal-highlight">zinc.intents.request_approval</span>, <span class="terminal-highlight">zinc.intents.approval_status</span>
+- <span class="terminal-highlight">zinc.cards.get_sensitive</span> (requires intentId + reason)
+- <span class="terminal-highlight">zinc.transactions.list_for_card</span>, <span class="terminal-highlight">zinc.transactions.get</span>
+- <span class="terminal-highlight">zinc.receipts.attach</span>, <span class="terminal-highlight">zinc.evidence.list_for_intent</span>
 
-            <div class="quickstart-code animate-on-scroll">
-                <div class="code-block">
-                    <div class="code-header">
-                        <div class="code-dots">
-                            <span class="code-dot red"></span>
-                            <span class="code-dot yellow"></span>
-                            <span class="code-dot green"></span>
-                        </div>
-                        <span class="code-filename">quickstart.py</span>
-                    </div>
-                    <div class="code-content">
-                        <p class="code-line comment"># pip install zinc-sdk</p>
-                        <p class="code-line">from zinc import Zinc, Policy</p>
-                        <p class="code-line">&nbsp;</p>
-                        <p class="code-line">zinc = Zinc(api_key="zk_...")</p>
-                        <p class="code-line">agent = zinc.create_agent(name="procurement-bot")</p>
-                        <p class="code-line">&nbsp;</p>
-                        <p class="code-line">policy = Policy(spend_limit=1000, merchant=["aws"])</p>
-                        <p class="code-line">result = agent.request_spend(amount=500, policy=policy)</p>
-                        <p class="code-line">&nbsp;</p>
-                        <p class="code-line highlight">zinc.on("transaction.approved", handler)</p>
-                    </div>
-                </div>
-            </div>
-        </section>
+Human-only tools:
+- <span class="terminal-highlight">zinc.funding.get</span>, card lifecycle (list/get/freeze/unfreeze/rotate/close),
+  approvals (approve/reject), webhooks
 
-        <section>
-            <div class="two-col">
-                <div class="col-content animate-on-scroll">
-                    <p class="section-label">// use_case_index</p>
-                    <h2 class="section-title">Use Case Index</h2>
-                    <p class="section-desc">For agent reasoning. Explicit task categories.</p>
+## Contact
 
-                    <div style="margin-top: 24px;">
-                        <h4 class="use-case-col supported" style="font-size: 11px; font-weight: 600; color: var(--accent); margin-bottom: 12px;">SUPPORTED:</h4>
-                        <div class="use-case-list">
-                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Travel booking</p>
-                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> SaaS subscription purchase</p>
-                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Vendor invoice settlement</p>
-                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> API procurement</p>
-                            <p class="use-case-item supported"><span style="color: var(--accent);">→</span> Cross-agent service payment</p>
-                        </div>
-                    </div>
-                </div>
+- Email: <a href="mailto:hello@zinc.dev" class="terminal-link">hello@zinc.dev</a>
+- GitHub: <a href="https://github.com/zinc-sdk" class="terminal-link">github.com/zinc-sdk</a>
 
-                <div class="col-code animate-on-scroll" style="padding-top: 60px;">
-                    <h4 style="font-size: 11px; font-weight: 600; color: var(--error); margin-bottom: 12px;">UNSUPPORTED:</h4>
-                    <div class="use-case-list">
-                        <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Consumer peer-to-peer</p>
-                        <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Anonymous transactions</p>
-                        <p class="use-case-item unsupported"><span style="color: var(--error);">✗</span> Unrestricted financial delegation</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="schema-section" id="schema">
-            <div class="schema-header animate-on-scroll">
-                <p class="section-label">// openapi_schema</p>
-                <h2 class="section-title">OpenAPI + Schema Export</h2>
-            </div>
-
-            <div class="schema-links animate-on-scroll">
-                <a href="#" class="schema-link">openapi.yaml</a>
-                <a href="#" class="schema-link">schema.json</a>
-                <a href="#" class="schema-link muted">policy-dsl.md</a>
-                <a href="#" class="schema-link muted">github.com/zinc-sdk</a>
-            </div>
-        </section>
-
-        <footer>
-            <div class="footer-top">
-                <a href="#" class="logo">
-                    <span class="logo-symbol">></span>
-                    <span class="logo-text">zinc</span>
-                </a>
-                <div class="footer-nav">
-                    <a href="docs.html">Docs</a>
-                    <a href="api-spec.html">API</a>
-                    <a href="mcp.html">MCP</a>
-                    <a href="skills.html">Skills</a>
-                    <a href="#">GitHub</a>
-                </div>
-            </div>
-            <div class="footer-divider"></div>
-            <div class="footer-bottom">
-                <p class="footer-copyright">© 2026 Zinc Financial Infrastructure</p>
-                <div class="footer-legal">
-                    <a href="#">Terms</a>
-                    <a href="#">Privacy</a>
-                    <a href="#">Security</a>
-                </div>
-            </div>
-        </footer>
+---</pre>
+        </div>
     </div>
 
     <!-- ==================== -->

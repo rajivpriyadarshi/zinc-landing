@@ -1938,6 +1938,283 @@
             transform: translateX(4px);
         }
 
+        .use-case-card {
+            cursor: pointer;
+        }
+
+        /* Expanded Use Case Modal */
+        .use-case-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0);
+            z-index: 1000;
+            pointer-events: none;
+            transition: background 0.4s ease;
+        }
+
+        .use-case-overlay.active {
+            background: rgba(0, 0, 0, 0.85);
+            pointer-events: all;
+        }
+
+        .use-case-card.expanding {
+            position: fixed;
+            z-index: 1001;
+            transition: all 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+        }
+
+        .use-case-card.expanded {
+            position: fixed;
+            z-index: 1001;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            width: 90vw !important;
+            max-width: 900px !important;
+            max-height: 85vh;
+            overflow-y: auto;
+            flex-direction: column;
+            background: var(--bg-primary);
+            border-color: var(--accent);
+        }
+
+        .use-case-card.expanded .use-case-number {
+            display: none;
+        }
+
+        .use-case-card.expanded .use-case-arrow {
+            display: none;
+        }
+
+        .use-case-card.expanded .use-case-content {
+            padding: 40px;
+        }
+
+        .use-case-card.expanded .use-case-title {
+            font-size: 28px;
+        }
+
+        .use-case-card.expanded .use-case-desc {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Close button for expanded card */
+        .use-case-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 24px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .use-case-close:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .use-case-card.expanded .use-case-close {
+            display: flex;
+        }
+
+        /* Detailed content (hidden by default) */
+        .use-case-details {
+            display: none;
+            flex-direction: column;
+            gap: 32px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .use-case-card.expanded .use-case-details {
+            display: flex;
+        }
+
+        .use-case-detail-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .use-case-detail-section p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* How It Works Timeline */
+        .use-case-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .use-case-timeline-step {
+            display: flex;
+            gap: 16px;
+            position: relative;
+        }
+
+        .use-case-timeline-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .use-case-timeline-dot {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-primary);
+            border: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .use-case-timeline-line {
+            width: 2px;
+            flex: 1;
+            background: var(--border);
+            min-height: 20px;
+        }
+
+        .use-case-timeline-step:last-child .use-case-timeline-line {
+            display: none;
+        }
+
+        .use-case-timeline-content {
+            flex: 1;
+            padding-bottom: 24px;
+        }
+
+        .use-case-timeline-step:last-child .use-case-timeline-content {
+            padding-bottom: 0;
+        }
+
+        .use-case-timeline-content h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .use-case-timeline-content p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .use-case-features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .use-case-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .use-case-feature-icon {
+            color: var(--accent);
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .use-case-feature h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .use-case-feature p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .use-case-code {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+
+        .use-case-code .code-comment {
+            color: var(--text-dim);
+        }
+
+        .use-case-code .code-keyword {
+            color: var(--accent);
+        }
+
+        .use-case-code .code-string {
+            color: #a5d6ff;
+        }
+
+        .use-case-code .code-number {
+            color: #ffa657;
+        }
+
+        .use-case-cta-btn {
+            display: inline-block;
+            padding: 14px 28px;
+            background: var(--accent);
+            color: #000;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+
+        .use-case-cta-btn:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .use-case-card.expanded {
+                width: 95vw !important;
+                max-height: 90vh;
+            }
+
+            .use-case-card.expanded .use-case-content {
+                padding: 24px;
+            }
+
+            .use-case-features {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .use-cases-cta {
             max-width: 1200px;
             margin: 60px auto 0;
@@ -1991,7 +2268,7 @@
             }
         }
 
-        /* Human Pricing Section */
+        /* Human Pricing Section - COMMENTED OUT
         .human-pricing {
             padding: 120px 80px;
             background: var(--bg-secondary);
@@ -2164,6 +2441,7 @@
                 order: -1;
             }
         }
+        END Human Pricing Section */
 
         .human-how-it-works {
             padding: 120px 80px;
@@ -2329,47 +2607,6 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
-        /* Stats Section */
-        .human-stats {
-            padding: 100px 80px;
-            background: var(--bg-secondary);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 40px;
-            max-width: 1000px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        .stat-item {
-            padding: 40px 20px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-        }
-
-        .stat-value {
-            font-size: 48px;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 8px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
         /* CTA Section */
         .human-cta {
             padding: 120px 80px;
@@ -3369,27 +3606,6 @@
             </div>
         </section>
 
-        <section class="human-stats">
-            <div class="stats-grid">
-                <div class="stat-item animate-on-scroll">
-                    <div class="stat-value">$2.5M+</div>
-                    <div class="stat-label">Processed Monthly</div>
-                </div>
-                <div class="stat-item animate-on-scroll">
-                    <div class="stat-value">150+</div>
-                    <div class="stat-label">Active Agents</div>
-                </div>
-                <div class="stat-item animate-on-scroll">
-                    <div class="stat-value">99.9%</div>
-                    <div class="stat-label">Uptime SLA</div>
-                </div>
-                <div class="stat-item animate-on-scroll">
-                    <div class="stat-value">&lt;50ms</div>
-                    <div class="stat-label">Avg Response</div>
-                </div>
-            </div>
-        </section>
-
         <section class="human-features">
             <div class="human-section-header animate-on-scroll">
                 <div class="human-section-label">Capabilities</div>
@@ -3508,6 +3724,8 @@
             </div>
         </section>
 
+        <div class="use-case-overlay"></div>
+
         <section class="human-use-cases">
             <div class="human-section-header animate-on-scroll">
                 <div class="human-section-label">Use Cases</div>
@@ -3517,6 +3735,7 @@
 
             <div class="use-cases-grid">
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">01</div>
                     <div class="use-case-content">
                         <div class="use-case-category">E-commerce</div>
@@ -3526,11 +3745,111 @@
                             <span class="use-case-tag">Merchant locks</span>
                             <span class="use-case-tag">Per-txn limits</span>
                         </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Declare Intent</h5>
+                                            <p>Agent specifies purchase purpose, expected amount, and target merchant</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Get Locked Card</h5>
+                                            <p>Zinc issues a virtual card locked to that specific merchant and amount</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Complete Purchase</h5>
+                                            <p>Agent uses the card to checkout—transaction is verified against intent</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Auto-Reconcile</h5>
+                                            <p>Receipt captured, card expires, and everything is logged for audit</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Merchant Locking</h5>
+                                            <p>Cards work only at specified merchants or categories</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Amount Verification</h5>
+                                            <p>Transactions must match declared intent within tolerance</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Auto-Expiry</h5>
+                                            <p>Cards automatically expire after successful use</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Receipt Capture</h5>
+                                            <p>Automatic receipt extraction and storage</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Create purchase intent</span>
+<span class="code-keyword">const</span> intent = <span class="code-keyword">await</span> zinc.intents.create({
+  purpose: <span class="code-string">"Purchase office supplies"</span>,
+  merchant: <span class="code-string">"amazon.com"</span>,
+  expected_amount: <span class="code-number">150.00</span>,
+  currency: <span class="code-string">"USD"</span>
+});
+
+<span class="code-comment">// Get locked card for this intent</span>
+<span class="code-keyword">const</span> card = <span class="code-keyword">await</span> zinc.cards.create({
+  intent_id: intent.id,
+  single_use: <span class="code-keyword">true</span>
+});
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
+                        </div>
                     </div>
                     <div class="use-case-arrow">→</div>
                 </div>
 
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">02</div>
                     <div class="use-case-content">
                         <div class="use-case-category">Infrastructure</div>
@@ -3540,11 +3859,108 @@
                             <span class="use-case-tag">Recurring limits</span>
                             <span class="use-case-tag">Auto-approval</span>
                         </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Register Subscription</h5>
+                                            <p>Connect your SaaS vendor with expected billing amount and cycle</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Auto-Unlock Windows</h5>
+                                            <p>Card activates only during expected billing periods</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Verify & Process</h5>
+                                            <p>Charge is validated against expected amount and merchant</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Track & Alert</h5>
+                                            <p>Monitor usage, get alerts on anomalies or approaching limits</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Billing Windows</h5>
+                                            <p>Cards activate only during expected billing periods</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Usage Tracking</h5>
+                                            <p>Monitor API credits and usage across all services</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Budget Alerts</h5>
+                                            <p>Get notified when approaching spending thresholds</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Auto-Scaling</h5>
+                                            <p>Dynamically adjust limits based on usage patterns</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Set up recurring subscription card</span>
+<span class="code-keyword">const</span> subscription = <span class="code-keyword">await</span> zinc.subscriptions.create({
+  merchant: <span class="code-string">"openai.com"</span>,
+  max_amount: <span class="code-number">500.00</span>,
+  billing_day: <span class="code-number">1</span>,
+  auto_approve: <span class="code-keyword">true</span>
+});
+
+<span class="code-comment">// Monitor usage</span>
+<span class="code-keyword">const</span> usage = <span class="code-keyword">await</span> zinc.subscriptions.getUsage(subscription.id);
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
+                        </div>
                     </div>
                     <div class="use-case-arrow">→</div>
                 </div>
 
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">03</div>
                     <div class="use-case-content">
                         <div class="use-case-category">Travel</div>
@@ -3554,11 +3970,105 @@
                             <span class="use-case-tag">Category controls</span>
                             <span class="use-case-tag">Receipt capture</span>
                         </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Create Trip Budget</h5>
+                                            <p>Define travel purpose, dates, and total budget allocation</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Agent Searches & Compares</h5>
+                                            <p>AI browses flights, hotels, and rentals across platforms for best options</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Book Within Policy</h5>
+                                            <p>Card enforces category restrictions and corporate travel policies</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Itinerary Compiled</h5>
+                                            <p>All confirmations auto-organized with receipts for expense reporting</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Category Enforcement</h5>
+                                            <p>Restrict to airlines, hotels, car rentals only</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Policy Compliance</h5>
+                                            <p>Enforce corporate travel policies automatically</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Itinerary Tracking</h5>
+                                            <p>Automatic extraction and organization of bookings</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Price Optimization</h5>
+                                            <p>Agents compare across platforms for best rates</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Create travel booking card</span>
+<span class="code-keyword">const</span> travelCard = <span class="code-keyword">await</span> zinc.cards.create({
+  purpose: <span class="code-string">"Q1 Conference Travel"</span>,
+  categories: [<span class="code-string">"airlines"</span>, <span class="code-string">"hotels"</span>, <span class="code-string">"car_rental"</span>],
+  budget: <span class="code-number">3000.00</span>,
+  valid_until: <span class="code-string">"2024-03-15"</span>
+});
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
+                        </div>
                     </div>
                     <div class="use-case-arrow">→</div>
                 </div>
 
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">04</div>
                     <div class="use-case-content">
                         <div class="use-case-category">Marketing</div>
@@ -3568,11 +4078,105 @@
                             <span class="use-case-tag">Daily caps</span>
                             <span class="use-case-tag">Platform locks</span>
                         </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Set Platform Budgets</h5>
+                                            <p>Allocate daily and monthly caps per ad platform (Meta, Google, TikTok)</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Agent Runs Experiments</h5>
+                                            <p>AI launches A/B tests, creates variations, and optimizes targeting</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Performance Monitoring</h5>
+                                            <p>Real-time ROAS tracking—auto-pause underperformers, scale winners</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Attribution & Reporting</h5>
+                                            <p>Every dollar tracked to specific campaigns with full spend visibility</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Daily Budget Caps</h5>
+                                            <p>Hard limits reset every 24 hours automatically</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Platform Isolation</h5>
+                                            <p>Separate budgets per ad platform</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>ROAS Triggers</h5>
+                                            <p>Auto-pause underperforming campaigns</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Spend Attribution</h5>
+                                            <p>Track every dollar to specific campaigns</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Set up ad platform budget</span>
+<span class="code-keyword">const</span> adBudget = <span class="code-keyword">await</span> zinc.budgets.create({
+  platform: <span class="code-string">"meta_ads"</span>,
+  daily_limit: <span class="code-number">500.00</span>,
+  monthly_cap: <span class="code-number">10000.00</span>,
+  pause_on_roas_below: <span class="code-number">1.5</span>
+});
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
+                        </div>
                     </div>
                     <div class="use-case-arrow">→</div>
                 </div>
 
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">05</div>
                     <div class="use-case-content">
                         <div class="use-case-category">Operations</div>
@@ -3582,11 +4186,105 @@
                             <span class="use-case-tag">Trial limits</span>
                             <span class="use-case-tag">Vendor scoring</span>
                         </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Create Trial Budget</h5>
+                                            <p>Set time-limited spend allocation for evaluating a new vendor</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Agent Evaluates</h5>
+                                            <p>AI provisions tools, tests features, and assesses vendor capabilities</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Score & Compare</h5>
+                                            <p>Performance metrics compiled—reliability, pricing, support quality</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Decision & Escalation</h5>
+                                            <p>Auto-cancel or escalate to humans for long-term commitment approval</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Trial Budgets</h5>
+                                            <p>Time-limited spend for vendor evaluation</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Vendor Scoring</h5>
+                                            <p>Automated performance and reliability tracking</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Contract Management</h5>
+                                            <p>Track terms, renewals, and commitments</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Approval Workflows</h5>
+                                            <p>Escalate to humans for large commitments</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Create vendor trial budget</span>
+<span class="code-keyword">const</span> trial = <span class="code-keyword">await</span> zinc.vendors.createTrial({
+  vendor_name: <span class="code-string">"New Analytics Tool"</span>,
+  budget: <span class="code-number">200.00</span>,
+  duration_days: <span class="code-number">14</span>,
+  auto_cancel: <span class="code-keyword">true</span>
+});
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
+                        </div>
                     </div>
                     <div class="use-case-arrow">→</div>
                 </div>
 
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">06</div>
                     <div class="use-case-content">
                         <div class="use-case-category">Security</div>
@@ -3596,11 +4294,105 @@
                             <span class="use-case-tag">Emergency access</span>
                             <span class="use-case-tag">Audit logs</span>
                         </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Incident Triggered</h5>
+                                            <p>Security alert activates pre-authorized emergency budget</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Instant Provisioning</h5>
+                                            <p>Agent immediately procures security tools and infrastructure needed</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Full Audit Trail</h5>
+                                            <p>Every action logged with incident context—who, what, when, why</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Post-Incident Review</h5>
+                                            <p>Automatic spend report generated for retrospectives and compliance</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Emergency Access</h5>
+                                            <p>Pre-authorized budgets for critical situations</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Full Audit Trail</h5>
+                                            <p>Every action logged with incident context</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Instant Provisioning</h5>
+                                            <p>Spin up tools and infrastructure immediately</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Post-Incident Review</h5>
+                                            <p>Automatic spend reports for retrospectives</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Activate emergency response budget</span>
+<span class="code-keyword">const</span> emergency = <span class="code-keyword">await</span> zinc.emergency.activate({
+  incident_id: <span class="code-string">"INC-2024-0142"</span>,
+  budget: <span class="code-number">5000.00</span>,
+  categories: [<span class="code-string">"security_tools"</span>, <span class="code-string">"cloud_infra"</span>],
+  notify: [<span class="code-string">"security-team@company.com"</span>]
+});
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
+                        </div>
                     </div>
                     <div class="use-case-arrow">→</div>
                 </div>
 
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">07</div>
                     <div class="use-case-content">
                         <div class="use-case-category">Data</div>
@@ -3610,11 +4402,105 @@
                             <span class="use-case-tag">Usage tracking</span>
                             <span class="use-case-tag">Cost allocation</span>
                         </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Define Data Needs</h5>
+                                            <p>Specify dataset requirements, quality standards, and budget per project</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Agent Discovers & Evaluates</h5>
+                                            <p>AI searches providers, samples data quality, compares pricing</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Purchase & Allocate</h5>
+                                            <p>Data acquired with spend tied to specific teams and projects</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Track Usage & Licensing</h5>
+                                            <p>Monitor API calls, data volume, and compliance with usage rights</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Usage Metering</h5>
+                                            <p>Track API calls and data volume per project</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Cost Allocation</h5>
+                                            <p>Attribute spend to teams and projects</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Quality Scoring</h5>
+                                            <p>Track data quality and vendor reliability</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>License Management</h5>
+                                            <p>Track usage rights and compliance</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Purchase dataset with allocation</span>
+<span class="code-keyword">const</span> purchase = <span class="code-keyword">await</span> zinc.data.purchase({
+  provider: <span class="code-string">"data-vendor.com"</span>,
+  dataset: <span class="code-string">"market-trends-2024"</span>,
+  project_id: <span class="code-string">"proj_ml_training"</span>,
+  max_cost: <span class="code-number">500.00</span>
+});
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
+                        </div>
                     </div>
                     <div class="use-case-arrow">→</div>
                 </div>
 
                 <div class="use-case-card animate-on-scroll">
+                    <div class="use-case-close">×</div>
                     <div class="use-case-number">08</div>
                     <div class="use-case-content">
                         <div class="use-case-category">Supply Chain</div>
@@ -3623,6 +4509,99 @@
                         <div class="use-case-tags">
                             <span class="use-case-tag">Multi-vendor</span>
                             <span class="use-case-tag">Price matching</span>
+                        </div>
+                        <div class="use-case-details">
+                            <div class="use-case-detail-section">
+                                <h4>How It Works</h4>
+                                <div class="use-case-timeline">
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">1</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Submit Requirements</h5>
+                                            <p>Specify parts, quantities, quality standards, and delivery timeline</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">2</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Multi-Marketplace Search</h5>
+                                            <p>Agent searches suppliers across platforms, compares pricing in real-time</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">3</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Optimize & Order</h5>
+                                            <p>AI balances cost, quality, and delivery to select optimal suppliers</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-timeline-step">
+                                        <div class="use-case-timeline-marker">
+                                            <div class="use-case-timeline-dot">4</div>
+                                            <div class="use-case-timeline-line"></div>
+                                        </div>
+                                        <div class="use-case-timeline-content">
+                                            <h5>Track & Analyze</h5>
+                                            <p>Monitor shipments, score suppliers, surface patterns in sourcing spend</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Key Features</h4>
+                                <div class="use-case-features">
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Price Comparison</h5>
+                                            <p>Real-time comparison across marketplaces</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Supplier Scoring</h5>
+                                            <p>Track reliability, quality, and pricing</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Order Optimization</h5>
+                                            <p>Balance cost, quality, and delivery time</p>
+                                        </div>
+                                    </div>
+                                    <div class="use-case-feature">
+                                        <div class="use-case-feature-icon">→</div>
+                                        <div>
+                                            <h5>Spend Analytics</h5>
+                                            <p>Visibility into sourcing patterns and trends</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="use-case-detail-section">
+                                <h4>Example Integration</h4>
+                                <div class="use-case-code">
+<span class="code-comment">// Source parts across marketplaces</span>
+<span class="code-keyword">const</span> order = <span class="code-keyword">await</span> zinc.procurement.source({
+  items: [{ sku: <span class="code-string">"PART-001"</span>, qty: <span class="code-number">100</span> }],
+  optimize_for: <span class="code-string">"cost"</span>,
+  max_delivery_days: <span class="code-number">7</span>,
+  budget: <span class="code-number">2500.00</span>
+});
+                                </div>
+                            </div>
+                            <a href="#" class="use-case-cta-btn">Get Started →</a>
                         </div>
                     </div>
                     <div class="use-case-arrow">→</div>
@@ -3801,6 +4780,7 @@
             </div>
         </section>
 
+        <!-- PRICING SECTION COMMENTED OUT
         <section class="human-pricing" id="pricing">
             <div class="human-section-header animate-on-scroll">
                 <div class="human-section-label">Pricing</div>
@@ -3876,6 +4856,7 @@
                 All plans include: <code>audit_logs</code> <code>webhook_events</code> <code>api_versioning</code> <code>99.9% uptime</code>
             </p>
         </section>
+        END PRICING SECTION -->
 
         <section class="human-cta">
             <!-- Perspective Grid -->
@@ -4353,6 +5334,150 @@
         document.querySelectorAll('.stat-item').forEach(item => {
             statsObserver.observe(item);
         });
+
+        // Use Case Card Expand/Collapse (Safari-like zoom)
+        (function initUseCaseExpand() {
+            const overlay = document.querySelector('.use-case-overlay');
+            const cards = document.querySelectorAll('.use-case-card');
+            let expandedCard = null;
+            let placeholder = null;
+            let originalRect = null;
+
+            if (!overlay || cards.length === 0) return;
+
+            cards.forEach(card => {
+                const closeBtn = card.querySelector('.use-case-close');
+
+                card.addEventListener('click', (e) => {
+                    // Don't expand if clicking close button or CTA
+                    if (e.target.closest('.use-case-close') || e.target.closest('.use-case-cta-btn')) {
+                        return;
+                    }
+
+                    // Don't expand if already expanded
+                    if (card.classList.contains('expanded')) return;
+
+                    expandCard(card);
+                });
+
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        collapseCard();
+                    });
+                }
+            });
+
+            // Close on overlay click
+            overlay.addEventListener('click', () => {
+                collapseCard();
+            });
+
+            // Close on escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && expandedCard) {
+                    collapseCard();
+                }
+            });
+
+            function expandCard(card) {
+                if (expandedCard) return;
+
+                expandedCard = card;
+                originalRect = card.getBoundingClientRect();
+
+                // Create a visible ghost clone to maintain the space and visual
+                placeholder = card.cloneNode(true);
+                placeholder.classList.remove('animate-on-scroll', 'visible');
+                placeholder.classList.add('use-case-ghost');
+                placeholder.style.opacity = '0.3';
+                placeholder.style.pointerEvents = 'none';
+                placeholder.style.filter = 'grayscale(100%)';
+                // Remove close button from ghost
+                const ghostClose = placeholder.querySelector('.use-case-close');
+                if (ghostClose) ghostClose.remove();
+                // Remove details from ghost to keep it simple
+                const ghostDetails = placeholder.querySelector('.use-case-details');
+                if (ghostDetails) ghostDetails.remove();
+                card.parentNode.insertBefore(placeholder, card);
+
+                // Set initial fixed position (current location)
+                card.style.position = 'fixed';
+                card.style.top = originalRect.top + 'px';
+                card.style.left = originalRect.left + 'px';
+                card.style.width = originalRect.width + 'px';
+                card.style.height = originalRect.height + 'px';
+                card.style.margin = '0';
+
+                // Show overlay
+                overlay.classList.add('active');
+
+                // Trigger reflow
+                card.offsetHeight;
+
+                // Add expanding class for transition
+                card.classList.add('expanding');
+
+                // Animate to expanded state
+                requestAnimationFrame(() => {
+                    card.classList.add('expanded');
+                    card.style.top = '50%';
+                    card.style.left = '50%';
+                    card.style.width = '90vw';
+                    card.style.height = 'auto';
+                    card.style.transform = 'translate(-50%, -50%)';
+
+                    // Prevent body scroll
+                    document.body.style.overflow = 'hidden';
+                });
+            }
+
+            function collapseCard() {
+                if (!expandedCard || !originalRect) return;
+
+                const card = expandedCard;
+
+                // Get the current placeholder position (in case of scroll)
+                const placeholderRect = placeholder.getBoundingClientRect();
+
+                // Remove expanded class first
+                card.classList.remove('expanded');
+
+                // Animate back to placeholder position
+                card.style.top = placeholderRect.top + 'px';
+                card.style.left = placeholderRect.left + 'px';
+                card.style.width = placeholderRect.width + 'px';
+                card.style.height = placeholderRect.height + 'px';
+                card.style.transform = 'none';
+
+                // Hide overlay
+                overlay.classList.remove('active');
+
+                // After animation, reset styles and remove placeholder
+                setTimeout(() => {
+                    card.classList.remove('expanding');
+                    card.style.position = '';
+                    card.style.top = '';
+                    card.style.left = '';
+                    card.style.width = '';
+                    card.style.height = '';
+                    card.style.margin = '';
+                    card.style.transform = '';
+
+                    // Remove placeholder
+                    if (placeholder && placeholder.parentNode) {
+                        placeholder.parentNode.removeChild(placeholder);
+                    }
+
+                    // Restore body scroll
+                    document.body.style.overflow = '';
+
+                    expandedCard = null;
+                    placeholder = null;
+                    originalRect = null;
+                }, 500);
+            }
+        })();
     </script>
 </body>
 </html>

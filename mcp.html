@@ -281,23 +281,79 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
         }
 
         .mcp-tool-item:hover {
             border-color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        .mcp-tool-item:active {
+            transform: scale(0.98);
         }
 
         .mcp-tool-name {
             font-size: 13px;
             font-family: 'JetBrains Mono', monospace;
-            color: var(--accent);
+            color: var(--text-primary);
             margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mcp-tool-name::after {
+            content: 'Click to copy';
+            font-size: 10px;
+            color: var(--text-dark);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .mcp-tool-item:hover .mcp-tool-name::after {
+            opacity: 1;
         }
 
         .mcp-tool-desc {
             font-size: 12px;
             color: var(--text-dim);
             line-height: 1.5;
+        }
+
+        /* Toast/Snackbar */
+        .copy-toast {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            padding: 14px 24px;
+            font-size: 13px;
+            color: var(--text-primary);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .copy-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .copy-toast .toast-icon {
+            color: var(--accent);
+        }
+
+        .copy-toast code {
+            color: var(--accent);
+            background: var(--bg-primary);
+            padding: 2px 8px;
         }
 
         /* Examples Section */
@@ -864,6 +920,12 @@ claude mcp test zinc</pre>
 
     </main>
 
+    <!-- Copy Toast -->
+    <div class="copy-toast" id="copyToast">
+        <span class="toast-icon">✓</span>
+        <span>Copied <code id="copiedText"></code></span>
+    </div>
+
     <footer>
         <div class="footer-content">
             <div class="footer-brand"><span>></span> zinc</div>
@@ -895,6 +957,36 @@ claude mcp test zinc</pre>
                         panel.classList.add('active');
                     }
                 });
+            });
+        });
+
+        // Copy Tool Name on Click
+        const toolItems = document.querySelectorAll('.mcp-tool-item');
+        const toast = document.getElementById('copyToast');
+        const copiedText = document.getElementById('copiedText');
+        let toastTimeout;
+
+        toolItems.forEach(item => {
+            item.addEventListener('click', async () => {
+                const toolName = item.querySelector('.mcp-tool-name').textContent.trim();
+
+                try {
+                    await navigator.clipboard.writeText(toolName);
+
+                    // Show toast
+                    copiedText.textContent = toolName;
+                    toast.classList.add('show');
+
+                    // Clear existing timeout
+                    if (toastTimeout) clearTimeout(toastTimeout);
+
+                    // Hide toast after 2 seconds
+                    toastTimeout = setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy:', err);
+                }
             });
         });
     </script>

@@ -337,8 +337,7 @@
         .skill-mini-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border);
-            padding: 16px;
-            text-align: center;
+            padding: 18px;
             transition: all 0.3s ease;
         }
 
@@ -347,8 +346,16 @@
         }
 
         .skill-mini-card code {
-            font-size: 12px;
+            display: block;
+            font-size: 13px;
             color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .skill-mini-card p {
+            font-size: 11px;
+            color: var(--text-dim);
+            line-height: 1.4;
             font-family: 'JetBrains Mono', monospace;
         }
 
@@ -636,33 +643,38 @@
                             <div class="skill-card-icon">★</div>
                             <h4>zinc-agent-payments</h4>
                         </div>
-                        <p>Complete payment flow with all 20 MCP tools. Handles intent creation, policy evaluation, card provisioning, and transaction verification.</p>
-                        <div class="skill-meta">Primary Skill • 20 Tools</div>
+                        <p>Complete payment flow guide with all 20 MCP tools documented. Covers intent creation, policy evaluation, card provisioning, and transaction verification.</p>
+                        <div class="skill-meta">Primary Skill • 20 Tools Documented</div>
                     </div>
                     <div class="skill-card featured">
                         <div class="skill-card-header">
                             <div class="skill-card-icon">★</div>
                             <h4>zinc-payments-openclaw</h4>
                         </div>
-                        <p>OpenClaw skill with 25+ tools and comprehensive auth guide. Optimized for OpenClaw agent workflows and conventions.</p>
-                        <div class="skill-meta">OpenClaw • 25+ Tools</div>
+                        <p>OpenClaw skill — mcporter setup, 25+ tools, intent flow, and auth guide. Optimized for OpenClaw agent workflows and conventions.</p>
+                        <div class="skill-meta">OpenClaw Skill • 25+ Tools</div>
                     </div>
                 </div>
                 <div class="skills-secondary-grid">
                     <div class="skill-mini-card">
                         <code>zinc-pay-mcp</code>
+                        <p>MCP server setup and configuration reference</p>
                     </div>
                     <div class="skill-mini-card">
                         <code>agent-card-provisioning</code>
+                        <p>Card lifecycle, spending controls, and policy enforcement</p>
                     </div>
                     <div class="skill-mini-card">
                         <code>zinc-pay</code>
+                        <p>Quick /zinc-pay command for instant payments</p>
                     </div>
                     <div class="skill-mini-card">
                         <code>zinc-balance</code>
+                        <p>Check available spending power with /zinc-balance</p>
                     </div>
                     <div class="skill-mini-card">
                         <code>zinc-status</code>
+                        <p>View intent and transaction status with /zinc-status</p>
                     </div>
                 </div>
             </div>

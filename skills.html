@@ -51,70 +51,114 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background: rgba(10, 10, 10, 0.9);
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border);
+            padding: 0 80px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            text-decoration: none;
             display: flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
         }
 
-        .logo span {
+        .logo-symbol {
             color: var(--accent);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .mode-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         nav {
             display: flex;
-            gap: 32px;
+            align-items: center;
+            gap: 40px;
         }
 
         nav a {
             color: var(--text-muted);
             text-decoration: none;
             font-size: 14px;
-            transition: color 0.3s ease;
+            font-weight: 500;
+            transition: color 0.2s ease;
         }
 
         nav a:hover, nav a.active {
-            color: var(--accent);
+            color: var(--text-primary);
         }
 
         .header-ctas {
             display: flex;
-            gap: 12px;
+            align-items: center;
+            gap: 16px;
         }
 
         .btn {
             padding: 10px 20px;
             font-family: inherit;
             font-size: 13px;
+            font-weight: 500;
             text-decoration: none;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.2s ease;
             border: none;
         }
 
         .btn-outline {
             background: transparent;
             border: 1px solid var(--border-light);
-            color: var(--text-secondary);
+            color: var(--text-primary);
         }
 
         .btn-outline:hover {
-            border-color: var(--accent);
-            color: var(--accent);
+            border-color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .btn-primary {
@@ -124,12 +168,19 @@
         }
 
         .btn-primary:hover {
-            opacity: 0.9;
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Machine Mode - Hide nav items */
+        body.machine-mode nav,
+        body.machine-mode .header-ctas {
+            display: none;
         }
 
         /* Main Content */
         .skills-page {
-            padding-top: 80px;
+            padding-top: 72px;
         }
 
         /* Hero Section */
@@ -593,10 +644,19 @@
 </head>
 <body>
     <header>
-        <a href="index.html" class="logo"><span>></span> zinc</a>
+        <a href="index.html" class="logo">
+            <span class="logo-symbol">></span>
+            <span class="logo-text">zinc</span>
+        </a>
+
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="human">Human</button>
+            <button class="mode-btn" data-mode="machine">Machine</button>
+        </div>
+
         <nav>
-            <a href="index.html#capabilities">Docs</a>
-            <a href="index.html#spend-protocol">API Spec</a>
+            <a href="docs.html">Docs</a>
+            <a href="api-spec.html">API Spec</a>
             <a href="mcp.html">MCP</a>
             <a href="skills.html" class="active">Skills</a>
         </nav>
@@ -783,12 +843,30 @@
             <div class="footer-brand"><span>></span> zinc</div>
             <div class="footer-links">
                 <a href="index.html">Home</a>
-                <a href="index.html#capabilities">Docs</a>
+                <a href="docs.html">Docs</a>
                 <a href="mcp.html">MCP</a>
                 <a href="skills.html">Skills</a>
                 <a href="#">API Reference</a>
             </div>
         </div>
     </footer>
+
+    <script>
+        // Mode toggle functionality
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const mode = btn.dataset.mode;
+                if (mode === 'machine') {
+                    document.body.classList.add('machine-mode');
+                } else {
+                    document.body.classList.remove('machine-mode');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

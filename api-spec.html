@@ -1,0 +1,1750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference — Zinc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #0D0D0D;
+            --bg-card: #111111;
+            --bg-code: #0D0D0D;
+            --border: #1A1A1A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --text-dark: #444444;
+            --accent: #00D084;
+            --accent-dark: #00AF6F;
+            --accent-glow: rgba(0, 208, 132, 0.3);
+            --method-get: #61AFFE;
+            --method-post: #49CC90;
+            --method-patch: #FCA130;
+            --method-delete: #F93E3E;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.3;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 80px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo-symbol { color: var(--accent); font-size: 24px; font-weight: 700; }
+        .logo-text { color: var(--text-primary); font-size: 20px; font-weight: 600; }
+
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active { background: var(--accent); color: #000; }
+        .mode-btn:hover:not(.active) { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .header-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .header-nav a:hover, .header-nav a.active { color: var(--text-primary); }
+
+        .header-ctas {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover { border-color: var(--text-muted); background: rgba(255,255,255,0.02); }
+
+        .btn-primary { background: var(--accent); color: #000; font-weight: 600; }
+        .btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+
+        body.machine-mode .header-nav,
+        body.machine-mode .header-ctas { display: none; }
+
+        /* Layout */
+        .docs-layout {
+            display: flex;
+            padding-top: 72px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            width: 260px;
+            height: calc(100vh - 72px);
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 24px 0;
+        }
+
+        .sidebar::-webkit-scrollbar { width: 6px; }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+
+        .search-container { padding: 0 20px 20px; }
+        .search-box { position: relative; }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 12px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus { border-color: var(--accent); }
+        .search-input::placeholder { color: var(--text-dim); }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        .nav-section { margin-bottom: 24px; }
+
+        .nav-section-title {
+            padding: 8px 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover { color: var(--text-primary); background: var(--bg-secondary); }
+        .nav-item.active { color: var(--accent); background: rgba(0,208,132,0.1); border-right: 2px solid var(--accent); }
+
+        .method-badge {
+            font-size: 9px;
+            font-weight: 600;
+            padding: 2px 6px;
+            text-transform: uppercase;
+        }
+
+        .method-badge.get { background: rgba(97,175,254,0.2); color: var(--method-get); }
+        .method-badge.post { background: rgba(73,204,144,0.2); color: var(--method-post); }
+        .method-badge.patch { background: rgba(252,161,48,0.2); color: var(--method-patch); }
+        .method-badge.delete { background: rgba(249,62,62,0.2); color: var(--method-delete); }
+
+        .content-wrapper {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-content {
+            max-width: 900px;
+            width: 100%;
+            padding: 48px 64px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .breadcrumb a { color: var(--text-dim); text-decoration: none; }
+        .breadcrumb a:hover { color: var(--accent); }
+
+        .main-content h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+
+        .main-content .subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .main-content h2 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-top: 48px;
+            margin-bottom: 20px;
+        }
+
+        .main-content h2:first-of-type { margin-top: 0; }
+
+        .main-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .main-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .main-content ul, .main-content ol { margin: 20px 0; padding-left: 24px; }
+        .main-content li { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; line-height: 1.6; }
+        .main-content a { color: var(--accent); text-decoration: none; }
+        .main-content a:hover { text-decoration: underline; }
+
+        .base-url {
+            display: inline-flex;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 16px 24px;
+            font-size: 14px;
+            color: var(--accent);
+            align-items: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .base-url span { color: var(--text-dim); }
+
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin: 24px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre { font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
+        .code-keyword { color: var(--accent); }
+        .code-string { color: #a5d6ff; }
+        .code-number { color: #ffa657; }
+        .code-comment { color: var(--text-dim); }
+
+        code {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        pre code { background: none; padding: 0; color: inherit; }
+
+        .param-table {
+            width: 100%;
+            margin: 24px 0;
+            border: 1px solid var(--border);
+            border-collapse: collapse;
+        }
+
+        .param-table th {
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .param-table td {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .param-table tr:last-child td { border-bottom: none; }
+        .param-name { color: var(--text-primary); font-weight: 500; }
+        .param-type { color: var(--accent); font-size: 11px; }
+        .param-required { color: var(--method-delete); font-size: 10px; margin-left: 8px; }
+
+        .endpoint-block {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .endpoint-method {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            text-transform: uppercase;
+        }
+
+        .endpoint-method.get { background: var(--method-get); color: #000; }
+        .endpoint-method.post { background: var(--method-post); color: #000; }
+        .endpoint-method.patch { background: var(--method-patch); color: #000; }
+        .endpoint-method.delete { background: var(--method-delete); color: #fff; }
+
+        .endpoint-path { font-size: 14px; color: var(--text-primary); }
+        .endpoint-desc { font-size: 13px; color: var(--text-muted); }
+
+        .status-code {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .status-code.success { background: rgba(0,208,132,0.15); color: var(--accent); }
+        .status-code.error { background: rgba(249,62,62,0.15); color: var(--method-delete); }
+        .status-code.warning { background: rgba(252,161,48,0.15); color: var(--method-patch); }
+
+        .content-page { display: none; }
+        .content-page.active { display: block; }
+
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        @media (max-width: 1024px) {
+            header { padding: 0 24px; }
+            .content-wrapper { margin-left: 260px; }
+            .main-content { padding: 32px 40px; }
+            .header-nav { gap: 24px; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 99; }
+            .sidebar.open { transform: translateX(0); }
+            .content-wrapper { margin-left: 0; }
+            .main-content { padding: 32px 24px; }
+            .mobile-menu-toggle { display: block; }
+            .header-nav, .header-ctas { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <a href="index.html" class="logo">
+                <span class="logo-symbol">></span>
+                <span class="logo-text">zinc</span>
+            </a>
+        </div>
+
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="human">Human</button>
+            <button class="mode-btn" data-mode="machine">Machine</button>
+        </div>
+
+        <nav class="header-nav">
+            <a href="docs.html">Docs</a>
+            <a href="api-spec.html" class="active">API Spec</a>
+            <a href="mcp.html">MCP</a>
+            <a href="skills.html">Skills</a>
+        </nav>
+        <div class="header-ctas">
+            <a href="index.html#schema" class="btn btn-outline">View Schema</a>
+            <a href="#" class="btn btn-primary">Get API Key</a>
+        </div>
+    </header>
+
+    <div class="docs-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">⌘</span>
+                    <input type="text" class="search-input" placeholder="Search API..." />
+                </div>
+            </div>
+
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <div class="nav-items">
+                        <a class="nav-item active" data-page="introduction">Introduction</a>
+                        <a class="nav-item" data-page="authentication">Authentication</a>
+                        <a class="nav-item" data-page="errors">Errors</a>
+                        <a class="nav-item" data-page="pagination">Pagination</a>
+                        <a class="nav-item" data-page="rate-limits">Rate Limits</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Customers</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="customers-list"><span class="method-badge get">GET</span> List customers</a>
+                        <a class="nav-item" data-page="customers-create"><span class="method-badge post">POST</span> Create customer</a>
+                        <a class="nav-item" data-page="customers-get"><span class="method-badge get">GET</span> Get customer</a>
+                        <a class="nav-item" data-page="customers-update"><span class="method-badge patch">PATCH</span> Update customer</a>
+                        <a class="nav-item" data-page="customers-delete"><span class="method-badge delete">DEL</span> Delete customer</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Agents</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="agents-list"><span class="method-badge get">GET</span> List agents</a>
+                        <a class="nav-item" data-page="agents-create"><span class="method-badge post">POST</span> Create agent</a>
+                        <a class="nav-item" data-page="agents-get"><span class="method-badge get">GET</span> Get agent</a>
+                        <a class="nav-item" data-page="agents-update"><span class="method-badge patch">PATCH</span> Update agent</a>
+                        <a class="nav-item" data-page="agents-suspend"><span class="method-badge post">POST</span> Suspend agent</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Cards</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="cards-list"><span class="method-badge get">GET</span> List cards</a>
+                        <a class="nav-item" data-page="cards-create"><span class="method-badge post">POST</span> Create card</a>
+                        <a class="nav-item" data-page="cards-get"><span class="method-badge get">GET</span> Get card</a>
+                        <a class="nav-item" data-page="cards-credentials"><span class="method-badge get">GET</span> Get credentials</a>
+                        <a class="nav-item" data-page="cards-freeze"><span class="method-badge post">POST</span> Freeze card</a>
+                        <a class="nav-item" data-page="cards-close"><span class="method-badge post">POST</span> Close card</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Intents</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="intents-list"><span class="method-badge get">GET</span> List intents</a>
+                        <a class="nav-item" data-page="intents-create"><span class="method-badge post">POST</span> Create intent</a>
+                        <a class="nav-item" data-page="intents-approve"><span class="method-badge post">POST</span> Approve intent</a>
+                        <a class="nav-item" data-page="intents-reject"><span class="method-badge post">POST</span> Reject intent</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Transactions</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="transactions-list"><span class="method-badge get">GET</span> List transactions</a>
+                        <a class="nav-item" data-page="transactions-get"><span class="method-badge get">GET</span> Get transaction</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Webhooks</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="webhooks-list"><span class="method-badge get">GET</span> List webhooks</a>
+                        <a class="nav-item" data-page="webhooks-create"><span class="method-badge post">POST</span> Create webhook</a>
+                        <a class="nav-item" data-page="webhooks-delete"><span class="method-badge delete">DEL</span> Delete webhook</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="content-wrapper">
+            <main class="main-content">
+
+                <!-- Introduction Page -->
+                <div class="content-page active" id="page-introduction">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Introduction</span>
+                    </div>
+
+                    <h1>API Reference</h1>
+                    <p class="subtitle">The Zinc API is organized around REST. Our API has predictable resource-oriented URLs, accepts JSON-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes and authentication.</p>
+
+                    <h2>Base URL</h2>
+                    <p>All API requests should be made to the following base URL:</p>
+                    <div class="base-url">
+                        <span>Base URL:</span> https://api.zinc.dev/v1
+                    </div>
+
+                    <h2>Request Format</h2>
+                    <p>The API accepts JSON-encoded request bodies. Include the <code>Content-Type: application/json</code> header with all requests that include a body.</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">curl</span> -X POST https://api.zinc.dev/v1/customers \
+  -H <span class="code-string">"Authorization: Bearer sk_live_..."</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{
+    "type": "consumer",
+    "email": "user@example.com",
+    "name": { "first": "Alex", "last": "Rivera" }
+  }'</span></pre>
+                    </div>
+
+                    <h2>Response Format</h2>
+                    <p>All responses are returned as JSON with consistent structure including resource IDs, metadata, and ISO 8601 timestamps.</p>
+
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"id"</span>: <span class="code-string">"cus_abc123"</span>,
+  <span class="code-string">"type"</span>: <span class="code-string">"consumer"</span>,
+  <span class="code-string">"email"</span>: <span class="code-string">"user@example.com"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"active"</span>,
+  <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+}</pre>
+                    </div>
+
+                    <h2>Idempotency</h2>
+                    <p>Include an <code>Idempotency-Key</code> header on POST requests to prevent duplicate operations. Keys are cached for 24 hours.</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">curl</span> -X POST https://api.zinc.dev/v1/cards \
+  -H <span class="code-string">"Authorization: Bearer sk_live_..."</span> \
+  -H <span class="code-string">"Idempotency-Key: unique-request-id-123"</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{ ... }'</span></pre>
+                    </div>
+                </div>
+
+                <!-- Authentication Page -->
+                <div class="content-page" id="page-authentication">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Authentication</span>
+                    </div>
+
+                    <h1>Authentication</h1>
+                    <p class="subtitle">The Zinc API uses bearer token authentication. All requests must include your API key in the Authorization header.</p>
+
+                    <h2>API Keys</h2>
+                    <p>You can generate API keys from your dashboard. There are two types of keys:</p>
+
+                    <table class="param-table">
+                        <tr>
+                            <th>Key Type</th>
+                            <th>Prefix</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">Live</span></td>
+                            <td><code>sk_live_</code></td>
+                            <td>Production keys for real transactions</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">Test</span></td>
+                            <td><code>sk_test_</code></td>
+                            <td>Sandbox keys for development</td>
+                        </tr>
+                    </table>
+
+                    <h2>Authorization Header</h2>
+                    <p>Include your API key in the Authorization header as a Bearer token:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">Authorization:</span> Bearer sk_live_your_api_key</pre>
+                    </div>
+
+                    <h2>Example Request</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">curl</span> https://api.zinc.dev/v1/customers \
+  -H <span class="code-string">"Authorization: Bearer sk_live_abc123xyz"</span></pre>
+                    </div>
+
+                    <h2>Authentication Errors</h2>
+                    <p>If authentication fails, you'll receive a <code>401 Unauthorized</code> response:</p>
+
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"error"</span>: {
+    <span class="code-string">"code"</span>: <span class="code-string">"unauthorized"</span>,
+    <span class="code-string">"message"</span>: <span class="code-string">"Invalid or missing API key"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Errors Page -->
+                <div class="content-page" id="page-errors">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Errors</span>
+                    </div>
+
+                    <h1>Errors</h1>
+                    <p class="subtitle">The API uses conventional HTTP response codes to indicate success or failure of requests.</p>
+
+                    <h2>HTTP Status Codes</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Code</th>
+                            <th>Status</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code success">200</span></td>
+                            <td>OK</td>
+                            <td>Request succeeded</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code success">201</span></td>
+                            <td>Created</td>
+                            <td>Resource created successfully</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code error">400</span></td>
+                            <td>Bad Request</td>
+                            <td>Invalid request parameters</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code error">401</span></td>
+                            <td>Unauthorized</td>
+                            <td>API key authentication failed</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code error">403</span></td>
+                            <td>Forbidden</td>
+                            <td>Insufficient permissions</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code error">404</span></td>
+                            <td>Not Found</td>
+                            <td>Resource doesn't exist</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code warning">429</span></td>
+                            <td>Too Many Requests</td>
+                            <td>Rate limit exceeded</td>
+                        </tr>
+                        <tr>
+                            <td><span class="status-code error">500</span></td>
+                            <td>Server Error</td>
+                            <td>Server-side issue</td>
+                        </tr>
+                    </table>
+
+                    <h2>Error Response Format</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"error"</span>: {
+    <span class="code-string">"code"</span>: <span class="code-string">"invalid_request"</span>,
+    <span class="code-string">"message"</span>: <span class="code-string">"The 'amount' field must be a positive integer"</span>,
+    <span class="code-string">"param"</span>: <span class="code-string">"amount"</span>
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Pagination Page -->
+                <div class="content-page" id="page-pagination">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Pagination</span>
+                    </div>
+
+                    <h1>Pagination</h1>
+                    <p class="subtitle">List endpoints support cursor-based pagination for efficiently navigating large result sets.</p>
+
+                    <h2>Query Parameters</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Number of results per page (1-100, default: 50)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">cursor</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Pagination cursor from previous response</td>
+                        </tr>
+                    </table>
+
+                    <h2>Response Fields</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Field</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">data</span></td>
+                            <td><span class="param-type">array</span></td>
+                            <td>Array of resource objects</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">nextCursor</span></td>
+                            <td><span class="param-type">string | null</span></td>
+                            <td>Cursor for the next page, null if no more pages</td>
+                        </tr>
+                    </table>
+
+                    <h2>Example</h2>
+                    <div class="code-block">
+                        <pre><span class="code-comment"># First page</span>
+<span class="code-keyword">GET</span> /v1/transactions?limit=50
+
+<span class="code-comment"># Next page using cursor</span>
+<span class="code-keyword">GET</span> /v1/transactions?limit=50&cursor=eyJpZCI6InR4bl8xMjM0NSJ9</pre>
+                    </div>
+                </div>
+
+                <!-- Rate Limits Page -->
+                <div class="content-page" id="page-rate-limits">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Rate Limits</span>
+                    </div>
+
+                    <h1>Rate Limits</h1>
+                    <p class="subtitle">The API enforces rate limits to ensure fair usage and maintain service stability.</p>
+
+                    <h2>Rate Limit Tiers</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Plan</th>
+                            <th>Limit</th>
+                            <th>Window</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">Standard</span></td>
+                            <td>100 requests</td>
+                            <td>per minute</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">Pro</span></td>
+                            <td>1,000 requests</td>
+                            <td>per minute</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">Enterprise</span></td>
+                            <td>Custom</td>
+                            <td>negotiated</td>
+                        </tr>
+                    </table>
+
+                    <h2>Rate Limit Headers</h2>
+                    <p>Responses include headers indicating your current rate limit status:</p>
+
+                    <div class="code-block">
+                        <pre>X-RateLimit-Limit: 100
+X-RateLimit-Remaining: 95
+X-RateLimit-Reset: 1704067200</pre>
+                    </div>
+
+                    <h2>Exceeding Limits</h2>
+                    <p>When you exceed the rate limit, you'll receive a <code>429 Too Many Requests</code> response:</p>
+
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"error"</span>: {
+    <span class="code-string">"code"</span>: <span class="code-string">"rate_limit_exceeded"</span>,
+    <span class="code-string">"message"</span>: <span class="code-string">"Too many requests. Please retry after 60 seconds."</span>
+  }
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Customers List Page -->
+                <div class="content-page" id="page-customers-list">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Customers</span>
+                        <span>/</span>
+                        <span>List</span>
+                    </div>
+
+                    <h1>List Customers</h1>
+                    <p class="subtitle">Retrieve a paginated list of all customers.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/customers</span>
+                        </div>
+                        <p class="endpoint-desc">Returns a list of customer objects sorted by creation date.</p>
+                    </div>
+
+                    <h2>Query Parameters</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Maximum results to return (1-100, default: 50)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">cursor</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Pagination cursor for next page</td>
+                        </tr>
+                    </table>
+
+                    <h2>Response</h2>
+                    <p><span class="status-code success">200</span> Returns paginated customer list</p>
+
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"data"</span>: [
+    {
+      <span class="code-string">"id"</span>: <span class="code-string">"cus_abc123"</span>,
+      <span class="code-string">"type"</span>: <span class="code-string">"consumer"</span>,
+      <span class="code-string">"status"</span>: <span class="code-string">"active"</span>,
+      <span class="code-string">"email"</span>: <span class="code-string">"user@example.com"</span>,
+      <span class="code-string">"name"</span>: {
+        <span class="code-string">"first"</span>: <span class="code-string">"Alex"</span>,
+        <span class="code-string">"last"</span>: <span class="code-string">"Rivera"</span>
+      },
+      <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+    }
+  ],
+  <span class="code-string">"nextCursor"</span>: <span class="code-string">"eyJpZCI6ImN1c18xMjM0NSJ9"</span>
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Customers Create Page -->
+                <div class="content-page" id="page-customers-create">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Customers</span>
+                        <span>/</span>
+                        <span>Create</span>
+                    </div>
+
+                    <h1>Create Customer</h1>
+                    <p class="subtitle">Create a new customer account.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/customers</span>
+                        </div>
+                        <p class="endpoint-desc">Creates a new customer and returns the customer object.</p>
+                    </div>
+
+                    <h2>Request Body</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">type</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Customer type: <code>consumer</code> or <code>corporate</code></td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">email</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Customer email address</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">name</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">object</span></td>
+                            <td>Name object with <code>first</code> and <code>last</code> fields</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">phone</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Phone number in E.164 format</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">metadata</span></td>
+                            <td><span class="param-type">object</span></td>
+                            <td>Custom key-value pairs</td>
+                        </tr>
+                    </table>
+
+                    <h2>Example Request</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">curl</span> -X POST https://api.zinc.dev/v1/customers \
+  -H <span class="code-string">"Authorization: Bearer sk_live_..."</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{
+    "type": "consumer",
+    "email": "alex@example.com",
+    "name": {
+      "first": "Alex",
+      "last": "Rivera"
+    },
+    "phone": "+14155551234"
+  }'</span></pre>
+                    </div>
+
+                    <h2>Response</h2>
+                    <p><span class="status-code success">201</span> Returns the created customer object</p>
+
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"id"</span>: <span class="code-string">"cus_abc123"</span>,
+  <span class="code-string">"type"</span>: <span class="code-string">"consumer"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"pending"</span>,
+  <span class="code-string">"email"</span>: <span class="code-string">"alex@example.com"</span>,
+  <span class="code-string">"name"</span>: {
+    <span class="code-string">"first"</span>: <span class="code-string">"Alex"</span>,
+    <span class="code-string">"last"</span>: <span class="code-string">"Rivera"</span>
+  },
+  <span class="code-string">"phone"</span>: <span class="code-string">"+14155551234"</span>,
+  <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Customers Get Page -->
+                <div class="content-page" id="page-customers-get">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Customers</span>
+                        <span>/</span>
+                        <span>Get</span>
+                    </div>
+
+                    <h1>Get Customer</h1>
+                    <p class="subtitle">Retrieve a single customer by ID.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/customers/{customerId}</span>
+                        </div>
+                        <p class="endpoint-desc">Returns the customer object for the specified ID.</p>
+                    </div>
+
+                    <h2>Path Parameters</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">customerId</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>The customer ID (e.g., <code>cus_abc123</code>)</td>
+                        </tr>
+                    </table>
+
+                    <h2>Response</h2>
+                    <p><span class="status-code success">200</span> Returns the customer object</p>
+                    <p><span class="status-code error">404</span> Customer not found</p>
+                </div>
+
+                <!-- Customers Update Page -->
+                <div class="content-page" id="page-customers-update">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Customers</span>
+                        <span>/</span>
+                        <span>Update</span>
+                    </div>
+
+                    <h1>Update Customer</h1>
+                    <p class="subtitle">Update an existing customer's details.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method patch">PATCH</span>
+                            <span class="endpoint-path">/v1/customers/{customerId}</span>
+                        </div>
+                        <p class="endpoint-desc">Updates the specified customer and returns the updated object.</p>
+                    </div>
+
+                    <h2>Request Body</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">email</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Updated email address</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">name</span></td>
+                            <td><span class="param-type">object</span></td>
+                            <td>Updated name object</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">policy</span></td>
+                            <td><span class="param-type">object</span></td>
+                            <td>Default spending policy for the customer</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">metadata</span></td>
+                            <td><span class="param-type">object</span></td>
+                            <td>Custom key-value pairs</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Customers Delete Page -->
+                <div class="content-page" id="page-customers-delete">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Customers</span>
+                        <span>/</span>
+                        <span>Delete</span>
+                    </div>
+
+                    <h1>Delete Customer</h1>
+                    <p class="subtitle">Delete a customer account.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method delete">DELETE</span>
+                            <span class="endpoint-path">/v1/customers/{customerId}</span>
+                        </div>
+                        <p class="endpoint-desc">Permanently deletes the customer. This also closes all associated cards.</p>
+                    </div>
+
+                    <h2>Response</h2>
+                    <p><span class="status-code success">200</span> Customer deleted successfully</p>
+                    <p><span class="status-code error">404</span> Customer not found</p>
+                </div>
+
+                <!-- Agents List Page -->
+                <div class="content-page" id="page-agents-list">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Agents</span>
+                        <span>/</span>
+                        <span>List</span>
+                    </div>
+
+                    <h1>List Agents</h1>
+                    <p class="subtitle">Retrieve a paginated list of agents, optionally filtered by customer.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/agents</span>
+                        </div>
+                    </div>
+
+                    <h2>Query Parameters</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">customerId</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Filter by customer ID</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Maximum results (1-100, default: 50)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">cursor</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Pagination cursor</td>
+                        </tr>
+                    </table>
+
+                    <h2>Response</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"data"</span>: [
+    {
+      <span class="code-string">"id"</span>: <span class="code-string">"agent_xyz789"</span>,
+      <span class="code-string">"customerId"</span>: <span class="code-string">"cus_abc123"</span>,
+      <span class="code-string">"externalId"</span>: <span class="code-string">"my-agent-001"</span>,
+      <span class="code-string">"name"</span>: <span class="code-string">"Shopping Assistant"</span>,
+      <span class="code-string">"status"</span>: <span class="code-string">"active"</span>,
+      <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+    }
+  ],
+  <span class="code-string">"nextCursor"</span>: <span class="code-keyword">null</span>
+}</pre>
+                    </div>
+                </div>
+
+                <!-- Agents Create Page -->
+                <div class="content-page" id="page-agents-create">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Agents</span>
+                        <span>/</span>
+                        <span>Create</span>
+                    </div>
+
+                    <h1>Create Agent</h1>
+                    <p class="subtitle">Register a new agent under a customer account.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/agents</span>
+                        </div>
+                    </div>
+
+                    <h2>Request Body</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">customerId</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>ID of the customer this agent belongs to</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">externalId</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Your internal identifier for this agent</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">name</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Display name for the agent</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">policy</span></td>
+                            <td><span class="param-type">object</span></td>
+                            <td>Spending policy overrides</td>
+                        </tr>
+                    </table>
+
+                    <h2>Example Request</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">curl</span> -X POST https://api.zinc.dev/v1/agents \
+  -H <span class="code-string">"Authorization: Bearer sk_live_..."</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{
+    "customerId": "cus_abc123",
+    "externalId": "my-agent-001",
+    "name": "Shopping Assistant"
+  }'</span></pre>
+                    </div>
+                </div>
+
+                <!-- Other agent pages (simplified) -->
+                <div class="content-page" id="page-agents-get">
+                    <h1>Get Agent</h1>
+                    <p class="subtitle">Retrieve a single agent by ID.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/agents/{agentId}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-agents-update">
+                    <h1>Update Agent</h1>
+                    <p class="subtitle">Update an existing agent's details or policy.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method patch">PATCH</span>
+                            <span class="endpoint-path">/v1/agents/{agentId}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-agents-suspend">
+                    <h1>Suspend Agent</h1>
+                    <p class="subtitle">Temporarily suspend an agent's spending capabilities.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/agents/{agentId}/suspend</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cards Pages -->
+                <div class="content-page" id="page-cards-list">
+                    <div class="breadcrumb">
+                        <a href="api-spec.html">API Reference</a>
+                        <span>/</span>
+                        <span>Cards</span>
+                        <span>/</span>
+                        <span>List</span>
+                    </div>
+
+                    <h1>List Cards</h1>
+                    <p class="subtitle">Retrieve a paginated list of cards, optionally filtered by customer or agent.</p>
+
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/cards</span>
+                        </div>
+                    </div>
+
+                    <h2>Query Parameters</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">customerId</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Filter by customer ID</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">agentId</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Filter by agent ID</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">limit</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Maximum results (1-100)</td>
+                        </tr>
+                    </table>
+
+                    <h2>Response</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"data"</span>: [
+    {
+      <span class="code-string">"id"</span>: <span class="code-string">"card_def456"</span>,
+      <span class="code-string">"customerId"</span>: <span class="code-string">"cus_abc123"</span>,
+      <span class="code-string">"agentId"</span>: <span class="code-string">"agent_xyz789"</span>,
+      <span class="code-string">"type"</span>: <span class="code-string">"virtual"</span>,
+      <span class="code-string">"usage"</span>: <span class="code-string">"single"</span>,
+      <span class="code-string">"status"</span>: <span class="code-string">"active"</span>,
+      <span class="code-string">"last4"</span>: <span class="code-string">"4242"</span>,
+      <span class="code-string">"expMonth"</span>: <span class="code-string">"12"</span>,
+      <span class="code-string">"expYear"</span>: <span class="code-string">"2025"</span>,
+      <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+    }
+  ],
+  <span class="code-string">"nextCursor"</span>: <span class="code-keyword">null</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-cards-create">
+                    <h1>Create Card</h1>
+                    <p class="subtitle">Issue a new virtual card to an agent.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/cards</span>
+                        </div>
+                    </div>
+
+                    <h2>Request Body</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">customerId</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Customer ID</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">agentId</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Agent ID</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">usage</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td><code>single</code> or <code>multi</code> (default: single)</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">policy</span></td>
+                            <td><span class="param-type">object</span></td>
+                            <td>Card-level spending policy</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="content-page" id="page-cards-get">
+                    <h1>Get Card</h1>
+                    <p class="subtitle">Retrieve a single card by ID.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/cards/{cardId}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-cards-credentials">
+                    <h1>Get Card Credentials</h1>
+                    <p class="subtitle">Retrieve sensitive card details (PAN, CVV, expiry). Requires an active intent.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/cards/{cardId}/credentials</span>
+                        </div>
+                    </div>
+
+                    <h2>Response</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"pan"</span>: <span class="code-string">"4242424242424242"</span>,
+  <span class="code-string">"cvv"</span>: <span class="code-string">"123"</span>,
+  <span class="code-string">"expMonth"</span>: <span class="code-string">"12"</span>,
+  <span class="code-string">"expYear"</span>: <span class="code-string">"2025"</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-cards-freeze">
+                    <h1>Freeze Card</h1>
+                    <p class="subtitle">Temporarily freeze a card to prevent transactions.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/cards/{cardId}/freeze</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-cards-close">
+                    <h1>Close Card</h1>
+                    <p class="subtitle">Permanently close a card.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/cards/{cardId}/close</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intents Pages -->
+                <div class="content-page" id="page-intents-list">
+                    <h1>List Intents</h1>
+                    <p class="subtitle">List all intents for a specific card.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/cards/{cardId}/intents</span>
+                        </div>
+                    </div>
+
+                    <h2>Response Schema</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"cardId"</span>: <span class="code-string">"card_def456"</span>,
+  <span class="code-string">"intents"</span>: [
+    {
+      <span class="code-string">"id"</span>: <span class="code-string">"int_abc123"</span>,
+      <span class="code-string">"purpose"</span>: <span class="code-string">"Purchase API credits"</span>,
+      <span class="code-string">"expectedAmount"</span>: <span class="code-number">5000</span>,
+      <span class="code-string">"expectedMerchant"</span>: <span class="code-string">"OpenAI"</span>,
+      <span class="code-string">"status"</span>: <span class="code-string">"pending"</span>,
+      <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+    }
+  ]
+}</pre>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-intents-create">
+                    <h1>Create Intent</h1>
+                    <p class="subtitle">Declare a purchase intent before accessing card credentials.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/cards/{cardId}/intents</span>
+                        </div>
+                    </div>
+
+                    <h2>Request Body</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">purpose</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Description of what will be purchased</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">expectedAmount</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">integer</span></td>
+                            <td>Expected amount in cents</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">expectedMerchant</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Expected merchant name</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="content-page" id="page-intents-approve">
+                    <h1>Approve Intent</h1>
+                    <p class="subtitle">Approve a pending intent.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/intents/{intentId}/approve</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-intents-reject">
+                    <h1>Reject Intent</h1>
+                    <p class="subtitle">Reject a pending intent with a reason.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/intents/{intentId}/reject</span>
+                        </div>
+                    </div>
+
+                    <h2>Request Body</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">reason</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Reason for rejection</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Transactions Pages -->
+                <div class="content-page" id="page-transactions-list">
+                    <h1>List Transactions</h1>
+                    <p class="subtitle">Retrieve a paginated list of transactions.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/transactions</span>
+                        </div>
+                    </div>
+
+                    <h2>Query Parameters</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">customerId</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Filter by customer</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">agentId</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Filter by agent</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">cardId</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>Filter by card</td>
+                        </tr>
+                    </table>
+
+                    <h2>Response</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"data"</span>: [
+    {
+      <span class="code-string">"id"</span>: <span class="code-string">"txn_abc123"</span>,
+      <span class="code-string">"cardId"</span>: <span class="code-string">"card_def456"</span>,
+      <span class="code-string">"amount"</span>: <span class="code-number">4999</span>,
+      <span class="code-string">"currency"</span>: <span class="code-string">"USD"</span>,
+      <span class="code-string">"status"</span>: <span class="code-string">"settled"</span>,
+      <span class="code-string">"merchant"</span>: {
+        <span class="code-string">"name"</span>: <span class="code-string">"Amazon"</span>,
+        <span class="code-string">"mcc"</span>: <span class="code-string">"5411"</span>,
+        <span class="code-string">"city"</span>: <span class="code-string">"Seattle"</span>,
+        <span class="code-string">"country"</span>: <span class="code-string">"US"</span>
+      },
+      <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+    }
+  ],
+  <span class="code-string">"nextCursor"</span>: <span class="code-keyword">null</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-transactions-get">
+                    <h1>Get Transaction</h1>
+                    <p class="subtitle">Retrieve a single transaction by ID.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/transactions/{transactionId}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Webhooks Pages -->
+                <div class="content-page" id="page-webhooks-list">
+                    <h1>List Webhooks</h1>
+                    <p class="subtitle">List all configured webhook endpoints.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method get">GET</span>
+                            <span class="endpoint-path">/v1/webhooks</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-page" id="page-webhooks-create">
+                    <h1>Create Webhook</h1>
+                    <p class="subtitle">Register a new webhook endpoint.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method post">POST</span>
+                            <span class="endpoint-path">/v1/webhooks</span>
+                        </div>
+                    </div>
+
+                    <h2>Request Body</h2>
+                    <table class="param-table">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Description</th>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">url</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">string</span></td>
+                            <td>HTTPS endpoint URL</td>
+                        </tr>
+                        <tr>
+                            <td><span class="param-name">events</span><span class="param-required">required</span></td>
+                            <td><span class="param-type">array</span></td>
+                            <td>Event types to subscribe to</td>
+                        </tr>
+                    </table>
+
+                    <h2>Available Events</h2>
+                    <ul>
+                        <li><code>card.created</code> - Card issued</li>
+                        <li><code>card.frozen</code> - Card frozen</li>
+                        <li><code>card.closed</code> - Card closed</li>
+                        <li><code>transaction.authorized</code> - Transaction authorized</li>
+                        <li><code>transaction.declined</code> - Transaction declined</li>
+                        <li><code>intent.created</code> - Intent created</li>
+                        <li><code>intent.approved</code> - Intent approved</li>
+                        <li><code>intent.rejected</code> - Intent rejected</li>
+                    </ul>
+                </div>
+
+                <div class="content-page" id="page-webhooks-delete">
+                    <h1>Delete Webhook</h1>
+                    <p class="subtitle">Remove a webhook endpoint.</p>
+                    <div class="endpoint-block">
+                        <div class="endpoint-header">
+                            <span class="endpoint-method delete">DELETE</span>
+                            <span class="endpoint-path">/v1/webhooks/{webhookId}</span>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Mode toggle
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.body.classList.toggle('machine-mode', btn.dataset.mode === 'machine');
+            });
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function navigateToPage(pageName) {
+            document.querySelectorAll('.content-page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page-' + pageName);
+            if (target) target.classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageName) item.classList.add('active');
+            });
+
+            history.pushState(null, '', '#' + pageName);
+            window.scrollTo(0, 0);
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        document.querySelectorAll('[data-page]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateToPage(item.dataset.page);
+            });
+        });
+
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) navigateToPage(hash);
+        });
+
+        window.addEventListener('popstate', () => {
+            const hash = window.location.hash.slice(1);
+            navigateToPage(hash || 'introduction');
+        });
+
+        // Search
+        const searchInput = document.querySelector('.search-input');
+        const navItems = document.querySelectorAll('.nav-item[data-page]');
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            navItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = (!query || text.includes(query)) ? 'flex' : 'none';
+            });
+        });
+
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                navItems.forEach(item => item.style.display = 'flex');
+            }
+        });
+    </script>
+</body>
+</html>

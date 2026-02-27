@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation — Zinc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0A0A0A;
+            --bg-secondary: #0D0D0D;
+            --bg-card: #111111;
+            --bg-code: #0D0D0D;
+            --border: #1A1A1A;
+            --border-light: #333333;
+            --text-primary: #FFFFFF;
+            --text-secondary: #CCCCCC;
+            --text-muted: #888888;
+            --text-dim: #666666;
+            --text-dark: #444444;
+            --accent: #00D084;
+            --accent-dark: #00AF6F;
+            --accent-glow: rgba(0, 208, 132, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.3;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 0 80px;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .logo-symbol {
+            color: var(--accent);
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-text {
+            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* Mode Toggle */
+        .mode-toggle {
+            display: flex;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn.active {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .mode-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .header-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .header-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .header-ctas {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        /* Machine Mode - Hide nav items */
+        body.machine-mode .header-nav,
+        body.machine-mode .header-ctas {
+            display: none;
+        }
+
+        /* Main Layout */
+        .docs-layout {
+            display: flex;
+            padding-top: 72px;
+            min-height: 100vh;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 72px;
+            left: 0;
+            width: 260px;
+            height: calc(100vh - 72px);
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 24px 0;
+            flex-shrink: 0;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border-light);
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--text-dim);
+        }
+
+        /* Search */
+        .search-container {
+            padding: 0 20px 20px;
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 12px 10px 36px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-size: 12px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-dim);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-dim);
+            font-size: 12px;
+        }
+
+        /* Navigation */
+        .nav-section {
+            margin-bottom: 24px;
+        }
+
+        .nav-section-title {
+            padding: 8px 20px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-dim);
+            margin-bottom: 4px;
+        }
+
+        .nav-items {
+            display: block;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 8px 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+        }
+
+        .nav-item.active {
+            color: var(--accent);
+            background: rgba(0, 208, 132, 0.1);
+            border-right: 2px solid var(--accent);
+        }
+
+        /* Main Content Wrapper */
+        .content-wrapper {
+            margin-left: 260px;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 800px;
+            width: 100%;
+            padding: 48px 64px;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 32px;
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .breadcrumb a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--accent);
+        }
+
+        .breadcrumb-separator {
+            color: var(--text-dark);
+        }
+
+        /* Content Typography */
+        .main-content h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            line-height: 1.1;
+        }
+
+        .main-content .subtitle {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .main-content h2 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-top: 48px;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .main-content h2:first-of-type {
+            margin-top: 0;
+        }
+
+        .main-content h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            color: var(--text-primary);
+        }
+
+        .main-content p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .main-content ul, .main-content ol {
+            margin: 20px 0;
+            padding-left: 24px;
+        }
+
+        .main-content li {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .main-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .main-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* Info Callout */
+        .callout {
+            background: var(--bg-secondary);
+            border-left: 3px solid var(--accent);
+            padding: 16px 20px;
+            margin: 24px 0;
+        }
+
+        .callout-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .callout-content {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* CTA Cards */
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+        }
+
+        .cta-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 20px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cta-card:hover {
+            border-color: var(--accent);
+        }
+
+        .cta-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cta-card-title .icon {
+            color: var(--accent);
+        }
+
+        .cta-card-desc {
+            font-size: 12px;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        /* Definition Table */
+        .definition-table {
+            margin: 32px 0;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .definition-row {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .definition-row:last-child {
+            border-bottom: none;
+        }
+
+        .definition-term {
+            padding: 16px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border);
+        }
+
+        .definition-desc {
+            padding: 16px 20px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin: 24px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .code-keyword { color: var(--accent); }
+        .code-string { color: #a5d6ff; }
+        .code-number { color: #ffa657; }
+        .code-comment { color: var(--text-dim); }
+
+        /* Inline Code */
+        code {
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        /* Page Navigation */
+        .page-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 64px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border);
+        }
+
+        .page-nav-link {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-decoration: none;
+            padding: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            max-width: 250px;
+            cursor: pointer;
+        }
+
+        .page-nav-link:hover {
+            border-color: var(--accent);
+        }
+
+        .page-nav-link.next {
+            align-items: flex-end;
+            text-align: right;
+        }
+
+        .page-nav-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+        }
+
+        .page-nav-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-badge.pending { background: rgba(255, 193, 7, 0.15); color: #ffc107; }
+        .status-badge.verified { background: rgba(0, 208, 132, 0.15); color: var(--accent); }
+        .status-badge.rejected { background: rgba(244, 67, 54, 0.15); color: #f44336; }
+        .status-badge.active { background: rgba(0, 208, 132, 0.15); color: var(--accent); }
+        .status-badge.suspended { background: rgba(255, 152, 0, 0.15); color: #ff9800; }
+        .status-badge.frozen { background: rgba(33, 150, 243, 0.15); color: #2196f3; }
+        .status-badge.closed { background: rgba(158, 158, 158, 0.15); color: #9e9e9e; }
+
+        /* Content Pages */
+        .content-page {
+            display: none;
+        }
+
+        .content-page.active {
+            display: block;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            header {
+                padding: 0 40px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            header {
+                padding: 0 24px;
+            }
+
+            .content-wrapper {
+                margin-left: 260px;
+            }
+
+            .main-content {
+                padding: 32px 40px;
+            }
+
+            .header-nav {
+                gap: 24px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 99;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .content-wrapper {
+                margin-left: 0;
+            }
+
+            .main-content {
+                padding: 32px 24px;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .header-nav,
+            .header-ctas {
+                display: none;
+            }
+
+            .cta-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .definition-row {
+                grid-template-columns: 1fr;
+            }
+
+            .definition-term {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="mobile-menu-toggle" onclick="toggleSidebar()">☰</button>
+            <a href="index.html" class="logo">
+                <span class="logo-symbol">></span>
+                <span class="logo-text">zinc</span>
+            </a>
+        </div>
+
+        <div class="mode-toggle">
+            <button class="mode-btn active" data-mode="human">Human</button>
+            <button class="mode-btn" data-mode="machine">Machine</button>
+        </div>
+
+        <nav class="header-nav">
+            <a href="docs.html">Docs</a>
+            <a href="api-spec.html">API Spec</a>
+            <a href="mcp.html">MCP</a>
+            <a href="skills.html">Skills</a>
+        </nav>
+        <div class="header-ctas">
+            <a href="index.html#schema" class="btn btn-outline">View Schema</a>
+            <a href="#" class="btn btn-primary">Get API Key</a>
+        </div>
+    </header>
+
+    <div class="docs-layout">
+        <!-- Left Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="search-container">
+                <div class="search-box">
+                    <span class="search-icon">⌘</span>
+                    <input type="text" class="search-input" placeholder="Search docs..." />
+                </div>
+            </div>
+
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Getting Started</div>
+                    <div class="nav-items">
+                        <a class="nav-item active" data-page="introduction">Introduction</a>
+                        <a class="nav-item" data-page="quickstart">Quickstart</a>
+                        <a class="nav-item" data-page="authentication">Authentication</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Core Concepts</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="customers">Customers</a>
+                        <a class="nav-item" data-page="agents">Agents</a>
+                        <a class="nav-item" data-page="cards">Cards</a>
+                        <a class="nav-item" data-page="intents">Intents</a>
+                        <a class="nav-item" data-page="policies">Policies</a>
+                        <a class="nav-item" data-page="kyc">KYC Verification</a>
+                        <a class="nav-item" data-page="transactions">Transactions</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Integration</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="webhooks">Webhooks</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">API Reference</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="api-overview">Overview</a>
+                        <a class="nav-item" data-page="endpoints">Endpoints</a>
+                        <a class="nav-item" data-page="errors">Error Handling</a>
+                    </div>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Resources</div>
+                    <div class="nav-items">
+                        <a class="nav-item" data-page="examples">Code Examples</a>
+                        <a class="nav-item" data-page="sdks">SDKs</a>
+                        <a class="nav-item" data-page="changelog">Changelog</a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <div class="content-wrapper">
+            <main class="main-content">
+
+                <!-- Introduction Page -->
+                <div class="content-page active" id="page-introduction">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Introduction</span>
+                    </div>
+
+                    <h1>Introduction</h1>
+                    <p class="subtitle">Zinc provides financial delegation infrastructure that enables AI agents to handle payments autonomously while maintaining full control, audit trails, and policy enforcement.</p>
+
+                    <div class="callout">
+                        <div class="callout-title">
+                            <span>📚</span>
+                            <span>Complete Resource Guide</span>
+                        </div>
+                        <div class="callout-content">
+                            Access the full documentation index at <code>docs.zinc.dev/llms.txt</code> for a comprehensive list of all available resources and endpoints.
+                        </div>
+                    </div>
+
+                    <h2>Overview</h2>
+                    <p>Zinc is built on the principle that AI agents need secure, programmable access to payment infrastructure without exposing sensitive credentials. Instead of sharing credit card numbers, agents declare their intent to make a purchase, receive a virtual card locked to that specific purpose, and complete the transaction within defined spending policies.</p>
+
+                    <div class="cta-grid">
+                        <a class="cta-card" data-page="quickstart">
+                            <div class="cta-card-title">
+                                <span class="icon">→</span>
+                                <span>Quickstart Guide</span>
+                            </div>
+                            <p class="cta-card-desc">Get your first agent card issued with step-by-step instructions</p>
+                        </a>
+                        <a class="cta-card" data-page="api-overview">
+                            <div class="cta-card-title">
+                                <span class="icon">→</span>
+                                <span>API Reference</span>
+                            </div>
+                            <p class="cta-card-desc">Explore complete API documentation with schemas and examples</p>
+                        </a>
+                    </div>
+
+                    <h2>Key Concepts</h2>
+                    <p>Understanding these foundational concepts will help you integrate Zinc into your agent workflows:</p>
+
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">Customer</div>
+                            <div class="definition-desc">The entity responsible for funding card spending. Customers set spending policies, add funding, and maintain oversight of all agent transactions.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">Agent</div>
+                            <div class="definition-desc">An autonomous AI system that can request and utilize payment cards. Agents operate within customer-defined spending limits and merchant constraints.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">Card</div>
+                            <div class="definition-desc">A virtual payment card provisioned for a specific intent. Cards can be single-use or recurring, with spending limits enforced at the network level.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">Intent</div>
+                            <div class="definition-desc">A pre-transaction declaration of what an agent plans to purchase, enabling policy enforcement before financial details are exposed.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">Policy</div>
+                            <div class="definition-desc">Customer-defined rules that govern agent spending behavior including per-transaction limits, daily caps, and merchant restrictions.</div>
+                        </div>
+                    </div>
+
+                    <div class="page-nav">
+                        <div></div>
+                        <a class="page-nav-link next" data-page="quickstart">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Quickstart Guide</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quickstart Page -->
+                <div class="content-page" id="page-quickstart">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Quickstart</span>
+                    </div>
+
+                    <h1>Quickstart</h1>
+                    <p class="subtitle">Get started with Zinc and issue your first agent card in minutes.</p>
+
+                    <h2>1. Create Your Account</h2>
+                    <p>Sign up at <code>zinc.dev</code> and complete KYC verification. This typically takes 2-3 minutes with instant approval for most users.</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-comment"># Using the Zinc CLI</span>
+zinc auth signup --email user@example.com
+
+<span class="code-comment"># Or via API</span>
+<span class="code-keyword">POST</span> /v1/customers
+{
+  <span class="code-string">"type"</span>: <span class="code-string">"consumer"</span>,
+  <span class="code-string">"email"</span>: <span class="code-string">"user@example.com"</span>,
+  <span class="code-string">"name"</span>: {
+    <span class="code-string">"first"</span>: <span class="code-string">"Alex"</span>,
+    <span class="code-string">"last"</span>: <span class="code-string">"Rivera"</span>
+  }
+}</pre>
+                    </div>
+
+                    <h2>2. Add Funding</h2>
+                    <p>Fund your account via ACH, wire transfer, or cryptocurrency. Deposits are typically available within 1-2 business days for ACH, instantly for crypto.</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-comment"># Get your funding details</span>
+<span class="code-keyword">GET</span> /v1/funding/details
+
+<span class="code-comment"># Response includes ACH routing, wire instructions, and crypto address</span></pre>
+                    </div>
+
+                    <h2>3. Connect Your Agent</h2>
+                    <p>Install the Zinc MCP Server or Skills package to give your agent payment capabilities:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-comment"># Via MCP (Claude Code, Cursor, etc.)</span>
+claude mcp add zinc --url https://mcp.zinc.dev/api/mcp
+
+<span class="code-comment"># Via Skills.sh</span>
+npx skills add zinc/zinc-mcp-skills</pre>
+                    </div>
+
+                    <h2>4. Issue Your First Card</h2>
+                    <p>Have your agent create an intent to receive a virtual card:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/intents
+{
+  <span class="code-string">"purpose"</span>: <span class="code-string">"Purchase API credits for OpenAI"</span>,
+  <span class="code-string">"expectedAmount"</span>: <span class="code-number">5000</span>,
+  <span class="code-string">"expectedMerchant"</span>: <span class="code-string">"openai.com"</span>
+}
+
+<span class="code-comment"># Response - card issued automatically</span>
+{
+  <span class="code-string">"intentId"</span>: <span class="code-string">"int_abc123"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"card_issued"</span>,
+  <span class="code-string">"card"</span>: {
+    <span class="code-string">"cardId"</span>: <span class="code-string">"card_xyz789"</span>,
+    <span class="code-string">"last4"</span>: <span class="code-string">"4242"</span>
+  }
+}</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="introduction">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Introduction</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="authentication">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Authentication</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Authentication Page -->
+                <div class="content-page" id="page-authentication">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Authentication</span>
+                    </div>
+
+                    <h1>Authentication</h1>
+                    <p class="subtitle">Secure your API requests with bearer token authentication.</p>
+
+                    <h2>API Keys</h2>
+                    <p>All API requests require authentication using a bearer token. You can generate API keys from your dashboard at <code>zinc.dev/dashboard/keys</code>.</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">curl</span> -X GET https://api.zinc.dev/v1/customers \
+  -H <span class="code-string">"Authorization: Bearer sk_live_your_api_key"</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span></pre>
+                    </div>
+
+                    <h2>Key Types</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">sk_live_*</div>
+                            <div class="definition-desc">Production keys for live transactions. Handle with care and never expose in client-side code.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">sk_test_*</div>
+                            <div class="definition-desc">Test keys for development. Transactions use simulated funds and won't affect real accounts.</div>
+                        </div>
+                    </div>
+
+                    <h2>Security Best Practices</h2>
+                    <ul>
+                        <li>Store API keys in environment variables, never in source code</li>
+                        <li>Rotate keys periodically and immediately if compromised</li>
+                        <li>Use test keys during development</li>
+                        <li>Implement IP allowlists for production keys</li>
+                    </ul>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="quickstart">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Quickstart</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="customers">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Customers</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Customers Page -->
+                <div class="content-page" id="page-customers">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Customers</span>
+                    </div>
+
+                    <h1>Customers</h1>
+                    <p class="subtitle">A Customer represents the entity responsible for funding card spending. Customers can be either individuals or businesses.</p>
+
+                    <h2>Customer Types</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">consumer</div>
+                            <div class="definition-desc">An individual person using Zinc for personal spending delegation.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">corporate</div>
+                            <div class="definition-desc">A business entity with multiple users and agents under a single account.</div>
+                        </div>
+                    </div>
+
+                    <h2>Creating a Customer</h2>
+                    <p>Create a new customer account with the required fields:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/customers
+{
+  <span class="code-string">"type"</span>: <span class="code-string">"consumer"</span>,
+  <span class="code-string">"email"</span>: <span class="code-string">"alex@example.com"</span>,
+  <span class="code-string">"name"</span>: {
+    <span class="code-string">"first"</span>: <span class="code-string">"Alex"</span>,
+    <span class="code-string">"last"</span>: <span class="code-string">"Rivera"</span>
+  }
+}
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-string">"id"</span>: <span class="code-string">"cus_abc123"</span>,
+  <span class="code-string">"type"</span>: <span class="code-string">"consumer"</span>,
+  <span class="code-string">"email"</span>: <span class="code-string">"alex@example.com"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"pending"</span>,
+  <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+}</pre>
+                    </div>
+
+                    <h2>Customer Fields</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">type</div>
+                            <div class="definition-desc">Either <code>consumer</code> for individuals or <code>corporate</code> for business entities.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">email</div>
+                            <div class="definition-desc">Primary contact email address for the customer account.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">name</div>
+                            <div class="definition-desc">Object containing <code>first</code> and <code>last</code> name for consumers, or <code>business</code> name for corporate.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">status</div>
+                            <div class="definition-desc">KYC verification status of the customer account.</div>
+                        </div>
+                    </div>
+
+                    <h2>KYC Verification Status</h2>
+                    <p>Customers must complete KYC verification before issuing cards:</p>
+                    <ul>
+                        <li><span class="status-badge pending">pending</span> — Awaiting verification submission or review</li>
+                        <li><span class="status-badge verified">verified</span> — Approved for card issuance</li>
+                        <li><span class="status-badge rejected">rejected</span> — Verification failed, may require additional documentation</li>
+                    </ul>
+
+                    <h2>Default Policies</h2>
+                    <p>Customers can establish default spending policies that cascade to all their agents and cards:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">PATCH</span> /v1/customers/cus_abc123
+{
+  <span class="code-string">"defaultPolicy"</span>: {
+    <span class="code-string">"requireIntent"</span>: <span class="code-keyword">true</span>,
+    <span class="code-string">"autoApproveBelow"</span>: <span class="code-number">5000</span>,
+    <span class="code-string">"limits"</span>: {
+      <span class="code-string">"perDay"</span>: <span class="code-number">100000</span>
+    }
+  }
+}</pre>
+                    </div>
+
+                    <div class="cta-grid">
+                        <a class="cta-card" data-page="agents">
+                            <div class="cta-card-title">
+                                <span class="icon">→</span>
+                                <span>Agents</span>
+                            </div>
+                            <p class="cta-card-desc">Create agents to spend on behalf of customers</p>
+                        </a>
+                        <a class="cta-card" data-page="cards">
+                            <div class="cta-card-title">
+                                <span class="icon">→</span>
+                                <span>Cards</span>
+                            </div>
+                            <p class="cta-card-desc">Issue virtual cards to agents</p>
+                        </a>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="authentication">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Authentication</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="agents">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Agents</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Agents Page -->
+                <div class="content-page" id="page-agents">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Agents</span>
+                    </div>
+
+                    <h1>Agents</h1>
+                    <p class="subtitle">An Agent is an autonomous actor—whether AI or automation—that makes purchases on behalf of customers. Agents require card assignments and must declare purchase intents before spending.</p>
+
+                    <h2>Creating an Agent</h2>
+                    <p>Register a new agent under a customer account:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/agents
+{
+  <span class="code-string">"customerId"</span>: <span class="code-string">"cus_abc123"</span>,
+  <span class="code-string">"externalId"</span>: <span class="code-string">"my-agent-001"</span>,
+  <span class="code-string">"name"</span>: <span class="code-string">"Shopping Assistant"</span>
+}
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-string">"id"</span>: <span class="code-string">"agent_xyz789"</span>,
+  <span class="code-string">"customerId"</span>: <span class="code-string">"cus_abc123"</span>,
+  <span class="code-string">"name"</span>: <span class="code-string">"Shopping Assistant"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"active"</span>,
+  <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+}</pre>
+                    </div>
+
+                    <h2>Agent Fields</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">customerId</div>
+                            <div class="definition-desc">The ID of the customer account this agent belongs to.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">externalId</div>
+                            <div class="definition-desc">Your internal identifier for this agent. Must be unique within the customer.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">name</div>
+                            <div class="definition-desc">A human-readable display name for the agent.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">status</div>
+                            <div class="definition-desc">Current operational status of the agent.</div>
+                        </div>
+                    </div>
+
+                    <h2>Agent Status</h2>
+                    <ul>
+                        <li><span class="status-badge active">active</span> — Full purchasing capabilities and card access</li>
+                        <li><span class="status-badge suspended">suspended</span> — Temporary spending restrictions, no new transactions allowed</li>
+                    </ul>
+
+                    <h2>Policy Overrides</h2>
+                    <p>Agents can have custom policy settings that override customer-level defaults:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">PATCH</span> /v1/agents/agent_xyz789
+{
+  <span class="code-string">"policy"</span>: {
+    <span class="code-string">"requireIntent"</span>: <span class="code-keyword">true</span>,
+    <span class="code-string">"limits"</span>: {
+      <span class="code-string">"perAuth"</span>: <span class="code-number">10000</span>,
+      <span class="code-string">"perDay"</span>: <span class="code-number">50000</span>
+    },
+    <span class="code-string">"blockedMccs"</span>: [<span class="code-string">"7995"</span>, <span class="code-string">"6211"</span>]
+  }
+}</pre>
+                    </div>
+
+                    <h2>Suspending an Agent</h2>
+                    <p>Temporarily disable an agent's spending capabilities:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/agents/agent_xyz789/suspend
+
+<span class="code-comment"># To reactivate</span>
+<span class="code-keyword">POST</span> /v1/agents/agent_xyz789/activate</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="customers">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Customers</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="cards">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Cards</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cards Page -->
+                <div class="content-page" id="page-cards">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Cards</span>
+                    </div>
+
+                    <h1>Cards</h1>
+                    <p class="subtitle">Cards are virtual spending instruments issued to agents with configurable policy controls. They function as controlled spending tools within the Zinc system.</p>
+
+                    <h2>Card Types</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">single</div>
+                            <div class="definition-desc">One-time use cards that auto-close after a successful transaction. Ideal for one-off purchases.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">multi</div>
+                            <div class="definition-desc">Reusable cards for recurring transactions like subscriptions or repeat purchases from the same merchant.</div>
+                        </div>
+                    </div>
+
+                    <h2>Creating a Card</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/cards
+{
+  <span class="code-string">"customerId"</span>: <span class="code-string">"cus_abc123"</span>,
+  <span class="code-string">"agentId"</span>: <span class="code-string">"agent_xyz789"</span>,
+  <span class="code-string">"usage"</span>: <span class="code-string">"single"</span>
+}
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-string">"id"</span>: <span class="code-string">"card_def456"</span>,
+  <span class="code-string">"customerId"</span>: <span class="code-string">"cus_abc123"</span>,
+  <span class="code-string">"agentId"</span>: <span class="code-string">"agent_xyz789"</span>,
+  <span class="code-string">"usage"</span>: <span class="code-string">"single"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"active"</span>,
+  <span class="code-string">"last4"</span>: <span class="code-string">"4242"</span>
+}</pre>
+                    </div>
+
+                    <h2>Card Status</h2>
+                    <ul>
+                        <li><span class="status-badge active">active</span> — Card is usable for transactions</li>
+                        <li><span class="status-badge frozen">frozen</span> — Temporarily blocked, can be unfrozen</li>
+                        <li><span class="status-badge closed">closed</span> — Permanently deactivated</li>
+                    </ul>
+
+                    <h2>Managing Card Status</h2>
+                    <div class="code-block">
+                        <pre><span class="code-comment"># Freeze a card</span>
+<span class="code-keyword">POST</span> /v1/cards/card_def456/freeze
+
+<span class="code-comment"># Unfreeze a card</span>
+<span class="code-keyword">POST</span> /v1/cards/card_def456/unfreeze
+
+<span class="code-comment"># Permanently close a card</span>
+<span class="code-keyword">POST</span> /v1/cards/card_def456/close</pre>
+                    </div>
+
+                    <h2>Retrieving Card Credentials</h2>
+                    <p>To access sensitive card details (PAN, CVV, expiry), the agent must first declare an intent:</p>
+
+                    <div class="code-block">
+                        <pre><span class="code-comment"># First, create an intent</span>
+<span class="code-keyword">POST</span> /v1/cards/card_def456/intents
+{
+  <span class="code-string">"purpose"</span>: <span class="code-string">"Purchase software license"</span>,
+  <span class="code-string">"expectedAmount"</span>: <span class="code-number">9900</span>,
+  <span class="code-string">"expectedMerchant"</span>: <span class="code-string">"GitHub"</span>
+}
+
+<span class="code-comment"># Then retrieve credentials</span>
+<span class="code-keyword">GET</span> /v1/cards/card_def456/credentials
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-string">"pan"</span>: <span class="code-string">"4242424242424242"</span>,
+  <span class="code-string">"cvv"</span>: <span class="code-string">"123"</span>,
+  <span class="code-string">"expMonth"</span>: <span class="code-string">"12"</span>,
+  <span class="code-string">"expYear"</span>: <span class="code-string">"2025"</span>
+}</pre>
+                    </div>
+
+                    <h2>Policy Controls</h2>
+                    <p>Cards support granular policy restrictions:</p>
+                    <ul>
+                        <li><strong>Spending limits</strong> — Maximum transaction amounts</li>
+                        <li><strong>Merchant whitelists</strong> — Restrict to specific vendors</li>
+                        <li><strong>Merchant locking</strong> — Lock card to first authorized merchant</li>
+                        <li><strong>MCC restrictions</strong> — Block specific merchant categories</li>
+                    </ul>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="agents">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Agents</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="intents">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Intents</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Intents Page -->
+                <div class="content-page" id="page-intents">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Intents</span>
+                    </div>
+
+                    <h1>Intents</h1>
+                    <p class="subtitle">An Intent is a pre-transaction declaration of what an agent plans to purchase, enabling policy enforcement before financial details are exposed.</p>
+
+                    <h2>Purpose</h2>
+                    <p>Intents serve four key functions:</p>
+                    <ul>
+                        <li><strong>Approval workflows</strong> — Route significant purchases for human review</li>
+                        <li><strong>Merchant validation</strong> — Restrict transactions to approved vendors</li>
+                        <li><strong>Spending limits</strong> — Enforce caps proactively</li>
+                        <li><strong>Audit trails</strong> — Create transaction documentation with stated purposes</li>
+                    </ul>
+
+                    <h2>Creating an Intent</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/cards/card_def456/intents
+{
+  <span class="code-string">"purpose"</span>: <span class="code-string">"Purchase office supplies from Amazon"</span>,
+  <span class="code-string">"expectedAmount"</span>: <span class="code-number">5000</span>,
+  <span class="code-string">"expectedMerchant"</span>: <span class="code-string">"Amazon"</span>
+}
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-string">"id"</span>: <span class="code-string">"int_abc123"</span>,
+  <span class="code-string">"cardId"</span>: <span class="code-string">"card_def456"</span>,
+  <span class="code-string">"purpose"</span>: <span class="code-string">"Purchase office supplies from Amazon"</span>,
+  <span class="code-string">"expectedAmount"</span>: <span class="code-number">5000</span>,
+  <span class="code-string">"expectedMerchant"</span>: <span class="code-string">"Amazon"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"pending"</span>
+}</pre>
+                    </div>
+
+                    <h2>Intent Fields</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">purpose</div>
+                            <div class="definition-desc">A descriptive rationale for the purchase. Used for audit trails and human review.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">expectedAmount</div>
+                            <div class="definition-desc">The anticipated transaction amount in cents. System allows ±10% tolerance.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">expectedMerchant</div>
+                            <div class="definition-desc">The intended vendor name. Uses fuzzy matching for name variations.</div>
+                        </div>
+                    </div>
+
+                    <h2>Intent Status Lifecycle</h2>
+                    <ul>
+                        <li><span class="status-badge pending">pending_approval</span> — Awaiting human authorization</li>
+                        <li><span class="status-badge pending">pending</span> — Approved and awaiting transaction</li>
+                        <li><span class="status-badge verified">matched</span> — Transaction matched the declared intent</li>
+                        <li><span class="status-badge rejected">mismatched</span> — Transaction deviated from intent (amount or merchant)</li>
+                        <li><span class="status-badge closed">expired</span> — Intent expired without a matching transaction</li>
+                    </ul>
+
+                    <h2>Managing Intents</h2>
+                    <div class="code-block">
+                        <pre><span class="code-comment"># Approve a pending intent</span>
+<span class="code-keyword">POST</span> /v1/intents/int_abc123/approve
+
+<span class="code-comment"># Reject a pending intent</span>
+<span class="code-keyword">POST</span> /v1/intents/int_abc123/reject
+{
+  <span class="code-string">"reason"</span>: <span class="code-string">"Purchase not authorized"</span>
+}
+
+<span class="code-comment"># Cancel an intent</span>
+<span class="code-keyword">POST</span> /v1/intents/int_abc123/cancel</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="cards">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Cards</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="policies">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Policies</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Policies Page -->
+                <div class="content-page" id="page-policies">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Policies</span>
+                    </div>
+
+                    <h1>Policies</h1>
+                    <p class="subtitle">Policies establish governance rules for card utilization, controlling spending thresholds, merchant categories, approval procedures, and operational restrictions.</p>
+
+                    <h2>Policy Hierarchy</h2>
+                    <p>Policies cascade through three levels, with more specific settings overriding broader ones:</p>
+                    <div class="code-block">
+                        <pre><span class="code-comment"># Priority (highest to lowest)</span>
+Card Level → Agent Level → Customer Level
+
+<span class="code-comment"># Example: Card limit of $25 overrides Agent limit of $100</span></pre>
+                    </div>
+
+                    <h2>Intent & Approval Controls</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">requireIntent</div>
+                            <div class="definition-desc">When enabled, agents must declare a purpose before accessing card information.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">requireApproval</div>
+                            <div class="definition-desc">Intents require human authorization before activation.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">autoApproveBelow</div>
+                            <div class="definition-desc">Amount threshold (in cents) below which intents are auto-approved.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">requireAttestation</div>
+                            <div class="definition-desc">Agents must confirm intent at each card access, generating timestamped records.</div>
+                        </div>
+                    </div>
+
+                    <h2>Spending Limits</h2>
+                    <p>Three limit types restrict expenditures (all values in cents):</p>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">perAuth</div>
+                            <div class="definition-desc">Maximum amount for a single transaction.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">perDay</div>
+                            <div class="definition-desc">Maximum total spending in a 24-hour period.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">perMonth</div>
+                            <div class="definition-desc">Maximum total spending in a calendar month.</div>
+                        </div>
+                    </div>
+
+                    <h2>Merchant Controls</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">allowedMerchants</div>
+                            <div class="definition-desc">Whitelist of merchant names. Only transactions at these vendors are processed.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">lockToFirstMerchant</div>
+                            <div class="definition-desc">After initial purchase, restrict all subsequent transactions to that merchant.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">allowedMccs</div>
+                            <div class="definition-desc">Whitelist of merchant category codes (e.g., 5411 for supermarkets).</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">blockedMccs</div>
+                            <div class="definition-desc">Blacklist of merchant category codes (e.g., 7995 for gambling).</div>
+                        </div>
+                    </div>
+
+                    <h2>Configuration Examples</h2>
+                    <h3>High-Trust Agent</h3>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"requireIntent"</span>: <span class="code-keyword">false</span>,
+  <span class="code-string">"limits"</span>: {
+    <span class="code-string">"perAuth"</span>: <span class="code-number">100000</span>,
+    <span class="code-string">"perDay"</span>: <span class="code-number">500000</span>
+  }
+}</pre>
+                    </div>
+
+                    <h3>Supervised Agent</h3>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"requireIntent"</span>: <span class="code-keyword">true</span>,
+  <span class="code-string">"requireApproval"</span>: <span class="code-keyword">true</span>,
+  <span class="code-string">"autoApproveBelow"</span>: <span class="code-number">2500</span>,
+  <span class="code-string">"limits"</span>: {
+    <span class="code-string">"perAuth"</span>: <span class="code-number">25000</span>,
+    <span class="code-string">"perDay"</span>: <span class="code-number">100000</span>
+  },
+  <span class="code-string">"cooldownMinutes"</span>: <span class="code-number">15</span>
+}</pre>
+                    </div>
+
+                    <h3>Restricted Card</h3>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"requireAttestation"</span>: <span class="code-keyword">true</span>,
+  <span class="code-string">"attestationWindowMinutes"</span>: <span class="code-number">10</span>,
+  <span class="code-string">"allowedMccs"</span>: [<span class="code-string">"5812"</span>],
+  <span class="code-string">"limits"</span>: {
+    <span class="code-string">"perAuth"</span>: <span class="code-number">5000</span>,
+    <span class="code-string">"perDay"</span>: <span class="code-number">10000</span>
+  },
+  <span class="code-string">"lockToFirstMerchant"</span>: <span class="code-keyword">true</span>
+}</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="intents">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Intents</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="kyc">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">KYC Verification</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- KYC Page -->
+                <div class="content-page" id="page-kyc">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>KYC Verification</span>
+                    </div>
+
+                    <h1>KYC Verification</h1>
+                    <p class="subtitle">Know Your Customer (KYC) verification is required before customers can issue cards or fund their accounts.</p>
+
+                    <h2>Verification Process</h2>
+                    <p>The KYC process varies based on customer type:</p>
+
+                    <h3>Consumer Verification</h3>
+                    <ul>
+                        <li>Government-issued ID (passport, driver's license)</li>
+                        <li>Proof of address (utility bill, bank statement)</li>
+                        <li>Identity verification selfie</li>
+                    </ul>
+
+                    <h3>Corporate Verification</h3>
+                    <ul>
+                        <li>Business registration documents</li>
+                        <li>Proof of business address</li>
+                        <li>Beneficial owner identification</li>
+                        <li>Director/officer verification</li>
+                    </ul>
+
+                    <h2>Submitting KYC Application</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/customers/cus_abc123/kyc
+{
+  <span class="code-string">"idDocument"</span>: {
+    <span class="code-string">"type"</span>: <span class="code-string">"passport"</span>,
+    <span class="code-string">"frontImage"</span>: <span class="code-string">"base64_encoded_image..."</span>
+  },
+  <span class="code-string">"addressDocument"</span>: {
+    <span class="code-string">"type"</span>: <span class="code-string">"utility_bill"</span>,
+    <span class="code-string">"image"</span>: <span class="code-string">"base64_encoded_image..."</span>
+  }
+}</pre>
+                    </div>
+
+                    <h2>KYC Status</h2>
+                    <ul>
+                        <li><span class="status-badge pending">pending</span> — Application submitted, under review</li>
+                        <li><span class="status-badge verified">verified</span> — Verification successful, full access granted</li>
+                        <li><span class="status-badge rejected">rejected</span> — Verification failed, may resubmit with corrections</li>
+                    </ul>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="policies">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Policies</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="transactions">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Transactions</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Transactions Page -->
+                <div class="content-page" id="page-transactions">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Transactions</span>
+                    </div>
+
+                    <h1>Transactions</h1>
+                    <p class="subtitle">Transactions represent completed or pending card authorizations with full audit details.</p>
+
+                    <h2>Listing Transactions</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">GET</span> /v1/transactions?customerId=cus_abc123&limit=50
+
+<span class="code-comment"># Response</span>
+{
+  <span class="code-string">"data"</span>: [
+    {
+      <span class="code-string">"id"</span>: <span class="code-string">"txn_abc123"</span>,
+      <span class="code-string">"cardId"</span>: <span class="code-string">"card_def456"</span>,
+      <span class="code-string">"amount"</span>: <span class="code-number">4999</span>,
+      <span class="code-string">"merchant"</span>: <span class="code-string">"Amazon"</span>,
+      <span class="code-string">"status"</span>: <span class="code-string">"settled"</span>,
+      <span class="code-string">"intentId"</span>: <span class="code-string">"int_xyz789"</span>,
+      <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+    }
+  ],
+  <span class="code-string">"hasMore"</span>: <span class="code-keyword">true</span>
+}</pre>
+                    </div>
+
+                    <h2>Transaction Fields</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">amount</div>
+                            <div class="definition-desc">Transaction amount in cents.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">merchant</div>
+                            <div class="definition-desc">Merchant name as reported by the payment network.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">mcc</div>
+                            <div class="definition-desc">Merchant Category Code identifying the business type.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">intentId</div>
+                            <div class="definition-desc">The intent that was matched to this transaction (if any).</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">status</div>
+                            <div class="definition-desc">Current transaction status: pending, settled, declined, or refunded.</div>
+                        </div>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="kyc">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">KYC Verification</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="webhooks">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Webhooks</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Webhooks Page -->
+                <div class="content-page" id="page-webhooks">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Webhooks</span>
+                    </div>
+
+                    <h1>Webhooks</h1>
+                    <p class="subtitle">Receive real-time notifications for events like card issuance, transaction authorization, and policy violations.</p>
+
+                    <h2>Configuring Webhooks</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/webhooks
+{
+  <span class="code-string">"url"</span>: <span class="code-string">"https://your-server.com/webhooks/zinc"</span>,
+  <span class="code-string">"events"</span>: [
+    <span class="code-string">"card.created"</span>,
+    <span class="code-string">"transaction.authorized"</span>,
+    <span class="code-string">"intent.approved"</span>,
+    <span class="code-string">"intent.rejected"</span>
+  ]
+}</pre>
+                    </div>
+
+                    <h2>Event Types</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">card.created</div>
+                            <div class="definition-desc">A new card has been issued.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">card.frozen</div>
+                            <div class="definition-desc">A card has been frozen.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">transaction.authorized</div>
+                            <div class="definition-desc">A transaction has been authorized.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">transaction.declined</div>
+                            <div class="definition-desc">A transaction was declined due to policy or limits.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">intent.created</div>
+                            <div class="definition-desc">A new intent has been created.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">intent.approved</div>
+                            <div class="definition-desc">An intent has been approved.</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">intent.rejected</div>
+                            <div class="definition-desc">An intent has been rejected.</div>
+                        </div>
+                    </div>
+
+                    <h2>Webhook Payload</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"id"</span>: <span class="code-string">"evt_abc123"</span>,
+  <span class="code-string">"type"</span>: <span class="code-string">"transaction.authorized"</span>,
+  <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>,
+  <span class="code-string">"data"</span>: {
+    <span class="code-string">"transactionId"</span>: <span class="code-string">"txn_xyz789"</span>,
+    <span class="code-string">"cardId"</span>: <span class="code-string">"card_def456"</span>,
+    <span class="code-string">"amount"</span>: <span class="code-number">4999</span>,
+    <span class="code-string">"merchant"</span>: <span class="code-string">"Amazon"</span>
+  }
+}</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="transactions">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Transactions</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="api-overview">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">API Overview</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- API Overview Page -->
+                <div class="content-page" id="page-api-overview">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>API Overview</span>
+                    </div>
+
+                    <h1>API Overview</h1>
+                    <p class="subtitle">The Zinc API is organized around REST principles with JSON request and response bodies.</p>
+
+                    <h2>Base URL</h2>
+                    <div class="code-block">
+                        <pre>https://api.zinc.dev/v1</pre>
+                    </div>
+
+                    <h2>Authentication</h2>
+                    <p>All requests require a bearer token in the Authorization header:</p>
+                    <div class="code-block">
+                        <pre>Authorization: Bearer sk_live_your_api_key</pre>
+                    </div>
+
+                    <h2>Request Format</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">POST</span> /v1/resource
+Content-Type: application/json
+
+{
+  <span class="code-string">"field"</span>: <span class="code-string">"value"</span>
+}</pre>
+                    </div>
+
+                    <h2>Response Format</h2>
+                    <p>Successful responses return the resource object:</p>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"id"</span>: <span class="code-string">"resource_abc123"</span>,
+  <span class="code-string">"field"</span>: <span class="code-string">"value"</span>,
+  <span class="code-string">"createdAt"</span>: <span class="code-string">"2024-01-15T10:30:00Z"</span>
+}</pre>
+                    </div>
+
+                    <h2>Pagination</h2>
+                    <p>List endpoints support cursor-based pagination:</p>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">GET</span> /v1/transactions?limit=50&startingAfter=txn_abc123</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="webhooks">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Webhooks</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="endpoints">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Endpoints</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Endpoints Page -->
+                <div class="content-page" id="page-endpoints">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Endpoints</span>
+                    </div>
+
+                    <h1>Endpoints</h1>
+                    <p class="subtitle">Complete list of available API endpoints organized by resource.</p>
+
+                    <h2>Customers</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">POST /customers</div>
+                            <div class="definition-desc">Create a new customer</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">GET /customers/:id</div>
+                            <div class="definition-desc">Retrieve a customer</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">PATCH /customers/:id</div>
+                            <div class="definition-desc">Update a customer</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">GET /customers</div>
+                            <div class="definition-desc">List all customers</div>
+                        </div>
+                    </div>
+
+                    <h2>Agents</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">POST /agents</div>
+                            <div class="definition-desc">Create a new agent</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">GET /agents/:id</div>
+                            <div class="definition-desc">Retrieve an agent</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">PATCH /agents/:id</div>
+                            <div class="definition-desc">Update an agent</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">POST /agents/:id/suspend</div>
+                            <div class="definition-desc">Suspend an agent</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">POST /agents/:id/activate</div>
+                            <div class="definition-desc">Activate an agent</div>
+                        </div>
+                    </div>
+
+                    <h2>Cards</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">POST /cards</div>
+                            <div class="definition-desc">Issue a new card</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">GET /cards/:id</div>
+                            <div class="definition-desc">Retrieve a card</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">GET /cards/:id/credentials</div>
+                            <div class="definition-desc">Get card credentials (requires intent)</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">POST /cards/:id/freeze</div>
+                            <div class="definition-desc">Freeze a card</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">POST /cards/:id/unfreeze</div>
+                            <div class="definition-desc">Unfreeze a card</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">POST /cards/:id/close</div>
+                            <div class="definition-desc">Permanently close a card</div>
+                        </div>
+                    </div>
+
+                    <h2>Intents</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">POST /cards/:id/intents</div>
+                            <div class="definition-desc">Create an intent for a card</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">GET /intents/:id</div>
+                            <div class="definition-desc">Retrieve an intent</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">POST /intents/:id/approve</div>
+                            <div class="definition-desc">Approve a pending intent</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">POST /intents/:id/reject</div>
+                            <div class="definition-desc">Reject a pending intent</div>
+                        </div>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="api-overview">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">API Overview</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="errors">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Error Handling</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Errors Page -->
+                <div class="content-page" id="page-errors">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Error Handling</span>
+                    </div>
+
+                    <h1>Error Handling</h1>
+                    <p class="subtitle">The API uses conventional HTTP response codes and returns detailed error messages.</p>
+
+                    <h2>HTTP Status Codes</h2>
+                    <div class="definition-table">
+                        <div class="definition-row">
+                            <div class="definition-term">200 OK</div>
+                            <div class="definition-desc">Request succeeded</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">201 Created</div>
+                            <div class="definition-desc">Resource created successfully</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">400 Bad Request</div>
+                            <div class="definition-desc">Invalid request parameters</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">401 Unauthorized</div>
+                            <div class="definition-desc">Missing or invalid API key</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">403 Forbidden</div>
+                            <div class="definition-desc">Insufficient permissions</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">404 Not Found</div>
+                            <div class="definition-desc">Resource doesn't exist</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">429 Too Many Requests</div>
+                            <div class="definition-desc">Rate limit exceeded</div>
+                        </div>
+                        <div class="definition-row">
+                            <div class="definition-term">500 Internal Error</div>
+                            <div class="definition-desc">Server error (contact support)</div>
+                        </div>
+                    </div>
+
+                    <h2>Error Response Format</h2>
+                    <div class="code-block">
+                        <pre>{
+  <span class="code-string">"error"</span>: {
+    <span class="code-string">"code"</span>: <span class="code-string">"invalid_request"</span>,
+    <span class="code-string">"message"</span>: <span class="code-string">"The 'amount' field must be a positive integer"</span>,
+    <span class="code-string">"param"</span>: <span class="code-string">"amount"</span>
+  }
+}</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="endpoints">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Endpoints</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="examples">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Code Examples</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Examples Page -->
+                <div class="content-page" id="page-examples">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Code Examples</span>
+                    </div>
+
+                    <h1>Code Examples</h1>
+                    <p class="subtitle">Complete implementation examples in popular languages.</p>
+
+                    <h2>Python</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">import</span> requests
+
+API_KEY = <span class="code-string">"sk_live_your_api_key"</span>
+BASE_URL = <span class="code-string">"https://api.zinc.dev/v1"</span>
+
+headers = {
+    <span class="code-string">"Authorization"</span>: f<span class="code-string">"Bearer {API_KEY}"</span>,
+    <span class="code-string">"Content-Type"</span>: <span class="code-string">"application/json"</span>
+}
+
+<span class="code-comment"># Create an intent and get card credentials</span>
+intent = requests.post(
+    f<span class="code-string">"{BASE_URL}/cards/card_abc123/intents"</span>,
+    headers=headers,
+    json={
+        <span class="code-string">"purpose"</span>: <span class="code-string">"Purchase API credits"</span>,
+        <span class="code-string">"expectedAmount"</span>: <span class="code-number">5000</span>,
+        <span class="code-string">"expectedMerchant"</span>: <span class="code-string">"OpenAI"</span>
+    }
+).json()
+
+credentials = requests.get(
+    f<span class="code-string">"{BASE_URL}/cards/card_abc123/credentials"</span>,
+    headers=headers
+).json()</pre>
+                    </div>
+
+                    <h2>Node.js</h2>
+                    <div class="code-block">
+                        <pre><span class="code-keyword">const</span> axios = require(<span class="code-string">'axios'</span>);
+
+<span class="code-keyword">const</span> client = axios.create({
+  baseURL: <span class="code-string">'https://api.zinc.dev/v1'</span>,
+  headers: {
+    <span class="code-string">'Authorization'</span>: <span class="code-string">`Bearer ${process.env.ZINC_API_KEY}`</span>
+  }
+});
+
+<span class="code-comment">// Create an intent</span>
+<span class="code-keyword">const</span> { data: intent } = <span class="code-keyword">await</span> client.post(
+  <span class="code-string">'/cards/card_abc123/intents'</span>,
+  {
+    purpose: <span class="code-string">'Purchase API credits'</span>,
+    expectedAmount: <span class="code-number">5000</span>,
+    expectedMerchant: <span class="code-string">'OpenAI'</span>
+  }
+);
+
+<span class="code-comment">// Get credentials</span>
+<span class="code-keyword">const</span> { data: credentials } = <span class="code-keyword">await</span> client.get(
+  <span class="code-string">'/cards/card_abc123/credentials'</span>
+);</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="errors">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Error Handling</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="sdks">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">SDKs</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- SDKs Page -->
+                <div class="content-page" id="page-sdks">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>SDKs</span>
+                    </div>
+
+                    <h1>SDKs</h1>
+                    <p class="subtitle">Official client libraries for popular programming languages.</p>
+
+                    <h2>Installation</h2>
+
+                    <h3>Python</h3>
+                    <div class="code-block">
+                        <pre>pip install zinc-payments</pre>
+                    </div>
+
+                    <h3>Node.js</h3>
+                    <div class="code-block">
+                        <pre>npm install @zinc/node</pre>
+                    </div>
+
+                    <h3>Go</h3>
+                    <div class="code-block">
+                        <pre>go get github.com/zinc-dev/zinc-go</pre>
+                    </div>
+
+                    <h2>Quick Start</h2>
+                    <div class="code-block">
+                        <pre><span class="code-comment"># Python</span>
+<span class="code-keyword">from</span> zinc <span class="code-keyword">import</span> Zinc
+
+client = Zinc(api_key=<span class="code-string">"sk_live_..."</span>)
+card = client.cards.create(
+    customer_id=<span class="code-string">"cus_abc123"</span>,
+    agent_id=<span class="code-string">"agent_xyz789"</span>
+)</pre>
+                    </div>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="examples">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">Code Examples</span>
+                        </a>
+                        <a class="page-nav-link next" data-page="changelog">
+                            <span class="page-nav-label">Next</span>
+                            <span class="page-nav-title">Changelog</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Changelog Page -->
+                <div class="content-page" id="page-changelog">
+                    <div class="breadcrumb">
+                        <a href="docs.html">Documentation</a>
+                        <span class="breadcrumb-separator">/</span>
+                        <span>Changelog</span>
+                    </div>
+
+                    <h1>Changelog</h1>
+                    <p class="subtitle">Track API changes, new features, and deprecations.</p>
+
+                    <h2>2024-01-15</h2>
+                    <ul>
+                        <li><strong>Added:</strong> MCP Server support for Claude Code and Cursor</li>
+                        <li><strong>Added:</strong> Agent Skills integration via skills.sh</li>
+                        <li><strong>Improved:</strong> Intent matching with fuzzy merchant names</li>
+                    </ul>
+
+                    <h2>2024-01-01</h2>
+                    <ul>
+                        <li><strong>Added:</strong> Attestation windows for card access</li>
+                        <li><strong>Added:</strong> Cooldown periods between transactions</li>
+                        <li><strong>Fixed:</strong> MCC filtering for certain merchant categories</li>
+                    </ul>
+
+                    <h2>2023-12-15</h2>
+                    <ul>
+                        <li><strong>Added:</strong> Corporate customer type</li>
+                        <li><strong>Added:</strong> Multi-use cards for subscriptions</li>
+                        <li><strong>Improved:</strong> KYC verification flow</li>
+                    </ul>
+
+                    <div class="page-nav">
+                        <a class="page-nav-link prev" data-page="sdks">
+                            <span class="page-nav-label">Previous</span>
+                            <span class="page-nav-title">SDKs</span>
+                        </a>
+                        <div></div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Mode toggle functionality
+        const modeButtons = document.querySelectorAll('.mode-btn');
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                modeButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const mode = btn.dataset.mode;
+                if (mode === 'machine') {
+                    document.body.classList.add('machine-mode');
+                } else {
+                    document.body.classList.remove('machine-mode');
+                }
+            });
+        });
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function navigateToPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.content-page').forEach(page => {
+                page.classList.remove('active');
+            });
+
+            // Show selected page
+            const targetPage = document.getElementById('page-' + pageName);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageName) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Update URL hash
+            history.pushState(null, '', '#' + pageName);
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // Close mobile sidebar
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        // Add click handlers to all navigation items
+        document.querySelectorAll('[data-page]').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateToPage(item.dataset.page);
+            });
+        });
+
+        // Handle initial page load from hash
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                navigateToPage(hash);
+            }
+        });
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                navigateToPage(hash);
+            } else {
+                navigateToPage('introduction');
+            }
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const navItems = document.querySelectorAll('.nav-item[data-page]');
+
+        // Define searchable content for each page
+        const pageContent = {
+            'introduction': 'introduction overview financial delegation infrastructure ai agents payments zinc',
+            'quickstart': 'quickstart get started first card issue account funding agent connect',
+            'authentication': 'authentication api key bearer token security keys live test',
+            'customers': 'customers consumer corporate entity funding kyc verification status',
+            'agents': 'agents autonomous actor ai spending policies suspend activate external id',
+            'cards': 'cards virtual single multi credentials pan cvv freeze unfreeze close',
+            'intents': 'intents pre-transaction declaration purpose expected amount merchant approval',
+            'policies': 'policies spending limits per auth day month merchant controls mcc blocked allowed',
+            'kyc': 'kyc verification know your customer identity document passport drivers license',
+            'transactions': 'transactions history settled declined refunded amount merchant',
+            'webhooks': 'webhooks notifications events card created transaction authorized',
+            'api-overview': 'api overview rest json base url authentication request response',
+            'endpoints': 'endpoints customers agents cards intents post get patch delete',
+            'errors': 'errors http status code 400 401 403 404 429 500',
+            'examples': 'examples code python node javascript implementation',
+            'sdks': 'sdks libraries python node go install npm pip',
+            'changelog': 'changelog updates changes new features improvements'
+        };
+
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+
+            if (query === '') {
+                // Show all nav items
+                navItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+                return;
+            }
+
+            // Filter nav items based on search
+            navItems.forEach(item => {
+                const page = item.dataset.page;
+                const content = pageContent[page] || '';
+                const itemText = item.textContent.toLowerCase();
+
+                if (content.includes(query) || itemText.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Clear search on escape
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                navItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

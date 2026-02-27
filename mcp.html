@@ -420,56 +420,6 @@
         .mcp-setup-panel .code-comment { color: var(--text-dim); }
         .mcp-setup-panel .code-string { color: #a5d6ff; }
 
-        /* Agent Skills Section */
-        .mcp-skills-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-
-        .mcp-skill-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border);
-            padding: 28px;
-            transition: all 0.3s ease;
-        }
-
-        .mcp-skill-card:hover {
-            border-color: var(--accent);
-        }
-
-        .mcp-skill-card h4 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-        }
-
-        .mcp-skill-card p {
-            font-size: 13px;
-            color: var(--text-dim);
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-
-        .mcp-skill-card code {
-            display: block;
-            background: var(--bg-primary);
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 12px;
-            color: var(--accent);
-        }
-
-        .skills-intro {
-            font-size: 15px;
-            color: var(--text-muted);
-            margin-bottom: 32px;
-            line-height: 1.6;
-            max-width: 800px;
-        }
-
         /* Footer */
         footer {
             padding: 60px 80px;
@@ -589,6 +539,7 @@
             <a href="index.html#capabilities">Docs</a>
             <a href="index.html#spend-protocol">API Spec</a>
             <a href="mcp.html" class="active">MCP</a>
+            <a href="skills.html">Skills</a>
         </nav>
         <div class="header-ctas">
             <a href="index.html#schema" class="btn btn-outline">View Schema</a>
@@ -902,27 +853,6 @@ claude mcp test zinc</pre>
             </div>
         </section>
 
-        <section class="mcp-section">
-            <h2>Agent Skills</h2>
-            <p class="skills-intro">Skills teach your agent how to use Zinc's payment tools. Install them to give your agent knowledge of the payment flow, available tools, and best practices.</p>
-            <div class="mcp-skills-grid">
-                <div class="mcp-skill-card">
-                    <h4>Claude Code</h4>
-                    <p>Install via mcporter for Claude Code and compatible MCP clients</p>
-                    <code>mcporter config add zinc --url https://mcp.zinc.dev/api/mcp</code>
-                </div>
-                <div class="mcp-skill-card">
-                    <h4>ClawHub</h4>
-                    <p>One-click install for ClawHub-enabled AI agents</p>
-                    <code>clawhub install zinc-payments</code>
-                </div>
-                <div class="mcp-skill-card">
-                    <h4>Skills.sh</h4>
-                    <p>Add payment capabilities via the Skills.sh registry</p>
-                    <code>npx skills add zinc/mcp-payments</code>
-                </div>
-            </div>
-        </section>
     </main>
 
     <footer>
@@ -932,8 +862,8 @@ claude mcp test zinc</pre>
                 <a href="index.html">Home</a>
                 <a href="index.html#capabilities">Docs</a>
                 <a href="mcp.html">MCP</a>
+                <a href="skills.html">Skills</a>
                 <a href="#">API Reference</a>
-                <a href="#">Support</a>
             </div>
         </div>
     </footer>

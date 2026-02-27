@@ -2268,6 +2268,267 @@
             }
         }
 
+        /* MCP Section */
+        .human-mcp {
+            padding: 120px 80px;
+            background: var(--bg-secondary);
+        }
+
+        .mcp-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .mcp-hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            margin-bottom: 80px;
+            align-items: center;
+        }
+
+        .mcp-hero-text h3 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .mcp-hero-text p {
+            font-size: 16px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 24px;
+        }
+
+        .mcp-server-url {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 16px 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mcp-server-url span {
+            color: var(--text-dim);
+        }
+
+        .mcp-hero-visual {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 32px;
+        }
+
+        .mcp-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .mcp-flow-step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .mcp-flow-step:hover {
+            border-color: var(--accent);
+        }
+
+        .mcp-flow-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-primary);
+            border: 1px solid var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .mcp-flow-text {
+            flex: 1;
+        }
+
+        .mcp-flow-text h5 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .mcp-flow-text p {
+            font-size: 11px;
+            color: var(--text-dim);
+        }
+
+        .mcp-tools-section {
+            margin-bottom: 60px;
+        }
+
+        .mcp-tools-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+
+        .mcp-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .mcp-tool-category {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 24px;
+        }
+
+        .mcp-tool-category h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mcp-tool-category h5 span {
+            color: var(--accent);
+        }
+
+        .mcp-tool-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mcp-tool-item {
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .mcp-setup-section h4 {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent);
+            margin-bottom: 24px;
+        }
+
+        .mcp-setup-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 0;
+        }
+
+        .mcp-setup-tab {
+            padding: 12px 24px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mcp-setup-tab:first-child {
+            border-right: none;
+        }
+
+        .mcp-setup-tab.active {
+            background: var(--bg-secondary);
+            color: var(--accent);
+            border-color: var(--accent);
+            border-bottom: 1px solid var(--bg-secondary);
+            margin-bottom: -1px;
+        }
+
+        .mcp-setup-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 24px;
+        }
+
+        .mcp-setup-panel {
+            display: none;
+        }
+
+        .mcp-setup-panel.active {
+            display: block;
+        }
+
+        .mcp-setup-panel pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            color: var(--text-secondary);
+        }
+
+        .mcp-setup-panel .code-comment {
+            color: var(--text-dim);
+        }
+
+        .mcp-setup-panel .code-keyword {
+            color: var(--accent);
+        }
+
+        .mcp-setup-panel .code-string {
+            color: #a5d6ff;
+        }
+
+        @media (max-width: 900px) {
+            .mcp-hero {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .mcp-tools-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .mcp-setup-tabs {
+                flex-direction: column;
+            }
+
+            .mcp-setup-tab {
+                border: 1px solid var(--border);
+                border-bottom: none;
+            }
+
+            .mcp-setup-tab:first-child {
+                border-right: 1px solid var(--border);
+            }
+
+            .mcp-setup-tab.active {
+                border-bottom: none;
+            }
+        }
+
         /* Human Pricing Section - COMMENTED OUT
         .human-pricing {
             padding: 120px 80px;
@@ -3040,8 +3301,7 @@
         <nav>
             <a href="#capabilities">Docs</a>
             <a href="#spend-protocol">API Spec</a>
-            <a href="#quickstart">SDK</a>
-            <a href="#pricing">Pricing</a>
+            <a href="#mcp">MCP</a>
         </nav>
         <div class="header-ctas">
             <a href="#schema" class="btn btn-outline">View Schema</a>
@@ -3077,7 +3337,7 @@
                 <a href="#" class="btn btn-terminal">$ get_api_key</a>
                 <a href="#" class="btn btn-ghost">View API Spec</a>
                 <a href="#schema" class="btn btn-ghost muted">OpenAPI Schema</a>
-                <a href="#quickstart" class="btn btn-ghost muted">SDK Install</a>
+                <a href="#mcp" class="btn btn-ghost muted">MCP Server</a>
             </div>
         </section>
 
@@ -4780,6 +5040,125 @@
             </div>
         </section>
 
+        <section class="human-mcp" id="mcp">
+            <div class="human-section-header animate-on-scroll">
+                <div class="human-section-label">MCP Integration</div>
+                <h2 class="human-section-title">Connect via Model Context Protocol</h2>
+                <p class="human-section-desc">Give your AI agents direct access to payment infrastructure through MCP. Intent-based card provisioning with policy enforcement.</p>
+            </div>
+
+            <div class="mcp-content">
+                <div class="mcp-hero animate-on-scroll">
+                    <div class="mcp-hero-text">
+                        <h3>Zinc MCP Server</h3>
+                        <p>Enable any MCP-compatible AI agent to request spending authority, provision cards, and execute payments—all through a standardized protocol with built-in policy enforcement.</p>
+                        <div class="mcp-server-url">
+                            <span>URL:</span> https://mcp.zinc.dev/api/mcp
+                        </div>
+                    </div>
+                    <div class="mcp-hero-visual">
+                        <div class="mcp-flow">
+                            <div class="mcp-flow-step">
+                                <div class="mcp-flow-icon">1</div>
+                                <div class="mcp-flow-text">
+                                    <h5>Agent Declares Intent</h5>
+                                    <p>Purpose, amount, merchant constraints</p>
+                                </div>
+                            </div>
+                            <div class="mcp-flow-step">
+                                <div class="mcp-flow-icon">2</div>
+                                <div class="mcp-flow-text">
+                                    <h5>Policy Evaluation</h5>
+                                    <p>Zinc validates against configured rules</p>
+                                </div>
+                            </div>
+                            <div class="mcp-flow-step">
+                                <div class="mcp-flow-icon">3</div>
+                                <div class="mcp-flow-text">
+                                    <h5>Card Provisioned</h5>
+                                    <p>Locked virtual card issued for intent</p>
+                                </div>
+                            </div>
+                            <div class="mcp-flow-step">
+                                <div class="mcp-flow-icon">4</div>
+                                <div class="mcp-flow-text">
+                                    <h5>Transaction Verified</h5>
+                                    <p>Payment executed and audit logged</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mcp-tools-section animate-on-scroll">
+                    <h4>Available Tools</h4>
+                    <div class="mcp-tools-grid">
+                        <div class="mcp-tool-category">
+                            <h5><span>→</span> Intents</h5>
+                            <div class="mcp-tool-list">
+                                <div class="mcp-tool-item">create_intent</div>
+                                <div class="mcp-tool-item">list_intents</div>
+                                <div class="mcp-tool-item">get_intent</div>
+                                <div class="mcp-tool-item">simulate_intent</div>
+                            </div>
+                        </div>
+                        <div class="mcp-tool-category">
+                            <h5><span>→</span> Cards</h5>
+                            <div class="mcp-tool-list">
+                                <div class="mcp-tool-item">provision_card</div>
+                                <div class="mcp-tool-item">list_cards</div>
+                                <div class="mcp-tool-item">freeze_card</div>
+                                <div class="mcp-tool-item">close_card</div>
+                            </div>
+                        </div>
+                        <div class="mcp-tool-category">
+                            <h5><span>→</span> Transactions</h5>
+                            <div class="mcp-tool-list">
+                                <div class="mcp-tool-item">list_transactions</div>
+                                <div class="mcp-tool-item">get_transaction</div>
+                                <div class="mcp-tool-item">verify_receipt</div>
+                                <div class="mcp-tool-item">get_audit_log</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mcp-setup-section animate-on-scroll">
+                    <h4>Quick Setup</h4>
+                    <div class="mcp-setup-tabs">
+                        <div class="mcp-setup-tab active" data-tab="claude">Claude Code</div>
+                        <div class="mcp-setup-tab" data-tab="manual">Manual Config</div>
+                    </div>
+                    <div class="mcp-setup-content">
+                        <div class="mcp-setup-panel active" data-panel="claude">
+                            <pre><span class="code-comment"># Add Zinc MCP server to Claude Code</span>
+claude mcp add zinc --transport http --url <span class="code-string">"https://mcp.zinc.dev/api/mcp"</span>
+
+<span class="code-comment"># Authenticate with your API key</span>
+claude mcp auth zinc --token <span class="code-string">"your_api_key"</span>
+
+<span class="code-comment"># Verify connection</span>
+claude mcp test zinc</pre>
+                        </div>
+                        <div class="mcp-setup-panel" data-panel="manual">
+                            <pre><span class="code-comment">// Add to your MCP configuration</span>
+{
+  <span class="code-string">"mcpServers"</span>: {
+    <span class="code-string">"zinc"</span>: {
+      <span class="code-string">"transport"</span>: <span class="code-string">"http"</span>,
+      <span class="code-string">"url"</span>: <span class="code-string">"https://mcp.zinc.dev/api/mcp"</span>,
+      <span class="code-string">"headers"</span>: {
+        <span class="code-string">"Authorization"</span>: <span class="code-string">"Bearer YOUR_API_KEY"</span>
+      }
+    }
+  }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- PRICING SECTION COMMENTED OUT
         <section class="human-pricing" id="pricing">
             <div class="human-section-header animate-on-scroll">
@@ -4887,7 +5266,7 @@
                 <div class="human-footer-col">
                     <h4>Product</h4>
                     <a href="#">Features</a>
-                    <a href="#">Pricing</a>
+                    <a href="#mcp">MCP</a>
                     <a href="#">Security</a>
                     <a href="#">Enterprise</a>
                 </div>
@@ -4895,7 +5274,7 @@
                     <h4>Developers</h4>
                     <a href="#">Documentation</a>
                     <a href="#">API Reference</a>
-                    <a href="#">SDKs</a>
+                    <a href="#mcp">MCP Server</a>
                     <a href="#">Status</a>
                 </div>
                 <div class="human-footer-col">
@@ -5334,6 +5713,32 @@
         document.querySelectorAll('.stat-item').forEach(item => {
             statsObserver.observe(item);
         });
+
+        // MCP Setup Tabs
+        (function initMcpTabs() {
+            const tabs = document.querySelectorAll('.mcp-setup-tab');
+            const panels = document.querySelectorAll('.mcp-setup-panel');
+
+            if (tabs.length === 0) return;
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetPanel = tab.dataset.tab;
+
+                    // Update tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    // Update panels
+                    panels.forEach(panel => {
+                        panel.classList.remove('active');
+                        if (panel.dataset.panel === targetPanel) {
+                            panel.classList.add('active');
+                        }
+                    });
+                });
+            });
+        })();
 
         // Use Case Card Expand/Collapse (Safari-like zoom)
         (function initUseCaseExpand() {

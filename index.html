@@ -2387,8 +2387,8 @@
 
         .mcp-tools-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
         }
 
         .mcp-tool-category {
@@ -2418,12 +2418,22 @@
         }
 
         .mcp-tool-item {
-            font-size: 12px;
-            color: var(--text-muted);
-            padding: 8px 12px;
+            padding: 10px 12px;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
+        }
+
+        .mcp-tool-name {
+            font-size: 12px;
             font-family: 'JetBrains Mono', monospace;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .mcp-tool-desc {
+            font-size: 11px;
+            color: var(--text-dim);
+            line-height: 1.4;
         }
 
         .mcp-setup-section h4 {
@@ -5094,30 +5104,112 @@
                     <h4>Available Tools</h4>
                     <div class="mcp-tools-grid">
                         <div class="mcp-tool-category">
+                            <h5><span>→</span> Account Status</h5>
+                            <div class="mcp-tool-list">
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.user.get</div>
+                                    <div class="mcp-tool-desc">Get authenticated user profile</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.kyc.status</div>
+                                    <div class="mcp-tool-desc">Check KYC verification status</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.kyc.link</div>
+                                    <div class="mcp-tool-desc">Get KYC completion link if needed</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.balance.get</div>
+                                    <div class="mcp-tool-desc">Check available balance</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.funding.get</div>
+                                    <div class="mcp-tool-desc">Get ACH/wire details and crypto deposit address</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.funding.request</div>
+                                    <div class="mcp-tool-desc">Request funding from account owner</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.tools.list</div>
+                                    <div class="mcp-tool-desc">List available MCP tools</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mcp-tool-category">
+                            <h5><span>→</span> Policies & Simulation</h5>
+                            <div class="mcp-tool-list">
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.policies.get</div>
+                                    <div class="mcp-tool-desc">Read current spend policy</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.policies.simulate</div>
+                                    <div class="mcp-tool-desc">Dry-run an intent and return allow/deny</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mcp-tool-category">
                             <h5><span>→</span> Intents</h5>
                             <div class="mcp-tool-list">
-                                <div class="mcp-tool-item">create_intent</div>
-                                <div class="mcp-tool-item">list_intents</div>
-                                <div class="mcp-tool-item">get_intent</div>
-                                <div class="mcp-tool-item">simulate_intent</div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.intents.create</div>
+                                    <div class="mcp-tool-desc">Create payment intent (auto-issues card if within policy)</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.intents.list</div>
+                                    <div class="mcp-tool-desc">List your intents</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.intents.get</div>
+                                    <div class="mcp-tool-desc">Get intent details including card info</div>
+                                </div>
                             </div>
                         </div>
                         <div class="mcp-tool-category">
                             <h5><span>→</span> Cards</h5>
                             <div class="mcp-tool-list">
-                                <div class="mcp-tool-item">provision_card</div>
-                                <div class="mcp-tool-item">list_cards</div>
-                                <div class="mcp-tool-item">freeze_card</div>
-                                <div class="mcp-tool-item">close_card</div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.cards.list</div>
+                                    <div class="mcp-tool-desc">List cards for the authenticated user</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.cards.get</div>
+                                    <div class="mcp-tool-desc">Get card details by ID</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.cards.get_sensitive</div>
+                                    <div class="mcp-tool-desc">Get full card number (PAN); requires intentId</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.cards.freeze</div>
+                                    <div class="mcp-tool-desc">Temporarily freeze a card</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.cards.unfreeze</div>
+                                    <div class="mcp-tool-desc">Unfreeze a card</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.cards.rotate</div>
+                                    <div class="mcp-tool-desc">Rotate card credentials without changing policy</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.cards.close</div>
+                                    <div class="mcp-tool-desc">Close a card permanently</div>
+                                </div>
                             </div>
                         </div>
                         <div class="mcp-tool-category">
                             <h5><span>→</span> Transactions</h5>
                             <div class="mcp-tool-list">
-                                <div class="mcp-tool-item">list_transactions</div>
-                                <div class="mcp-tool-item">get_transaction</div>
-                                <div class="mcp-tool-item">verify_receipt</div>
-                                <div class="mcp-tool-item">get_audit_log</div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.transactions.list</div>
+                                    <div class="mcp-tool-desc">List transactions for a specific card</div>
+                                </div>
+                                <div class="mcp-tool-item">
+                                    <div class="mcp-tool-name">zinc.transactions.get</div>
+                                    <div class="mcp-tool-desc">Get transaction details</div>
+                                </div>
                             </div>
                         </div>
                     </div>

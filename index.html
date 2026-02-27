@@ -1461,6 +1461,78 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
+        /* Terminal Install Block */
+        .terminal-install {
+            display: inline-flex;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 4px 4px 4px 20px;
+            gap: 16px;
+            backdrop-filter: blur(10px);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .terminal-install code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .terminal-install code span {
+            color: var(--text-dim);
+        }
+
+        .terminal-copy-btn {
+            background: var(--accent);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+            border-radius: 0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .terminal-copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        /* Snackbar */
+        .snackbar {
+            position: fixed;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-card);
+            border: 1px solid var(--accent);
+            padding: 14px 24px;
+            font-size: 13px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-primary);
+            z-index: 10000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 6px;
+        }
+
+        .snackbar.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .snackbar-icon {
+            color: var(--accent);
+        }
+
         /* Card Stack */
         .card-stack {
             position: absolute;
@@ -3297,6 +3369,12 @@
     </style>
 </head>
 <body>
+    <!-- Snackbar for copy notifications -->
+    <div class="snackbar" id="snackbar">
+        <span class="snackbar-icon">✓</span>
+        <span>Copied to clipboard</span>
+    </div>
+
     <header>
         <a href="#" class="logo">
             <span class="logo-symbol">></span>
@@ -3780,9 +3858,9 @@
                 <div class="human-hero-badge">Now in Public Beta</div>
                 <h1>Give your AI agents <span class="accent-text">financial superpowers</span></h1>
                 <p class="human-hero-subtitle">Zinc is the secure infrastructure layer that lets autonomous agents handle payments, manage budgets, and transact with the real world—all with enterprise-grade controls.</p>
-                <div class="human-hero-ctas">
-                    <a href="#" class="human-btn human-btn-primary">Start Building Free</a>
-                    <a href="#" class="human-btn human-btn-secondary">Watch Demo</a>
+                <div class="terminal-install">
+                    <code><span>$</span> npm install zinc-agent</code>
+                    <button class="terminal-copy-btn" onclick="copyInstallCommand()">Copy & Get Started</button>
                 </div>
             </div>
 
@@ -5208,6 +5286,23 @@
             });
         });
 
+        // Copy install command to clipboard
+        let snackbarTimeout;
+        function copyInstallCommand() {
+            const command = 'npm install zinc-agent';
+            navigator.clipboard.writeText(command).then(() => {
+                const snackbar = document.getElementById('snackbar');
+                snackbar.classList.add('show');
+
+                if (snackbarTimeout) clearTimeout(snackbarTimeout);
+                snackbarTimeout = setTimeout(() => {
+                    snackbar.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
         // Animate cards on page load (starts immediately)
         (function initCardAnimation() {
             const cards = document.querySelectorAll('.floating-card');
@@ -5237,7 +5332,7 @@
             const heroTitle = document.querySelector('.human-hero h1');
             const heroSubtitle = document.querySelector('.human-hero-subtitle');
             const heroBadge = document.querySelector('.human-hero-badge');
-            const heroCTAs = document.querySelector('.human-hero-ctas');
+            const heroCTAs = document.querySelector('.terminal-install');
 
             if (!heroTitle || body.classList.contains('machine-mode')) return;
 

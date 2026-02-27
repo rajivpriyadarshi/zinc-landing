@@ -298,6 +298,81 @@
             gap: 16px;
         }
 
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.98);
+            border-bottom: 1px solid var(--border);
+            padding: 24px;
+            flex-direction: column;
+            gap: 16px;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        .mobile-menu.active {
+            display: flex;
+        }
+
+        .mobile-menu a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.2s ease;
+        }
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--text-primary);
+        }
+
+        .mobile-menu .btn {
+            margin-top: 8px;
+            text-align: center;
+        }
+
         .btn {
             padding: 10px 20px;
             font-family: inherit;
@@ -3223,19 +3298,37 @@
 
         @media (max-width: 1024px) {
             header {
-                padding: 0 40px;
+                padding: 0 32px;
             }
 
             section {
-                padding: 60px 40px;
+                padding: 60px 32px;
             }
 
             .hero {
-                padding: 160px 40px 80px;
+                padding: 140px 32px 60px;
             }
 
             .hero h1 {
-                font-size: 48px;
+                font-size: 40px;
+            }
+
+            .human-hero {
+                padding: 120px 32px 60px;
+            }
+
+            .human-hero h1 {
+                font-size: 36px;
+            }
+
+            .human-features,
+            .human-how-it-works,
+            .human-cta-section {
+                padding: 80px 32px;
+            }
+
+            .terminal-page {
+                padding: 120px 32px 60px;
             }
 
             .two-col {
@@ -3304,34 +3397,41 @@
 
         @media (max-width: 768px) {
             header {
-                padding: 0 20px;
+                padding: 0 16px;
             }
 
             nav {
                 display: none;
             }
 
+            .header-ctas {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
             .mode-toggle {
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
+                position: static;
+                transform: none;
             }
 
             section {
-                padding: 40px 20px;
+                padding: 40px 16px;
             }
 
             .hero {
-                padding: 140px 20px 60px;
+                padding: 120px 16px 40px;
             }
 
             .hero h1 {
-                font-size: 36px;
-                letter-spacing: -1px;
+                font-size: 28px;
+                letter-spacing: -0.5px;
             }
 
             .hero-subtitle {
-                font-size: 16px;
+                font-size: 14px;
             }
 
             .hero-ctas {
@@ -3345,16 +3445,20 @@
             }
 
             .section-title {
-                font-size: 24px;
+                font-size: 22px;
+            }
+
+            .section-desc {
+                font-size: 14px;
             }
 
             .matrix-table {
-                font-size: 11px;
+                font-size: 10px;
             }
 
             .matrix-table th,
             .matrix-table td {
-                padding: 12px;
+                padding: 8px 6px;
             }
 
             .integration-grid {
@@ -3366,18 +3470,126 @@
             }
 
             footer {
-                padding: 40px 20px;
+                padding: 32px 16px;
             }
 
             .footer-top {
                 flex-direction: column;
-                gap: 24px;
+                gap: 20px;
             }
 
             .footer-bottom {
                 flex-direction: column;
-                gap: 16px;
+                gap: 12px;
                 text-align: center;
+            }
+
+            .footer-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 16px;
+            }
+
+            /* Terminal page mobile */
+            .terminal-page {
+                padding: 100px 16px 60px;
+            }
+
+            .terminal-content {
+                font-size: 12px;
+                line-height: 1.7;
+            }
+
+            /* Human hero mobile */
+            .human-hero {
+                padding: 100px 16px 60px;
+            }
+
+            .human-hero h1 {
+                font-size: 28px;
+            }
+
+            .human-hero-subtitle {
+                font-size: 14px;
+            }
+
+            .terminal-install {
+                flex-direction: column;
+                padding: 16px;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .terminal-install code {
+                font-size: 13px;
+            }
+
+            .terminal-copy-btn {
+                width: 100%;
+                padding: 14px 20px;
+            }
+
+            /* Card stack mobile */
+            .card-stack {
+                display: none;
+            }
+
+            /* Human sections mobile */
+            .human-features {
+                padding: 60px 16px;
+            }
+
+            .human-section-title {
+                font-size: 24px;
+            }
+
+            .human-section-desc {
+                font-size: 14px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .human-how-it-works {
+                padding: 60px 16px;
+            }
+
+            .step-row {
+                gap: 20px;
+            }
+
+            .step-number {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+
+            .step-body {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .steps-container::before {
+                left: 24px;
+            }
+
+            .steps-progress-line {
+                left: 24px;
+            }
+
+            .human-cta-section {
+                padding: 60px 16px;
+            }
+
+            .human-footer {
+                padding: 40px 16px;
+            }
+
+            .human-footer-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
             }
 
             .human-hero {
@@ -3430,7 +3642,7 @@
     </div>
 
     <header>
-        <a href="#" class="logo">
+        <a href="index.html" class="logo">
             <span class="logo-symbol">></span>
             <span class="logo-text">zinc</span>
         </a>
@@ -3450,7 +3662,22 @@
             <a href="#schema" class="btn btn-outline">View Schema</a>
             <a href="#" class="btn btn-primary">Get API Key</a>
         </div>
+
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
     </header>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="docs.html">Docs</a>
+        <a href="api-spec.html">API Spec</a>
+        <a href="mcp.html">MCP</a>
+        <a href="skills.html">Skills</a>
+        <a href="#" class="btn btn-primary">Get API Key</a>
+    </div>
 
     <!-- ==================== -->
     <!-- MACHINE VIEW         -->
@@ -5011,6 +5238,25 @@ Human-only tools:
                 }
             });
         });
+
+        // Hamburger Menu Toggle
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        if (hamburger && mobileMenu) {
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking a link
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    hamburger.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                });
+            });
+        }
 
         // Copy install command to clipboard
         let snackbarTimeout;
